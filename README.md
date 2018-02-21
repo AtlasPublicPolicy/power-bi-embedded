@@ -12,9 +12,9 @@
  
  **Stable tag:** 1.0.0
  
- **License:** Apache License 2.0
+ **License:** GNU General Public License v3.0
  
- **License URI:** [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0) 
+ **License URI:** [https://www.gnu.org/licenses/lgpl.html](https://www.gnu.org/licenses/lgpl.html) 
 
 ## Description
 This WordPress plugin supports Microsoft Power BI Embedded, including  dashboards, reports, report visuals, Q&A, and tiles. Power BI is a sophisticated data analytics software and service package from Microsoft. More information on Power BI is available at www.powerbi.com. 
