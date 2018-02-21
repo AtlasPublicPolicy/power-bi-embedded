@@ -2,6 +2,8 @@
 
 ![Atlas](http://atlaspolicy.com/wp-content/uploads/2017/03/logo.png)
 
+ **Title:** Power BI Embedded for WordPress
+ 
  **Contributors:** Nick Nigro [nick.nigro@atlaspolicy.com], aswingiri [aswingiri@upnrunn.com]
  
  **Homepage:** [http://www.atlaspolicy.com](http://www.atlaspolicy.com)
@@ -19,7 +21,7 @@
 ## Description
 This WordPress plugin supports Microsoft Power BI Embedded, including  dashboards, reports, report visuals, Q&A, and tiles. Power BI is a sophisticated data analytics software and service package from Microsoft. More information on Power BI is available at www.powerbi.com. 
 
-This plugin uses the Power BI REST API to access various types of content and easily embed them on a WordPress site using a shortcode. The plugin follows the "app owns data" process as documented by Microsoft [https://docs.microsoft.com/en-us/power-bi/developer/embedding-content](https://docs.microsoft.com/en-us/power-bi/developer/embedding-content). See [https://docs.microsoft.com/en-us/power-bi/developer/embedding](https://docs.microsoft.com/en-us/power-bi/developer/embedding) for more information from Microsoft on how to Power BI embed content. 
+This plugin uses the Power BI REST API to access various types of content and easily embed them on a WordPress site using a shortcode. The plugin follows the "app owns data" process as documented by Microsoft at [https://docs.microsoft.com/en-us/power-bi/developer/embedding-content](https://docs.microsoft.com/en-us/power-bi/developer/embedding-content). See [https://docs.microsoft.com/en-us/power-bi/developer/embedding](https://docs.microsoft.com/en-us/power-bi/developer/embedding) for more information from Microsoft on how to Power BI embed content. 
 
 The plugin relies on Microsoft's JavaScript library for embedding Power BI available on Github here: [https://github.com/Microsoft/PowerBI-JavaScript](https://github.com/Microsoft/PowerBI-JavaScript). 
 
