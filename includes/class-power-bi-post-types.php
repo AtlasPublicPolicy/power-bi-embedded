@@ -206,7 +206,7 @@ class Power_Bi_Post_Types {
 
 		$metabox_details->add_field( array(
 			'name'    => 'Dataset Id',
-			'desc'    => 'Enter the unique identifier for the dataset. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL.',
+			'desc'    => 'Enter the unique identifier for the dataset. This is only needed for Create mode. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL.',
 			'id'      => $prefix . 'dataset_id',
 			'type'    => 'text',
 			'attributes' => array(
