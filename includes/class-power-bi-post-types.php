@@ -87,6 +87,7 @@ class Power_Bi_Post_Types {
 			'menu_position'      => null,
 			'supports'           => array( 'title' ),
 			'menu_icon'          => 'dashicons-chart-line',
+			'taxonomies'         => array( 'category' ),
 		);
 
 		register_post_type( 'powerbi', $args );
