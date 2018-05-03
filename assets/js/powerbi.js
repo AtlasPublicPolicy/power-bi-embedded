@@ -1,4 +1,4 @@
-/*! powerbi-client v2.4.6 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.5.1 | (c) 2016 Microsoft Corporation MIT */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -57,23 +57,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var service = __webpack_require__(1);
 	exports.service = service;
-	var factories = __webpack_require__(14);
+	var factories = __webpack_require__(15);
 	exports.factories = factories;
 	var models = __webpack_require__(4);
 	exports.models = models;
 	var report_1 = __webpack_require__(5);
 	exports.Report = report_1.Report;
-	var dashboard_1 = __webpack_require__(10);
+	var dashboard_1 = __webpack_require__(11);
 	exports.Dashboard = dashboard_1.Dashboard;
-	var tile_1 = __webpack_require__(11);
+	var tile_1 = __webpack_require__(12);
 	exports.Tile = tile_1.Tile;
 	var embed_1 = __webpack_require__(2);
 	exports.Embed = embed_1.Embed;
 	var page_1 = __webpack_require__(6);
 	exports.Page = page_1.Page;
-	var qna_1 = __webpack_require__(12);
+	var qna_1 = __webpack_require__(13);
 	exports.Qna = qna_1.Qna;
-	var visual_1 = __webpack_require__(13);
+	var visual_1 = __webpack_require__(14);
 	exports.Visual = visual_1.Visual;
 	var visualDescriptor_1 = __webpack_require__(7);
 	exports.VisualDescriptor = visualDescriptor_1.VisualDescriptor;
@@ -92,12 +92,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var embed = __webpack_require__(2);
 	var report_1 = __webpack_require__(5);
-	var create_1 = __webpack_require__(9);
-	var dashboard_1 = __webpack_require__(10);
-	var tile_1 = __webpack_require__(11);
+	var create_1 = __webpack_require__(10);
+	var dashboard_1 = __webpack_require__(11);
+	var tile_1 = __webpack_require__(12);
 	var page_1 = __webpack_require__(6);
-	var qna_1 = __webpack_require__(12);
-	var visual_1 = __webpack_require__(13);
+	var qna_1 = __webpack_require__(13);
+	var visual_1 = __webpack_require__(14);
 	var utils = __webpack_require__(3);
 	/**
 	 * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
@@ -957,7 +957,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! powerbi-models v1.0.1 | (c) 2016 Microsoft Corporation MIT */
+	/*! powerbi-models v1.0.4 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -1040,6 +1040,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		    DisplayOption[DisplayOption["FitToWidth"] = 1] = "FitToWidth";
 		    DisplayOption[DisplayOption["ActualSize"] = 2] = "ActualSize";
 		})(DisplayOption = exports.DisplayOption || (exports.DisplayOption = {}));
+		var BackgroundType;
+		(function (BackgroundType) {
+		    BackgroundType[BackgroundType["Default"] = 0] = "Default";
+		    BackgroundType[BackgroundType["Transparent"] = 1] = "Transparent";
+		})(BackgroundType = exports.BackgroundType || (exports.BackgroundType = {}));
 		var VisualContainerDisplayMode;
 		(function (VisualContainerDisplayMode) {
 		    VisualContainerDisplayMode[VisualContainerDisplayMode["Visible"] = 0] = "Visible";
@@ -1049,7 +1054,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		(function (LayoutType) {
 		    LayoutType[LayoutType["Master"] = 0] = "Master";
 		    LayoutType[LayoutType["Custom"] = 1] = "Custom";
+		    LayoutType[LayoutType["MobilePortrait"] = 2] = "MobilePortrait";
+		    LayoutType[LayoutType["MobileLandscape"] = 3] = "MobileLandscape";
 		})(LayoutType = exports.LayoutType || (exports.LayoutType = {}));
+		var SectionVisibility;
+		(function (SectionVisibility) {
+		    SectionVisibility[SectionVisibility["AlwaysVisible"] = 0] = "AlwaysVisible";
+		    SectionVisibility[SectionVisibility["HiddenInViewMode"] = 1] = "HiddenInViewMode";
+		})(SectionVisibility = exports.SectionVisibility || (exports.SectionVisibility = {}));
 		var Permissions;
 		(function (Permissions) {
 		    Permissions[Permissions["Read"] = 0] = "Read";
@@ -1093,7 +1105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    RelativeDateOperators[RelativeDateOperators["InThis"] = 1] = "InThis";
 		    RelativeDateOperators[RelativeDateOperators["InNext"] = 2] = "InNext";
 		})(RelativeDateOperators = exports.RelativeDateOperators || (exports.RelativeDateOperators = {}));
-		var Filter = (function () {
+		var Filter = /** @class */ (function () {
 		    function Filter(target, filterType) {
 		        this.target = target;
 		        this.filterType = filterType;
@@ -1109,7 +1121,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return Filter;
 		}());
 		exports.Filter = Filter;
-		var NotSupportedFilter = (function (_super) {
+		var NotSupportedFilter = /** @class */ (function (_super) {
 		    __extends(NotSupportedFilter, _super);
 		    function NotSupportedFilter(target, message, notSupportedTypeName) {
 		        var _this = _super.call(this, target, FilterType.Unknown) || this;
@@ -1124,11 +1136,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		        filter.notSupportedTypeName = this.notSupportedTypeName;
 		        return filter;
 		    };
+		    NotSupportedFilter.schemaUrl = "http://powerbi.com/product/schema#notSupported";
 		    return NotSupportedFilter;
 		}(Filter));
-		NotSupportedFilter.schemaUrl = "http://powerbi.com/product/schema#notSupported";
 		exports.NotSupportedFilter = NotSupportedFilter;
-		var IncludeExcludeFilter = (function (_super) {
+		var IncludeExcludeFilter = /** @class */ (function (_super) {
 		    __extends(IncludeExcludeFilter, _super);
 		    function IncludeExcludeFilter(target, isExclude, values) {
 		        var _this = _super.call(this, target, FilterType.IncludeExclude) || this;
@@ -1143,11 +1155,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		        filter.values = this.values;
 		        return filter;
 		    };
+		    IncludeExcludeFilter.schemaUrl = "http://powerbi.com/product/schema#includeExclude";
 		    return IncludeExcludeFilter;
 		}(Filter));
-		IncludeExcludeFilter.schemaUrl = "http://powerbi.com/product/schema#includeExclude";
 		exports.IncludeExcludeFilter = IncludeExcludeFilter;
-		var TopNFilter = (function (_super) {
+		var TopNFilter = /** @class */ (function (_super) {
 		    __extends(TopNFilter, _super);
 		    function TopNFilter(target, operator, itemCount) {
 		        var _this = _super.call(this, target, FilterType.TopN) || this;
@@ -1162,11 +1174,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		        filter.itemCount = this.itemCount;
 		        return filter;
 		    };
+		    TopNFilter.schemaUrl = "http://powerbi.com/product/schema#topN";
 		    return TopNFilter;
 		}(Filter));
-		TopNFilter.schemaUrl = "http://powerbi.com/product/schema#topN";
 		exports.TopNFilter = TopNFilter;
-		var RelativeDateFilter = (function (_super) {
+		var RelativeDateFilter = /** @class */ (function (_super) {
 		    __extends(RelativeDateFilter, _super);
 		    function RelativeDateFilter(target, operator, timeUnitsCount, timeUnitType, includeToday) {
 		        var _this = _super.call(this, target, FilterType.RelativeDate) || this;
@@ -1185,11 +1197,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		        filter.includeToday = this.includeToday;
 		        return filter;
 		    };
+		    RelativeDateFilter.schemaUrl = "http://powerbi.com/product/schema#relativeDate";
 		    return RelativeDateFilter;
 		}(Filter));
-		RelativeDateFilter.schemaUrl = "http://powerbi.com/product/schema#relativeDate";
 		exports.RelativeDateFilter = RelativeDateFilter;
-		var BasicFilter = (function (_super) {
+		var BasicFilter = /** @class */ (function (_super) {
 		    __extends(BasicFilter, _super);
 		    function BasicFilter(target, operator) {
 		        var values = [];
@@ -1221,11 +1233,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		        filter.values = this.values;
 		        return filter;
 		    };
+		    BasicFilter.schemaUrl = "http://powerbi.com/product/schema#basic";
 		    return BasicFilter;
 		}(Filter));
-		BasicFilter.schemaUrl = "http://powerbi.com/product/schema#basic";
 		exports.BasicFilter = BasicFilter;
-		var BasicFilterWithKeys = (function (_super) {
+		var BasicFilterWithKeys = /** @class */ (function (_super) {
 		    __extends(BasicFilterWithKeys, _super);
 		    function BasicFilterWithKeys(target, operator, values, keyValues) {
 		        var _this = _super.call(this, target, operator, values) || this;
@@ -1256,7 +1268,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return BasicFilterWithKeys;
 		}(BasicFilter));
 		exports.BasicFilterWithKeys = BasicFilterWithKeys;
-		var AdvancedFilter = (function (_super) {
+		var AdvancedFilter = /** @class */ (function (_super) {
 		    __extends(AdvancedFilter, _super);
 		    function AdvancedFilter(target, logicalOperator) {
 		        var conditions = [];
@@ -1301,9 +1313,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		        filter.conditions = this.conditions;
 		        return filter;
 		    };
+		    AdvancedFilter.schemaUrl = "http://powerbi.com/product/schema#advanced";
 		    return AdvancedFilter;
 		}(Filter));
-		AdvancedFilter.schemaUrl = "http://powerbi.com/product/schema#advanced";
 		exports.AdvancedFilter = AdvancedFilter;
 		function isFilterKeyColumnsTarget(target) {
 		    return isColumn(target) && !!target.keys;
@@ -1349,6 +1361,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		    QnaMode[QnaMode["Interactive"] = 0] = "Interactive";
 		    QnaMode[QnaMode["ResultOnly"] = 1] = "ResultOnly";
 		})(QnaMode = exports.QnaMode || (exports.QnaMode = {}));
+		var ExportDataType;
+		(function (ExportDataType) {
+		    ExportDataType[ExportDataType["Summarized"] = 0] = "Summarized";
+		    ExportDataType[ExportDataType["Underlying"] = 1] = "Underlying";
+		})(ExportDataType = exports.ExportDataType || (exports.ExportDataType = {}));
+		var BookmarksPlayMode;
+		(function (BookmarksPlayMode) {
+		    BookmarksPlayMode[BookmarksPlayMode["Off"] = 0] = "Off";
+		    BookmarksPlayMode[BookmarksPlayMode["Presentation"] = 1] = "Presentation";
+		})(BookmarksPlayMode = exports.BookmarksPlayMode || (exports.BookmarksPlayMode = {}));
 		function normalizeError(error) {
 		    var message = error.message;
 		    if (!message) {
@@ -1358,6 +1380,26 @@ return /******/ (function(modules) { // webpackBootstrap
 		        message: message
 		    };
 		}
+		function validatePlayBookmarkRequest(input) {
+		    var errors = exports.Validators.playBookmarkRequestValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validatePlayBookmarkRequest = validatePlayBookmarkRequest;
+		function validateAddBookmarkRequest(input) {
+		    var errors = exports.Validators.addBookmarkRequestValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateAddBookmarkRequest = validateAddBookmarkRequest;
+		function validateApplyBookmarkByNameRequest(input) {
+		    var errors = exports.Validators.applyBookmarkByNameRequestValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateApplyBookmarkByNameRequest = validateApplyBookmarkByNameRequest;
+		function validateApplyBookmarkStateRequest(input) {
+		    var errors = exports.Validators.applyBookmarkStateRequestValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateApplyBookmarkStateRequest = validateApplyBookmarkStateRequest;
 		function validateSettings(input) {
 		    var errors = exports.Validators.settingsValidator.validate(input);
 		    return errors ? errors.map(normalizeError) : undefined;
@@ -1418,6 +1460,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return errors ? errors.map(normalizeError) : undefined;
 		}
 		exports.validateQnaInterpretInputData = validateQnaInterpretInputData;
+		function validateExportDataRequest(input) {
+		    var errors = exports.Validators.exportDataRequestValidator.validate(input);
+		    return errors ? errors.map(normalizeError) : undefined;
+		}
+		exports.validateExportDataRequest = validateExportDataRequest;
 	
 	
 	/***/ }),
@@ -1428,18 +1475,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		var typeValidator_1 = __webpack_require__(2);
 		var extensionsValidator_1 = __webpack_require__(3);
 		var settingsValidator_1 = __webpack_require__(5);
-		var filtersValidator_1 = __webpack_require__(6);
-		var fieldRequiredValidator_1 = __webpack_require__(7);
-		var anyOfValidator_1 = __webpack_require__(8);
-		var reportLoadValidator_1 = __webpack_require__(9);
-		var reportCreateValidator_1 = __webpack_require__(10);
-		var dashboardLoadValidator_1 = __webpack_require__(11);
-		var tileLoadValidator_1 = __webpack_require__(12);
-		var pageValidator_1 = __webpack_require__(13);
-		var qnaValidator_1 = __webpack_require__(14);
-		var saveAsParametersValidator_1 = __webpack_require__(15);
-		var mapValidator_1 = __webpack_require__(16);
-		var layoutValidator_1 = __webpack_require__(17);
+		var bookmarkValidator_1 = __webpack_require__(6);
+		var filtersValidator_1 = __webpack_require__(7);
+		var fieldRequiredValidator_1 = __webpack_require__(8);
+		var anyOfValidator_1 = __webpack_require__(9);
+		var reportLoadValidator_1 = __webpack_require__(10);
+		var reportCreateValidator_1 = __webpack_require__(11);
+		var dashboardLoadValidator_1 = __webpack_require__(12);
+		var tileLoadValidator_1 = __webpack_require__(13);
+		var pageValidator_1 = __webpack_require__(14);
+		var qnaValidator_1 = __webpack_require__(15);
+		var saveAsParametersValidator_1 = __webpack_require__(16);
+		var mapValidator_1 = __webpack_require__(17);
+		var layoutValidator_1 = __webpack_require__(18);
+		var exportDataValidator_1 = __webpack_require__(19);
 		exports.Validators = {
 		    advancedFilterTypeValidator: new typeValidator_1.EnumValidator([0]),
 		    advancedFilterValidator: new filtersValidator_1.AdvancedFilterValidator(),
@@ -1448,6 +1497,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		    anyValueValidator: new anyOfValidator_1.AnyOfValidator([new typeValidator_1.StringValidator(), new typeValidator_1.NumberValidator(), new typeValidator_1.BooleanValidator()]),
 		    basicFilterTypeValidator: new typeValidator_1.EnumValidator([1]),
 		    basicFilterValidator: new filtersValidator_1.BasicFilterValidator(),
+		    playBookmarkRequestValidator: new bookmarkValidator_1.PlayBookmarkRequestValidator(),
+		    addBookmarkRequestValidator: new bookmarkValidator_1.AddBookmarkRequestValidator(),
+		    applyBookmarkByNameRequestValidator: new bookmarkValidator_1.ApplyBookmarkByNameRequestValidator(),
+		    applyBookmarkStateRequestValidator: new bookmarkValidator_1.ApplyBookmarkStateRequestValidator(),
+		    applyBookmarkValidator: new anyOfValidator_1.AnyOfValidator([new bookmarkValidator_1.ApplyBookmarkByNameRequestValidator(), new bookmarkValidator_1.ApplyBookmarkStateRequestValidator()]),
+		    backgroundValidator: new typeValidator_1.EnumValidator([0, 1]),
 		    booleanArrayValidator: new typeValidator_1.BooleanArrayValidator(),
 		    booleanValidator: new typeValidator_1.BooleanValidator(),
 		    commandExtensionValidator: new extensionsValidator_1.CommandExtensionValidator(),
@@ -1458,6 +1513,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    dashboardLoadValidator: new dashboardLoadValidator_1.DashboardLoadValidator(),
 		    displayStateModeValidator: new typeValidator_1.EnumValidator([0, 1]),
 		    displayStateValidator: new layoutValidator_1.DisplayStateValidator(),
+		    exportDataRequestValidator: new exportDataValidator_1.ExportDataRequestValidator(),
 		    extensionPointsValidator: new extensionsValidator_1.ExtensionPointsValidator(),
 		    extentionArrayValidator: new typeValidator_1.ArrayValidator([new extensionsValidator_1.ExtensionValidator()]),
 		    extentionValidator: new extensionsValidator_1.ExtensionValidator(),
@@ -1471,7 +1527,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    filtersValidator: new filtersValidator_1.FilterValidator(),
 		    includeExcludeFilterValidator: new filtersValidator_1.IncludeExcludeFilterValidator(),
 		    includeExludeFilterTypeValidator: new typeValidator_1.EnumValidator([3]),
-		    layoutTypeValidator: new typeValidator_1.EnumValidator([0, 1]),
+		    layoutTypeValidator: new typeValidator_1.EnumValidator([0, 1, 2, 3]),
 		    loadQnaValidator: new qnaValidator_1.LoadQnaValidator(),
 		    menuExtensionValidator: new extensionsValidator_1.MenuExtensionValidator(),
 		    notSupportedFilterTypeValidator: new typeValidator_1.EnumValidator([2]),
@@ -1521,7 +1577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    };
 		})();
 		Object.defineProperty(exports, "__esModule", { value: true });
-		var ObjectValidator = (function () {
+		var ObjectValidator = /** @class */ (function () {
 		    function ObjectValidator() {
 		    }
 		    ObjectValidator.prototype.validate = function (input, path, field) {
@@ -1540,7 +1596,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return ObjectValidator;
 		}());
 		exports.ObjectValidator = ObjectValidator;
-		var ArrayValidator = (function () {
+		var ArrayValidator = /** @class */ (function () {
 		    function ArrayValidator(itemValidators) {
 		        this.itemValidators = itemValidators;
 		    }
@@ -1574,7 +1630,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return ArrayValidator;
 		}());
 		exports.ArrayValidator = ArrayValidator;
-		var TypeValidator = (function () {
+		var TypeValidator = /** @class */ (function () {
 		    function TypeValidator(expectedType) {
 		        this.expectedType = expectedType;
 		    }
@@ -1594,7 +1650,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return TypeValidator;
 		}());
 		exports.TypeValidator = TypeValidator;
-		var StringValidator = (function (_super) {
+		var StringValidator = /** @class */ (function (_super) {
 		    __extends(StringValidator, _super);
 		    function StringValidator() {
 		        return _super.call(this, "string") || this;
@@ -1602,7 +1658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return StringValidator;
 		}(TypeValidator));
 		exports.StringValidator = StringValidator;
-		var BooleanValidator = (function (_super) {
+		var BooleanValidator = /** @class */ (function (_super) {
 		    __extends(BooleanValidator, _super);
 		    function BooleanValidator() {
 		        return _super.call(this, "boolean") || this;
@@ -1610,7 +1666,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return BooleanValidator;
 		}(TypeValidator));
 		exports.BooleanValidator = BooleanValidator;
-		var NumberValidator = (function (_super) {
+		var NumberValidator = /** @class */ (function (_super) {
 		    __extends(NumberValidator, _super);
 		    function NumberValidator() {
 		        return _super.call(this, "number") || this;
@@ -1618,7 +1674,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return NumberValidator;
 		}(TypeValidator));
 		exports.NumberValidator = NumberValidator;
-		var ValueValidator = (function () {
+		var ValueValidator = /** @class */ (function () {
 		    function ValueValidator(possibleValues) {
 		        this.possibleValues = possibleValues;
 		    }
@@ -1638,7 +1694,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return ValueValidator;
 		}());
 		exports.ValueValidator = ValueValidator;
-		var EnumValidator = (function (_super) {
+		var EnumValidator = /** @class */ (function (_super) {
 		    __extends(EnumValidator, _super);
 		    function EnumValidator(possibleValues) {
 		        var _this = _super.call(this) || this;
@@ -1659,7 +1715,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return EnumValidator;
 		}(NumberValidator));
 		exports.EnumValidator = EnumValidator;
-		var StringArrayValidator = (function (_super) {
+		var StringArrayValidator = /** @class */ (function (_super) {
 		    __extends(StringArrayValidator, _super);
 		    function StringArrayValidator() {
 		        return _super.call(this, [new StringValidator()]) || this;
@@ -1678,7 +1734,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return StringArrayValidator;
 		}(ArrayValidator));
 		exports.StringArrayValidator = StringArrayValidator;
-		var BooleanArrayValidator = (function (_super) {
+		var BooleanArrayValidator = /** @class */ (function (_super) {
 		    __extends(BooleanArrayValidator, _super);
 		    function BooleanArrayValidator() {
 		        return _super.call(this, [new BooleanValidator()]) || this;
@@ -1697,7 +1753,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return BooleanArrayValidator;
 		}(ArrayValidator));
 		exports.BooleanArrayValidator = BooleanArrayValidator;
-		var NumberArrayValidator = (function (_super) {
+		var NumberArrayValidator = /** @class */ (function (_super) {
 		    __extends(NumberArrayValidator, _super);
 		    function NumberArrayValidator() {
 		        return _super.call(this, [new NumberValidator()]) || this;
@@ -1736,7 +1792,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var MenuExtensionValidator = (function (_super) {
+		var MenuExtensionValidator = /** @class */ (function (_super) {
 		    __extends(MenuExtensionValidator, _super);
 		    function MenuExtensionValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -1765,7 +1821,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return MenuExtensionValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.MenuExtensionValidator = MenuExtensionValidator;
-		var ExtensionPointsValidator = (function (_super) {
+		var ExtensionPointsValidator = /** @class */ (function (_super) {
 		    __extends(ExtensionPointsValidator, _super);
 		    function ExtensionPointsValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -1794,7 +1850,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return ExtensionPointsValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.ExtensionPointsValidator = ExtensionPointsValidator;
-		var ExtensionItemValidator = (function (_super) {
+		var ExtensionItemValidator = /** @class */ (function (_super) {
 		    __extends(ExtensionItemValidator, _super);
 		    function ExtensionItemValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -1823,7 +1879,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return ExtensionItemValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.ExtensionItemValidator = ExtensionItemValidator;
-		var CommandExtensionValidator = (function (_super) {
+		var CommandExtensionValidator = /** @class */ (function (_super) {
 		    __extends(CommandExtensionValidator, _super);
 		    function CommandExtensionValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -1852,7 +1908,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return CommandExtensionValidator;
 		}(ExtensionItemValidator));
 		exports.CommandExtensionValidator = CommandExtensionValidator;
-		var ExtensionValidator = (function (_super) {
+		var ExtensionValidator = /** @class */ (function (_super) {
 		    __extends(ExtensionValidator, _super);
 		    function ExtensionValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -1884,7 +1940,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/***/ (function(module, exports) {
 	
 		Object.defineProperty(exports, "__esModule", { value: true });
-		var MultipleFieldsValidator = (function () {
+		var MultipleFieldsValidator = /** @class */ (function () {
 		    function MultipleFieldsValidator(fieldValidatorsPairs) {
 		        this.fieldValidatorsPairs = fieldValidatorsPairs;
 		    }
@@ -1928,7 +1984,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var SettingsValidator = (function (_super) {
+		var SettingsValidator = /** @class */ (function (_super) {
 		    __extends(SettingsValidator, _super);
 		    function SettingsValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -1951,6 +2007,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		                validators: [validator_1.Validators.booleanValidator]
 		            },
 		            {
+		                field: "bookmarksPaneEnabled",
+		                validators: [validator_1.Validators.booleanValidator]
+		            },
+		            {
 		                field: "useCustomSaveAsDialog",
 		                validators: [validator_1.Validators.booleanValidator]
 		            },
@@ -1965,7 +2025,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "customLayout",
 		                validators: [validator_1.Validators.customLayoutValidator]
-		            }
+		            },
+		            {
+		                field: "background",
+		                validators: [validator_1.Validators.backgroundValidator]
+		            },
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
 		        return multipleFieldsValidator.validate(input, path, field);
@@ -1993,7 +2057,135 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var FilterColumnTargetValidator = (function (_super) {
+		var PlayBookmarkRequestValidator = /** @class */ (function (_super) {
+		    __extends(PlayBookmarkRequestValidator, _super);
+		    function PlayBookmarkRequestValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    PlayBookmarkRequestValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "playMode",
+		                validators: [validator_1.Validators.fieldRequiredValidator, new typeValidator_1.EnumValidator([0, 1])]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return PlayBookmarkRequestValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.PlayBookmarkRequestValidator = PlayBookmarkRequestValidator;
+		var AddBookmarkRequestValidator = /** @class */ (function (_super) {
+		    __extends(AddBookmarkRequestValidator, _super);
+		    function AddBookmarkRequestValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    AddBookmarkRequestValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "state",
+		                validators: [validator_1.Validators.stringValidator]
+		            },
+		            {
+		                field: "displayName",
+		                validators: [validator_1.Validators.stringValidator]
+		            },
+		            {
+		                field: "apply",
+		                validators: [validator_1.Validators.booleanValidator]
+		            },
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return AddBookmarkRequestValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.AddBookmarkRequestValidator = AddBookmarkRequestValidator;
+		var ApplyBookmarkByNameRequestValidator = /** @class */ (function (_super) {
+		    __extends(ApplyBookmarkByNameRequestValidator, _super);
+		    function ApplyBookmarkByNameRequestValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    ApplyBookmarkByNameRequestValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "name",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return ApplyBookmarkByNameRequestValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.ApplyBookmarkByNameRequestValidator = ApplyBookmarkByNameRequestValidator;
+		var ApplyBookmarkStateRequestValidator = /** @class */ (function (_super) {
+		    __extends(ApplyBookmarkStateRequestValidator, _super);
+		    function ApplyBookmarkStateRequestValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    ApplyBookmarkStateRequestValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "state",
+		                validators: [validator_1.Validators.fieldRequiredValidator, validator_1.Validators.stringValidator]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return ApplyBookmarkStateRequestValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.ApplyBookmarkStateRequestValidator = ApplyBookmarkStateRequestValidator;
+	
+	
+	/***/ }),
+	/* 7 */
+	/***/ (function(module, exports, __webpack_require__) {
+	
+		var __extends = (this && this.__extends) || (function () {
+		    var extendStatics = Object.setPrototypeOf ||
+		        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+		        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+		    return function (d, b) {
+		        extendStatics(d, b);
+		        function __() { this.constructor = d; }
+		        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+		    };
+		})();
+		Object.defineProperty(exports, "__esModule", { value: true });
+		var validator_1 = __webpack_require__(1);
+		var multipleFieldsValidator_1 = __webpack_require__(4);
+		var typeValidator_1 = __webpack_require__(2);
+		var FilterColumnTargetValidator = /** @class */ (function (_super) {
 		    __extends(FilterColumnTargetValidator, _super);
 		    function FilterColumnTargetValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2022,7 +2214,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return FilterColumnTargetValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.FilterColumnTargetValidator = FilterColumnTargetValidator;
-		var FilterHierarchyTargetValidator = (function (_super) {
+		var FilterHierarchyTargetValidator = /** @class */ (function (_super) {
 		    __extends(FilterHierarchyTargetValidator, _super);
 		    function FilterHierarchyTargetValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2055,7 +2247,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return FilterHierarchyTargetValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.FilterHierarchyTargetValidator = FilterHierarchyTargetValidator;
-		var FilterMeasureTargetValidator = (function (_super) {
+		var FilterMeasureTargetValidator = /** @class */ (function (_super) {
 		    __extends(FilterMeasureTargetValidator, _super);
 		    function FilterMeasureTargetValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2084,7 +2276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return FilterMeasureTargetValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.FilterMeasureTargetValidator = FilterMeasureTargetValidator;
-		var BasicFilterValidator = (function (_super) {
+		var BasicFilterValidator = /** @class */ (function (_super) {
 		    __extends(BasicFilterValidator, _super);
 		    function BasicFilterValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2121,7 +2313,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return BasicFilterValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.BasicFilterValidator = BasicFilterValidator;
-		var AdvancedFilterValidator = (function (_super) {
+		var AdvancedFilterValidator = /** @class */ (function (_super) {
 		    __extends(AdvancedFilterValidator, _super);
 		    function AdvancedFilterValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2158,7 +2350,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return AdvancedFilterValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.AdvancedFilterValidator = AdvancedFilterValidator;
-		var RelativeDateFilterValidator = (function (_super) {
+		var RelativeDateFilterValidator = /** @class */ (function (_super) {
 		    __extends(RelativeDateFilterValidator, _super);
 		    function RelativeDateFilterValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2203,7 +2395,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return RelativeDateFilterValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.RelativeDateFilterValidator = RelativeDateFilterValidator;
-		var TopNFilterValidator = (function (_super) {
+		var TopNFilterValidator = /** @class */ (function (_super) {
 		    __extends(TopNFilterValidator, _super);
 		    function TopNFilterValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2240,7 +2432,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return TopNFilterValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.TopNFilterValidator = TopNFilterValidator;
-		var NotSupportedFilterValidator = (function (_super) {
+		var NotSupportedFilterValidator = /** @class */ (function (_super) {
 		    __extends(NotSupportedFilterValidator, _super);
 		    function NotSupportedFilterValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2277,7 +2469,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return NotSupportedFilterValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.NotSupportedFilterValidator = NotSupportedFilterValidator;
-		var IncludeExcludeFilterValidator = (function (_super) {
+		var IncludeExcludeFilterValidator = /** @class */ (function (_super) {
 		    __extends(IncludeExcludeFilterValidator, _super);
 		    function IncludeExcludeFilterValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2314,7 +2506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return IncludeExcludeFilterValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.IncludeExcludeFilterValidator = IncludeExcludeFilterValidator;
-		var FilterValidator = (function (_super) {
+		var FilterValidator = /** @class */ (function (_super) {
 		    __extends(FilterValidator, _super);
 		    function FilterValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2328,7 +2520,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return FilterValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.FilterValidator = FilterValidator;
-		var ConditionItemValidator = (function (_super) {
+		var ConditionItemValidator = /** @class */ (function (_super) {
 		    __extends(ConditionItemValidator, _super);
 		    function ConditionItemValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2360,11 +2552,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 7 */
+	/* 8 */
 	/***/ (function(module, exports) {
 	
 		Object.defineProperty(exports, "__esModule", { value: true });
-		var FieldRequiredValidator = (function () {
+		var FieldRequiredValidator = /** @class */ (function () {
 		    function FieldRequiredValidator() {
 		    }
 		    FieldRequiredValidator.prototype.validate = function (input, path, field) {
@@ -2383,11 +2575,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 8 */
+	/* 9 */
 	/***/ (function(module, exports) {
 	
 		Object.defineProperty(exports, "__esModule", { value: true });
-		var AnyOfValidator = (function () {
+		var AnyOfValidator = /** @class */ (function () {
 		    function AnyOfValidator(validators) {
 		        this.validators = validators;
 		    }
@@ -2419,7 +2611,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 9 */
+	/* 10 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2436,7 +2628,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var ReportLoadValidator = (function (_super) {
+		var ReportLoadValidator = /** @class */ (function (_super) {
 		    __extends(ReportLoadValidator, _super);
 		    function ReportLoadValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2481,6 +2673,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		            {
 		                field: "tokenType",
 		                validators: [validator_1.Validators.tokenTypeValidator]
+		            },
+		            {
+		                field: "bookmark",
+		                validators: [validator_1.Validators.applyBookmarkValidator]
 		            }
 		        ];
 		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
@@ -2492,7 +2688,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 10 */
+	/* 11 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2509,7 +2705,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var ReportCreateValidator = (function (_super) {
+		var ReportCreateValidator = /** @class */ (function (_super) {
 		    __extends(ReportCreateValidator, _super);
 		    function ReportCreateValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2545,7 +2741,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 11 */
+	/* 12 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2562,7 +2758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var DashboardLoadValidator = (function (_super) {
+		var DashboardLoadValidator = /** @class */ (function (_super) {
 		    __extends(DashboardLoadValidator, _super);
 		    function DashboardLoadValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2602,7 +2798,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 12 */
+	/* 13 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2619,7 +2815,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var TileLoadValidator = (function (_super) {
+		var TileLoadValidator = /** @class */ (function (_super) {
 		    __extends(TileLoadValidator, _super);
 		    function TileLoadValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2671,7 +2867,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 13 */
+	/* 14 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2688,7 +2884,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var PageSizeValidator = (function (_super) {
+		var PageSizeValidator = /** @class */ (function (_super) {
 		    __extends(PageSizeValidator, _super);
 		    function PageSizeValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2713,7 +2909,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return PageSizeValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.PageSizeValidator = PageSizeValidator;
-		var CustomPageSizeValidator = (function (_super) {
+		var CustomPageSizeValidator = /** @class */ (function (_super) {
 		    __extends(CustomPageSizeValidator, _super);
 		    function CustomPageSizeValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2742,7 +2938,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return CustomPageSizeValidator;
 		}(PageSizeValidator));
 		exports.CustomPageSizeValidator = CustomPageSizeValidator;
-		var PageValidator = (function (_super) {
+		var PageValidator = /** @class */ (function (_super) {
 		    __extends(PageValidator, _super);
 		    function PageValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2767,7 +2963,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return PageValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.PageValidator = PageValidator;
-		var PageViewFieldValidator = (function (_super) {
+		var PageViewFieldValidator = /** @class */ (function (_super) {
 		    __extends(PageViewFieldValidator, _super);
 		    function PageViewFieldValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2794,7 +2990,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 14 */
+	/* 15 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2811,7 +3007,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var LoadQnaValidator = (function (_super) {
+		var LoadQnaValidator = /** @class */ (function (_super) {
 		    __extends(LoadQnaValidator, _super);
 		    function LoadQnaValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2856,7 +3052,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return LoadQnaValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.LoadQnaValidator = LoadQnaValidator;
-		var QnaSettingsValidator = (function (_super) {
+		var QnaSettingsValidator = /** @class */ (function (_super) {
 		    __extends(QnaSettingsValidator, _super);
 		    function QnaSettingsValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2881,7 +3077,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return QnaSettingsValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.QnaSettingsValidator = QnaSettingsValidator;
-		var QnaInterpretInputDataValidator = (function (_super) {
+		var QnaInterpretInputDataValidator = /** @class */ (function (_super) {
 		    __extends(QnaInterpretInputDataValidator, _super);
 		    function QnaInterpretInputDataValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2913,7 +3109,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 15 */
+	/* 16 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2930,7 +3126,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var SaveAsParametersValidator = (function (_super) {
+		var SaveAsParametersValidator = /** @class */ (function (_super) {
 		    __extends(SaveAsParametersValidator, _super);
 		    function SaveAsParametersValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -2958,7 +3154,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 16 */
+	/* 17 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -2973,7 +3169,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		})();
 		Object.defineProperty(exports, "__esModule", { value: true });
 		var typeValidator_1 = __webpack_require__(2);
-		var MapValidator = (function (_super) {
+		var MapValidator = /** @class */ (function (_super) {
 		    __extends(MapValidator, _super);
 		    function MapValidator(keyValidators, valueValidators) {
 		        var _this = _super.call(this) || this;
@@ -3016,7 +3212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	
 	/***/ }),
-	/* 17 */
+	/* 18 */
 	/***/ (function(module, exports, __webpack_require__) {
 	
 		var __extends = (this && this.__extends) || (function () {
@@ -3033,7 +3229,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		var validator_1 = __webpack_require__(1);
 		var multipleFieldsValidator_1 = __webpack_require__(4);
 		var typeValidator_1 = __webpack_require__(2);
-		var CustomLayoutValidator = (function (_super) {
+		var CustomLayoutValidator = /** @class */ (function (_super) {
 		    __extends(CustomLayoutValidator, _super);
 		    function CustomLayoutValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -3066,7 +3262,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return CustomLayoutValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.CustomLayoutValidator = CustomLayoutValidator;
-		var VisualLayoutValidator = (function (_super) {
+		var VisualLayoutValidator = /** @class */ (function (_super) {
 		    __extends(VisualLayoutValidator, _super);
 		    function VisualLayoutValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -3111,7 +3307,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return VisualLayoutValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.VisualLayoutValidator = VisualLayoutValidator;
-		var DisplayStateValidator = (function (_super) {
+		var DisplayStateValidator = /** @class */ (function (_super) {
 		    __extends(DisplayStateValidator, _super);
 		    function DisplayStateValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -3136,7 +3332,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		    return DisplayStateValidator;
 		}(typeValidator_1.ObjectValidator));
 		exports.DisplayStateValidator = DisplayStateValidator;
-		var PageLayoutValidator = (function (_super) {
+		var PageLayoutValidator = /** @class */ (function (_super) {
 		    __extends(PageLayoutValidator, _super);
 		    function PageLayoutValidator() {
 		        return _super !== null && _super.apply(this, arguments) || this;
@@ -3167,6 +3363,54 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.PageLayoutValidator = PageLayoutValidator;
 	
 	
+	/***/ }),
+	/* 19 */
+	/***/ (function(module, exports, __webpack_require__) {
+	
+		var __extends = (this && this.__extends) || (function () {
+		    var extendStatics = Object.setPrototypeOf ||
+		        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+		        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+		    return function (d, b) {
+		        extendStatics(d, b);
+		        function __() { this.constructor = d; }
+		        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+		    };
+		})();
+		Object.defineProperty(exports, "__esModule", { value: true });
+		var multipleFieldsValidator_1 = __webpack_require__(4);
+		var typeValidator_1 = __webpack_require__(2);
+		var ExportDataRequestValidator = /** @class */ (function (_super) {
+		    __extends(ExportDataRequestValidator, _super);
+		    function ExportDataRequestValidator() {
+		        return _super !== null && _super.apply(this, arguments) || this;
+		    }
+		    ExportDataRequestValidator.prototype.validate = function (input, path, field) {
+		        if (input == null) {
+		            return null;
+		        }
+		        var errors = _super.prototype.validate.call(this, input, path, field);
+		        if (errors) {
+		            return errors;
+		        }
+		        var fields = [
+		            {
+		                field: "rows",
+		                validators: [new typeValidator_1.NumberValidator()]
+		            },
+		            {
+		                field: "exportDataType",
+		                validators: [new typeValidator_1.EnumValidator([0, 1])]
+		            }
+		        ];
+		        var multipleFieldsValidator = new multipleFieldsValidator_1.MultipleFieldsValidator(fields);
+		        return multipleFieldsValidator.validate(input, path, field);
+		    };
+		    return ExportDataRequestValidator;
+		}(typeValidator_1.ObjectValidator));
+		exports.ExportDataRequestValidator = ExportDataRequestValidator;
+	
+	
 	/***/ })
 	/******/ ])
 	});
@@ -3187,6 +3431,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var utils = __webpack_require__(3);
 	var page_1 = __webpack_require__(6);
 	var defaults_1 = __webpack_require__(8);
+	var bookmarksManager_1 = __webpack_require__(9);
 	/**
 	 * The Power BI Report embed component
 	 *
@@ -3218,6 +3463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.loadPath = "/report/load";
 	        this.phasedLoadPath = "/report/prepare";
 	        Array.prototype.push.apply(this.allowedEvents, Report.allowedEvents);
+	        this.bookmarksManager = new bookmarksManager_1.BookmarksManager(service, config, this.iframe);
 	    }
 	    /**
 	     * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
@@ -3445,6 +3691,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	     */
 	    Report.prototype.populateConfig = function (baseConfig) {
 	        var config = baseConfig;
+	        if (config.settings && (config.settings.layoutType === models.LayoutType.MobileLandscape || config.settings.layoutType === models.LayoutType.MobilePortrait))
+	            config.embedUrl = utils.addParamToUrl(config.embedUrl, "isMobile", "true");
 	        _super.prototype.populateConfig.call(this, config);
 	        // TODO: Change when Object.assign is available.
 	        var settings = utils.assign({}, defaults_1.Defaults.defaultSettings, config.settings);
@@ -3483,7 +3731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
-	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered"];
+	    Report.allowedEvents = ["filtersApplied", "pageChanged", "commandTriggered", "swipeStart", "swipeEnd", "bookmarkApplied"];
 	    Report.reportIdAttribute = 'powerbi-report-id';
 	    Report.filterPaneEnabledAttribute = 'powerbi-settings-filter-pane-enabled';
 	    Report.navContentPaneEnabledAttribute = 'powerbi-settings-nav-content-pane-enabled';
@@ -3499,6 +3747,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports, __webpack_require__) {
 
 	var visualDescriptor_1 = __webpack_require__(7);
+	var models = __webpack_require__(4);
 	/**
 	 * A Power BI report page
 	 *
@@ -3609,6 +3858,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
+	    /**
+	     * Checks if page has layout.
+	     *
+	     * ```javascript
+	     * page.hasLayout(layoutType)
+	     *  .then(hasLayout: boolean => { ... });
+	     * ```
+	     *
+	     * @returns {(Promise<boolean>)}
+	     */
+	    Page.prototype.hasLayout = function (layoutType) {
+	        var layoutTypeEnum = models.LayoutType[layoutType];
+	        return this.report.service.hpm.get("/report/pages/" + this.name + "/layoutTypes/" + layoutTypeEnum, { uid: this.report.config.uniqueId }, this.report.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
 	    return Page;
 	}());
 	exports.Page = Page;
@@ -3678,6 +3944,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw response.body;
 	        });
 	    };
+	    /**
+	     * Exports Visual data.
+	     * Can export up to 30K rows.
+	     * @param rows: Optional. Default value is 30K, maximum value is 30K as well.
+	     * @param exportDataType: Optional. Default is models.ExportDataType.Summarized.
+	     * ```javascript
+	     * visual.exportData()
+	     *  .then(data => { ... });
+	     * ```
+	     *
+	     * @returns {(Promise<string>)}
+	     */
+	    VisualDescriptor.prototype.exportData = function (exportDataType, rows) {
+	        var exportDataRequestBody = {
+	            rows: rows,
+	            exportDataType: exportDataType
+	        };
+	        return this.page.report.service.hpm.post("/report/pages/" + this.page.name + "/visuals/" + this.name + "/exportData", exportDataRequestBody, { uid: this.page.report.config.uniqueId }, this.page.report.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
 	    return VisualDescriptor;
 	}());
 	exports.VisualDescriptor = VisualDescriptor;
@@ -3703,6 +3991,117 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 9 */
+/***/ (function(module, exports) {
+
+	/**
+	 * Manages report bookmarks.
+	 *
+	 * @export
+	 * @class BookmarksManager
+	 * @implements {IBookmarksManager}
+	 */
+	var BookmarksManager = (function () {
+	    function BookmarksManager(service, config, iframe) {
+	        this.service = service;
+	        this.config = config;
+	        this.iframe = iframe;
+	    }
+	    /**
+	     * Gets bookmarks that are defined in the report.
+	     *
+	     * ```javascript
+	     * // Gets bookmarks that are defined in the report
+	     * bookmarksManager.getBookmarks()
+	     *   .then(bookmarks => {
+	     *     ...
+	     *   });
+	     * ```
+	     *
+	     * @returns {Promise<models.IReportBookmark[]>}
+	     */
+	    BookmarksManager.prototype.getBookmarks = function () {
+	        return this.service.hpm.get("/report/bookmarks", { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Apply bookmark By name.
+	     *
+	     * ```javascript
+	     * bookmarksManager.apply(bookmarkName)
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    BookmarksManager.prototype.apply = function (bookmarkName) {
+	        var request = {
+	            name: bookmarkName
+	        };
+	        return this.service.hpm.post("/report/bookmarks/applyByName", request, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Play bookmarks: Enter or Exit bookmarks presentation mode.
+	     *
+	     * ```javascript
+	     * // Enter presentation mode.
+	     * bookmarksManager.play(true)
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    BookmarksManager.prototype.play = function (playMode) {
+	        var playBookmarkRequest = {
+	            playMode: playMode
+	        };
+	        return this.service.hpm.post("/report/bookmarks/play", playBookmarkRequest, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Capture bookmark from current state.
+	     *
+	     * ```javascript
+	     * bookmarksManager.capture()
+	     * ```
+	     *
+	     * @returns {Promise<models.IReportBookmark>}
+	     */
+	    BookmarksManager.prototype.capture = function () {
+	        return this.service.hpm.post("/report/bookmarks/capture", null, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .then(function (response) { return response.body; }, function (response) {
+	            throw response.body;
+	        });
+	    };
+	    /**
+	     * Apply bookmark state.
+	     *
+	     * ```javascript
+	     * bookmarksManager.applyState(bookmarkName)
+	     * ```
+	     *
+	     * @returns {Promise<void>}
+	     */
+	    BookmarksManager.prototype.applyState = function (state) {
+	        var request = {
+	            state: state
+	        };
+	        return this.service.hpm.post("/report/bookmarks/applyState", request, { uid: this.config.uniqueId }, this.iframe.contentWindow)
+	            .catch(function (response) {
+	            throw response.body;
+	        });
+	    };
+	    return BookmarksManager;
+	}());
+	exports.BookmarksManager = BookmarksManager;
+
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3781,7 +4180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3889,7 +4288,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -3976,7 +4375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -4038,7 +4437,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -4176,13 +4575,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	var config_1 = __webpack_require__(15);
-	var wpmp = __webpack_require__(16);
-	var hpm = __webpack_require__(17);
-	var router = __webpack_require__(18);
+	var config_1 = __webpack_require__(16);
+	var wpmp = __webpack_require__(17);
+	var hpm = __webpack_require__(18);
+	var router = __webpack_require__(19);
 	exports.hpmFactory = function (wpmp, defaultTargetWindow, sdkVersion, sdkType) {
 	    if (sdkVersion === void 0) { sdkVersion = config_1.default.version; }
 	    if (sdkType === void 0) { sdkType = config_1.default.type; }
@@ -4210,11 +4609,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	var config = {
-	    version: '2.4.6',
+	    version: '2.5.1',
 	    type: 'js'
 	};
 	Object.defineProperty(exports, "__esModule", { value: true });
@@ -4222,10 +4621,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
-	/*! window-post-message-proxy v0.2.4 | (c) 2016 Microsoft Corporation MIT */
+	/*! window-post-message-proxy v0.2.5 | (c) 2016 Microsoft Corporation MIT */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -4280,7 +4679,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/************************************************************************/
 	/******/ ([
 	/* 0 */
-	/***/ function(module, exports) {
+	/***/ (function(module, exports) {
 	
 		"use strict";
 		var WindowPostMessageProxy = (function () {
@@ -4515,14 +4914,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		exports.WindowPostMessageProxy = WindowPostMessageProxy;
 	
 	
-	/***/ }
+	/***/ })
 	/******/ ])
 	});
 	;
 	//# sourceMappingURL=windowPostMessageProxy.js.map
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! http-post-message v0.2.3 | (c) 2016 Microsoft Corporation MIT */
@@ -4706,7 +5105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=httpPostMessage.js.map
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/*! powerbi-router v0.1.5 | (c) 2016 Microsoft Corporation MIT */
