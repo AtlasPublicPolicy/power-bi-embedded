@@ -38,31 +38,31 @@ class Power_Bi_Oauth {
 	}
 
     public function add_token() {
-        $powerbi_credientials = get_option('power_bi_credientials');
+        $powerbi_credentials = get_option('power_bi_credentials');
 
-        if( isset( $powerbi_credientials['access_token'] ) || isset( $powerbi_credientials['error'] ) ) {
-			$token_credientials = $this->get_token();
-			update_option('power_bi_credientials', $token_credientials);
+        if( isset( $powerbi_credentials['access_token'] ) || isset( $powerbi_credentials['error'] ) ) {
+			$token_credentials = $this->get_token();
+			update_option('power_bi_credentials', $token_credentials);
 
 			return;
         }
 
-        $token_credientials = $this->get_token();
+        $token_credentials = $this->get_token();
 
-        if( isset( $token_credientials['access_token'] ) || isset( $token_credientials['error'] ) ) {
-			if ( ! add_option( 'power_bi_credientials', $token_credientials ) ) {
-				update_option('power_bi_credientials', $token_credientials);
+        if( isset( $token_credentials['access_token'] ) || isset( $token_credentials['error'] ) ) {
+			if ( ! add_option( 'power_bi_credentials', $token_credentials ) ) {
+				update_option('power_bi_credentials', $token_credentials);
 			}
         }
     }
 
     public function get_token() {
-		$user_credientials = get_option( 'power_bi_settings' );
+		$user_credentials = get_option( 'power_bi_settings' );
 
-		$user_name         = $user_credientials['power_bi_username'];
-		$password          = $user_credientials['power_bi_password'];
-		$client_id         = $user_credientials['power_bi_client_id'];
-		$client_secret     = $user_credientials['power_bi_client_secret'];
+		$user_name         = $user_credentials['power_bi_username'];
+		$password          = $user_credentials['power_bi_password'];
+		$client_id         = $user_credentials['power_bi_client_id'];
+		$client_secret     = $user_credentials['power_bi_client_secret'];
 
 		$curl = curl_init();
 

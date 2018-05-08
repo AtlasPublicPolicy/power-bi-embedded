@@ -60,16 +60,17 @@ class Power_Bi_Shortcodes {
     }
 
 	public function powerbi_js( $id ) {
-		$powerbi_credientials = get_option('power_bi_credientials');
+		$powerbi_credentials = get_option('power_bi_credentials');
 
-        if( isset( $powerbi_credientials['access_token'] ) ) {
-            $access_token = $powerbi_credientials['access_token'];
+        if( isset( $powerbi_credentials['access_token'] ) ) {
+            $access_token = $powerbi_credentials['access_token'];
         } else {
 			return;
 		}
 
 		// Common metas
 		$token_type     = 'Aad';
+		$layout_type    = 'Master'; // 'MobilePortrait';
 		$api_url        = "https://app.powerbi.com/";
 		$embed_type 	= get_post_meta( $id, '_power_bi_embed_type', true );
 		$dashboard_id 	= get_post_meta( $id, '_power_bi_dashboard_id', true );
@@ -128,7 +129,7 @@ class Power_Bi_Shortcodes {
 				"use strict";
 
 				var models = window['powerbi-client'].models;
-
+				
 				var embedConfiguration = {
 					type: '<?php echo $embed_type; ?>',
 					embedUrl: '<?php echo $embed_url; ?>',
@@ -137,6 +138,7 @@ class Power_Bi_Shortcodes {
 					settings: {
 						filterPaneEnabled: <?php echo ($filter_pane ? 'true': 'false'); ?>,
 						navContentPaneEnabled: <?php echo ($page_navigation ? 'true': 'false'); ?>,
+						layoutType: models.LayoutType.<?php echo $layout_type; ?>,
 						localeSettings: {
 							language: '<?php echo $language; ?>',
 							formatLocale: '<?php echo $format_local; ?>'
