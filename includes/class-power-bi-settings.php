@@ -99,63 +99,6 @@ class Power_Bi_Settings {
     		'power_bi',
     		'power_bi_section'
     	);
-		// Schedule Power BI Resource
-		add_settings_section(
-    		'power_bi_schedule_section',
-    		__( 'Schedule Power BI Resource', 'power-bi' ),
-    		'power_bi_schedule_section_callback',
-    		'power_bi'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_sunday_time',
-    		__( 'Sunday', 'power-bi' ),
-    		'power_bi_schedule_sunday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_monday_time',
-    		__( 'Monday', 'power-bi' ),
-    		'power_bi_schedule_monday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_tuesday_time',
-    		__( 'Tuesday', 'power-bi' ),
-    		'power_bi_schedule_tuesday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_wednesday_time',
-    		__( 'Wednesday', 'power-bi' ),
-    		'power_bi_schedule_wednesday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_thursday_time',
-    		__( 'Thursday', 'power-bi' ),
-    		'power_bi_schedule_thursday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_friday_time',
-    		__( 'Friday', 'power-bi' ),
-    		'power_bi_schedule_friday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_saturday_time',
-    		__( 'Saturday', 'power-bi' ),
-    		'power_bi_schedule_saturday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-
     }
 
 	/**
@@ -168,7 +111,6 @@ class Power_Bi_Settings {
 		if ( isset( $_GET['settings-updated'] ) ) {
 			add_settings_error( 'wporg_messages', 'wporg_message', __( 'Settings Saved', 'wporg' ), 'updated' );
 		}
-		
 		?>
 
 		<div class="wrap">

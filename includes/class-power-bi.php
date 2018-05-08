@@ -55,8 +55,6 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-shortcodes.php';
 
 			include_once POWER_BI_PLUGIN_DIR . '/includes/functions-power-bi-settings.php';
-			// Added Schedule Resource Option
-			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-schedule-resources.php';
 		}
 
 		/**
