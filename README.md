@@ -91,14 +91,14 @@ Once the Power BI content is created in WordPress, you can embed it anywhere wit
 You can insert shortcode into pages/posts to display content based on resource state. Check the following examples.
 
 Display the content when resource is active.
-[powerbi_resource]
-    Resource is active.
-[powerbi_resource]
+    [powerbi_resource]
+        Resource is active.
+    [powerbi_resource]
 
 Display the content when resource is paused.
-[powerbi_resource state="Paused"]
-    Resource is paused.
-[powerbi_resource]
+    [powerbi_resource state="Paused"]
+        Resource is paused.
+    [powerbi_resource]
 
 [https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state](State), Find more states.
 
