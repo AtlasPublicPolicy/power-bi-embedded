@@ -35,6 +35,7 @@ class Power_Bi_Shortcodes {
 	 */
 	private function setup_shortcodes() {
 		add_shortcode( 'powerbi', array( $this, 'power_bi_html' ) );
+		add_shortcode( 'powerbi_resource', array( $this, 'power_bi_resource_html' ) );
 	}
 
     public function power_bi_html( $atts ) {
@@ -74,7 +75,7 @@ class Power_Bi_Shortcodes {
 		$embed_type 	= get_post_meta( $id, '_power_bi_embed_type', true );
 		$dashboard_id 	= get_post_meta( $id, '_power_bi_dashboard_id', true );
 		$group_id 	    = get_post_meta( $id, '_power_bi_group_id', true );
-		$report_id 		= get_post_meta( $id, '_power_bi_report_id', true );		
+		$report_id 		= get_post_meta( $id, '_power_bi_report_id', true );
 		$dataset_id 	= get_post_meta( $id, '_power_bi_dataset_id', true );
 
 		$filter_pane 	 = get_post_meta( $id, '_power_bi_filter_pane', true );
@@ -191,6 +192,57 @@ class Power_Bi_Shortcodes {
 		<?php
 		return ob_get_clean();
 	}
+
+	public function power_bi_resource_html( $atts, $c ) {
+        extract( shortcode_atts( array(
+			'state' => 'Succeeded',
+        ), $atts ) );
+
+		if ( empty( $c ) ) {
+			return;
+		}
+
+		$access_token = $this->get_azure_access_token();
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => "https://management.azure.com/subscriptions/b6e6a952-b4d5-40df-8dd5-90e826279ce7/resourceGroups/atlas_ev_hub/providers/Microsoft.PowerBIDedicated/capacities/atlasevhub?api-version=2017-10-01",
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 30,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_CUSTOMREQUEST => "GET",
+		  CURLOPT_HTTPHEADER => array(
+		    "Authorization: Bearer " . $access_token,
+		    "Cache-Control: no-cache",
+		    "Postman-Token: 96d97831-7bea-4cc8-8955-1a97305b1c50"
+		  ),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		ob_start();
+		if ($err) {
+			echo "cURL Error #:" . $err;
+		} else {
+			$response = json_decode( $response, true );
+			$resource_state = $response['properties']['state'];
+
+			if ( $state == $resource_state ) {
+				echo do_shortcode( $c );
+			}
+		}
+		return ob_get_clean();
+    }
+
+	public function get_azure_access_token() {
+		return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImlCakwxUmNxemhpeTRmcHhJeGRacW9oTTJZayIsImtpZCI6ImlCakwxUmNxemhpeTRmcHhJeGRacW9oTTJZayJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0LzFiYjQ4ZGE0LTMxNDMtNDAzMS1iZGFlLWNjYzA0MDc1MDhmZS8iLCJpYXQiOjE1MjU4NTgxMTMsIm5iZiI6MTUyNTg1ODExMywiZXhwIjoxNTI1ODYyMDEzLCJhY3IiOiIxIiwiYWlvIjoiWTJkZ1lGRGJsTUM1OW41WDU2WFhmbTM3UkJ4ZjJobWYyaG44WG9EUDM2aDAxVXZHa2hRQSIsImFtciI6WyJwd2QiXSwiYXBwaWQiOiJmYmZjN2E3MS0yNTZiLTQ1NGEtYmYyNy0xMjE2MmY2MzBlMGEiLCJhcHBpZGFjciI6IjAiLCJmYW1pbHlfbmFtZSI6Ikd1ZXN0IiwiZ2l2ZW5fbmFtZSI6IkF0bGFzIiwiaXBhZGRyIjoiNDMuMjQ1LjEyMS42NCIsIm5hbWUiOiJBdGxhcyBHdWVzdCIsIm9pZCI6IjljMGM2OWFjLTU5ZGYtNDM2MC1iNGU5LWQ3Y2QxYmU4MzhjMyIsInB1aWQiOiIxMDAzQkZGREEzMTQ0Qjg0Iiwic2NwIjoidXNlcl9pbXBlcnNvbmF0aW9uIiwic3ViIjoiOE5sSFFsZnBiaTBHRE1PVFpsUlV5R2NlOHRJeG5IamVoWFBUdHpwWlVhVSIsInRpZCI6IjFiYjQ4ZGE0LTMxNDMtNDAzMS1iZGFlLWNjYzA0MDc1MDhmZSIsInVuaXF1ZV9uYW1lIjoiZ3Vlc3RAYXRsYXNwb2xpY3kuY29tIiwidXBuIjoiZ3Vlc3RAYXRsYXNwb2xpY3kuY29tIiwidXRpIjoidnA5VlVVSGdfRWVpNWZ2VnVNd3pBQSIsInZlciI6IjEuMCJ9.FTE8C910R4MxfpBNwuVL4JSnmIcOS3v5Sj8DR90_AuDL_inKESvNsk_FnWOLy7ZKcj6Qu7flEXFGC_Jd-ODWHumPIzyykns2Roj3pT_7ZzIGi7v1F4zXVjgSQ85lkuvF0wJLjj5xAsZdYweNCoYSaiqXMrCwgWNI4xSJwOiE-bvy-RtDAJyNd7zRT1PjP4EMlxB1DNlfeD-sbbUxm2idvHLTDcL5P-caTYKpBgSHcQyFJhXizRuH8A8dUU8gb3Ybg6nvUAAssEh66Ctq25xwmE_YSjpustsAJZuVukx9TRFTIb6eBEWIiZgVj-h3aPhiDknxHm2JK_dFnQbETcqY6w';
+    }
 }
 
 Power_Bi_Shortcodes::get_instance();
