@@ -100,7 +100,7 @@ Display the content when resource is paused.
     Resource is paused.
 [powerbi_resource]
 
-[https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state](State)
+[https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state](State), Find more states.
 
 ## Plugin Dependencies
 
