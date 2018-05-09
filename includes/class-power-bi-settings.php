@@ -106,6 +106,36 @@ class Power_Bi_Settings {
     		'power_bi_schedule_section_callback',
     		'power_bi'
     	);
+        // New setting for adding other required fields for make azure api call
+        add_settings_field(
+            'power_bi_azure_tenant_id',
+            __( 'Tenant ID', 'power-bi' ),
+            'power_bi_azure_tenant_id_render',
+            'power_bi',
+            'power_bi_schedule_section'
+        );
+        add_settings_field(
+            'power_bi_azure_subscription_id',
+            __( 'Subscription ID', 'power-bi' ),
+            'power_bi_azure_subscription_id_render',
+            'power_bi',
+            'power_bi_schedule_section'
+        );
+        add_settings_field(
+            'power_bi_azure_resource_group',
+            __( 'Resource Group', 'power-bi' ),
+            'power_bi_azure_resource_group_render',
+            'power_bi',
+            'power_bi_schedule_section'
+        );
+        add_settings_field(
+            'power_bi_azure_capacity',
+            __( 'Capacity', 'power-bi' ),
+            'power_bi_azure_capacity_render',
+            'power_bi',
+            'power_bi_schedule_section'
+        );
+
     	add_settings_field(
     		'power_bi_schedule_sunday_time',
     		__( 'Sunday', 'power-bi' ),
