@@ -33,21 +33,21 @@ class Power_Bi_Schedule_Resources {
 	 * @return void
 	 */
 	protected function setup_scheduler_resources_events() {
-		$power_bi_scheduler_settings = get_option( 'power_bi_settings' );
-		$sunday_start_time = $power_bi_scheduler_settings['power_bi_schedule_sunday_start_time'];
-		$sunday_pause_time = $power_bi_scheduler_settings['power_bi_schedule_sunday_pause_time'];
-		$monday_start_time = $power_bi_scheduler_settings['power_bi_schedule_monday_start_time'];
-		$monday_pause_time = $power_bi_scheduler_settings['power_bi_schedule_monday_pause_time'];
-		$tuesday_start_time = $power_bi_scheduler_settings['power_bi_schedule_tuesday_start_time'];
-		$tuesday_pause_time = $power_bi_scheduler_settings['power_bi_schedule_tuesday_pause_time'];
-		$wednesday_start_time = $power_bi_scheduler_settings['power_bi_schedule_wednesday_start_time'];
-		$wednesday_pause_time = $power_bi_scheduler_settings['power_bi_schedule_wednesday_pause_time'];
-		$thursday_start_time = $power_bi_scheduler_settings['power_bi_schedule_thursday_start_time'];
-		$thursday_pause_time = $power_bi_scheduler_settings['power_bi_schedule_thursday_pause_time'];
-		$friday_start_time = $power_bi_scheduler_settings['power_bi_schedule_friday_start_time'];
-		$friday_pause_time = $power_bi_scheduler_settings['power_bi_schedule_friday_pause_time'];
-		$saturday_start_time = $power_bi_scheduler_settings['power_bi_schedule_saturday_start_time'];
-		$saturday_pause_time = $power_bi_scheduler_settings['power_bi_schedule_saturday_pause_time'];
+		$power_bi_scheduler_settings 	= get_option( 'power_bi_settings' );
+		$sunday_start_time 				= $power_bi_scheduler_settings['power_bi_schedule_sunday_start_time'];
+		$sunday_pause_time 				= $power_bi_scheduler_settings['power_bi_schedule_sunday_pause_time'];
+		$monday_start_time 				= $power_bi_scheduler_settings['power_bi_schedule_monday_start_time'];
+		$monday_pause_time 				= $power_bi_scheduler_settings['power_bi_schedule_monday_pause_time'];
+		$tuesday_start_time 			= $power_bi_scheduler_settings['power_bi_schedule_tuesday_start_time'];
+		$tuesday_pause_time 			= $power_bi_scheduler_settings['power_bi_schedule_tuesday_pause_time'];
+		$wednesday_start_time 			= $power_bi_scheduler_settings['power_bi_schedule_wednesday_start_time'];
+		$wednesday_pause_time 			= $power_bi_scheduler_settings['power_bi_schedule_wednesday_pause_time'];
+		$thursday_start_time 			= $power_bi_scheduler_settings['power_bi_schedule_thursday_start_time'];
+		$thursday_pause_time 			= $power_bi_scheduler_settings['power_bi_schedule_thursday_pause_time'];
+		$friday_start_time 				= $power_bi_scheduler_settings['power_bi_schedule_friday_start_time'];
+		$friday_pause_time 				= $power_bi_scheduler_settings['power_bi_schedule_friday_pause_time'];
+		$saturday_start_time 			= $power_bi_scheduler_settings['power_bi_schedule_saturday_start_time'];
+		$saturday_pause_time 			= $power_bi_scheduler_settings['power_bi_schedule_saturday_pause_time'];
 		
 		// Resource Start Event
 		$this->handle_start_pause_cron_power_bi_sch("start");
@@ -64,21 +64,35 @@ class Power_Bi_Schedule_Resources {
 
 	function power_bi_schedule_resource_start_fn() {
 		// execute the code for running event starting
-		_custlog("service started @ ".time());
-		$this->start_azure_resource_service("resume");
+		$resource_state = $this->check_resource_capacity_state();
+		if($resource_state != "Succeeded") {
+			if($this->handle_azure_resource_service("resume")) {
+				_custlog("service started @ ".time());
+			}
+		}
 	}
 	function power_bi_schedule_resource_pause_fn() {
 		//excute the code to stop / pause resource ofr power bi
-		_custlog("service paused @ ".time());
-		$this->start_azure_resource_service("suspend");
+		$resource_state = $this->check_resource_capacity_state();
+		if($resource_state != "Paused") {
+			if($this->handle_azure_resource_service("suspend")) {
+				_custlog("service paused @ ".time());
+			}
+		}
 	}
 
-	protected function start_azure_resource_service($action = "") {
-		$powerbi_credientials = get_option('power_bi_credientials');
+	protected function handle_azure_resource_service($action = "") {
+		// get saved power bi settings
+		$power_bi_settings 	= get_option( 'power_bi_settings' );
+		$subscription_id 	= $power_bi_settings['power_bi_azure_subscription_id'];
+		$resource_group 	= $power_bi_settings['power_bi_azure_resource_group'];
+		$capacity 			= $power_bi_settings['power_bi_azure_capacity'];
+		// get saved management azure credential for access token
+		$powerbi_azure_credientials = get_option('power_bi_management_azure_credentials');
+		// call url for start / resume resource capacity
+		$request_url = "https://management.azure.com/subscriptions/".$subscription_id."/resourceGroups/".$resource_group."/providers/Microsoft.PowerBIDedicated/capacities/".$capacity."/".$action."?api-version=2017-10-01";
 
-		$request_url = "https://management.azure.com/subscriptions/b6e6a952-b4d5-40df-8dd5-90e826279ce7/resourceGroups/atlas_ev_hub/providers/Microsoft.PowerBIDedicated/capacities/atlasevhub/".$action."?api-version=2017-01-01-preview";
-
-		$authorization = "Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImlCakwxUmNxemhpeTRmcHhJeGRacW9oTTJZayIsImtpZCI6ImlCakwxUmNxemhpeTRmcHhJeGRacW9oTTJZayJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0LzFiYjQ4ZGE0LTMxNDMtNDAzMS1iZGFlLWNjYzA0MDc1MDhmZS8iLCJpYXQiOjE1MjU3MDA2NzYsIm5iZiI6MTUyNTcwMDY3NiwiZXhwIjoxNTI1NzA0NTc2LCJhaW8iOiJZMmRnWU5BTnVqUEg4V2ovb3RkSFY3MklybVE3QXdBPSIsImFwcGlkIjoiMDY1M2RlYWMtODI2NS00Y2VlLWFiZWQtMzg1NmU4NDVlOGM2IiwiYXBwaWRhY3IiOiIxIiwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvMWJiNDhkYTQtMzE0My00MDMxLWJkYWUtY2NjMDQwNzUwOGZlLyIsIm9pZCI6ImQ0OTUxNmIzLTdlOWEtNGY1Ni04OTI2LTM0MjFmOWUzMWMxYiIsInN1YiI6ImQ0OTUxNmIzLTdlOWEtNGY1Ni04OTI2LTM0MjFmOWUzMWMxYiIsInRpZCI6IjFiYjQ4ZGE0LTMxNDMtNDAzMS1iZGFlLWNjYzA0MDc1MDhmZSIsInV0aSI6IndBT0lFME0yZWs2MlNPVGU1WklWQUEiLCJ2ZXIiOiIxLjAifQ.d2hxjfHb3Fu3mYbJGpRJxnfC66BdlAa5kRwTX_EHXGsz95Yd4WNiB4t9AqEtKiKwcKP4xhVubVaKsnM6BX8AZnsWj4xuBzaLPrRfSfoJBlsIGAw8wAFgJQJKEZal_RokdHgAxS1CoBmMNLee6UWM_Rs7g4cFQpyvkOFE7qwLqBEsZGlrjUFoYkG45NujFK1evHzj7iveRlhynElZ2D51puEcN3pbdMWij-lMArt-tOfOX2Twk2jh0TFhEW6CSZdlDqlVVah48cBC_ZxQMuGPXZNOBXG-MUiKk4w4cGRbl6sjsKibkT58jyeCUHXvG4Ap9sDaz3lXRXyMzTKmVZ_fnw";
+		$authorization = "Authorization: Bearer " . $powerbi_azure_credientials['access_token'];
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
@@ -102,12 +116,6 @@ class Power_Bi_Schedule_Resources {
 		$err = curl_error($curl);
 
 		curl_close($curl);
-
-		_custlog("Response:");
-		_custlog($response);
-		_custlog("Error:");
-		_custlog($err);
-
 
 		if ($err) {
           $err = json_decode($err, true);
@@ -159,7 +167,53 @@ class Power_Bi_Schedule_Resources {
 		        break;
 		}
 	}
+	function check_resource_capacity_state() {
+		// get saved power bi settings
+		$power_bi_settings 	= get_option( 'power_bi_settings' );
+		$subscription_id 	= $power_bi_settings['power_bi_azure_subscription_id'];
+		$resource_group 	= $power_bi_settings['power_bi_azure_resource_group'];
+		$capacity 			= $power_bi_settings['power_bi_azure_capacity'];
+		// get saved management azure credential for access token
+		$powerbi_azure_credientials = get_option('power_bi_management_azure_credentials');
+		// call url for start / resume resource capacity
+		$request_url = "https://management.azure.com/subscriptions/".$subscription_id."/resourceGroups/".$resource_group."/providers/Microsoft.PowerBIDedicated/capacities/".$capacity."?api-version=2017-10-01";
 
+
+		$authorization = "Authorization: Bearer " . $powerbi_azure_credientials['access_token'];
+
+		$curl = curl_init();
+
+		curl_setopt_array($curl, array(
+		  CURLOPT_URL => $request_url,
+		  CURLOPT_RETURNTRANSFER => true,
+		  CURLOPT_ENCODING => "",
+		  CURLOPT_MAXREDIRS => 10,
+		  CURLOPT_TIMEOUT => 30,
+		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		  CURLOPT_HTTPGET => true,
+		  CURLOPT_SSL_VERIFYPEER => false,
+		  CURLOPT_HTTPHEADER => array(
+		    "Cache-Control: no-cache",
+		    "Content-Type: application/json",
+		    $authorization,
+		    "Content-length: 0"
+		  ),
+		));
+
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+
+		curl_close($curl);
+
+		if ($err) {
+          $err = json_decode($err, true);
+		  return $err;
+		} else {
+		  $response = json_decode($response, true);
+		  $resource_state = $response['properties']['state'];
+		  return $resource_state;
+		}
+	}
 }
 
 
