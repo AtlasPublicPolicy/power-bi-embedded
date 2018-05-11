@@ -48,7 +48,7 @@ class Power_Bi_Schedule_Resources {
 		$friday_pause_time 				= $power_bi_scheduler_settings['power_bi_schedule_friday_pause_time'];
 		$saturday_start_time 			= $power_bi_scheduler_settings['power_bi_schedule_saturday_start_time'];
 		$saturday_pause_time 			= $power_bi_scheduler_settings['power_bi_schedule_saturday_pause_time'];
-
+		
 		// Resource Start Event
 		$this->handle_start_pause_cron_power_bi_sch("start");
 		// Resource Pause Event
@@ -59,7 +59,7 @@ class Power_Bi_Schedule_Resources {
 			add_action( 'power_bi_schedule_resource_'.$day_name.'_start_cron', array( $this, 'power_bi_schedule_resource_start_fn') );
 			add_action( 'power_bi_schedule_resource_'.$day_name.'_pause_cron', array( $this, 'power_bi_schedule_resource_pause_fn') );
 		}
-
+		
 	}
 
 	function power_bi_schedule_resource_start_fn() {
@@ -67,7 +67,7 @@ class Power_Bi_Schedule_Resources {
 		$resource_state = $this->check_resource_capacity_state();
 		if($resource_state != "Succeeded") {
 			if($this->handle_azure_resource_service("resume")) {
-				_custlog("service started @ ".time());
+				//_custlog("service started @ ".time());
 			}
 		}
 	}
@@ -76,7 +76,7 @@ class Power_Bi_Schedule_Resources {
 		$resource_state = $this->check_resource_capacity_state();
 		if($resource_state != "Paused") {
 			if($this->handle_azure_resource_service("suspend")) {
-				_custlog("service paused @ ".time());
+				//_custlog("service paused @ ".time());
 			}
 		}
 	}
@@ -131,39 +131,25 @@ class Power_Bi_Schedule_Resources {
 		$weekdayname = strtolower(date("l"));
 		switch ($weekdayname) {
 		    case "sunday":
-		    	if(!wp_next_scheduled('power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron')) {
-			        wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-			    }
-		        break;
+		    	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
+			    break;
 		    case "monday":
-		    	if(!wp_next_scheduled('power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron')) {
-		        	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-		        }
+		    	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
 		        break;
 		    case "tuesday":
-		    	if(!wp_next_scheduled('power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron')) {
-		        	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-		        }
+		    	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
 		        break;
 		   	case "wednesday":
-		   		if(!wp_next_scheduled('power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron')) {
-		        	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-		        }
+		   		wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
 		        break;
 		    case "thursday":
-		    	if(!wp_next_scheduled('power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron')) {
-		        	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-		        }
+		    	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
 		        break;
 		    case "friday":
-		    	if(!wp_next_scheduled('power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron')) {
-		        	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-		        }
+		        wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
 		        break;
 		    case "saturday":
-		    	if(!wp_next_scheduled('power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron')) {
-		        	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-		        }
+	        	wp_schedule_event(strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
 		        break;
 		}
 	}
@@ -218,3 +204,5 @@ class Power_Bi_Schedule_Resources {
 
 
 Power_Bi_Schedule_Resources::get_instance();
+
+
