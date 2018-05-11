@@ -49,12 +49,11 @@ function power_bi_oauth_success_render() {
 
 	$powerbi_credientials = get_option('power_bi_credientials');
 	$token = $powerbi_credientials['access_token'];
-	$error = $powerbi_credientials['error_description'];
 
 	if( isset( $token ) ) {
 		echo '<span class="dashicons dashicons-yes"></span> Connected';
-	} elseif ( $error ) {
-		echo '<span class="dashicons dashicons-no-alt"></span> ' . $error;
+	} elseif ( isset( $powerbi_credientials['error_description'] ) ) {
+		echo '<span class="dashicons dashicons-no-alt"></span> ' . $powerbi_credientials['error_description'];
 	}
 
 }
@@ -178,19 +177,19 @@ function display_time_dropdown($sel =  "") {
 	for($hours=0; $hours<24; $hours++)
 	{
 	    for($mins=0; $mins<60; $mins+=30)
-	    { 
+	    {
 	        $time = str_pad($hours,2,'0',STR_PAD_LEFT).':'.str_pad($mins,2,'0',STR_PAD_LEFT);
 	        if($sel != "" && $sel == $time) {
-	        	echo '<option selected="selected" value= "'.$time.'">'.$time.'</option>';	
+	        	echo '<option selected="selected" value= "'.$time.'">'.$time.'</option>';
 	        } else {
 	        	echo '<option value= "'.$time.'">'.$time.'</option>';
 	        }
-	        
+
 	    }
 	}
 }
 // To add new cron custom schedule
-add_filter( 'cron_schedules', 'power_bi_add_weekly_schedule' ); 
+add_filter( 'cron_schedules', 'power_bi_add_weekly_schedule' );
 function power_bi_add_weekly_schedule( $schedules ) {
   $schedules['weekly'] = array(
     'interval' => 7 * 24 * 60 * 60, //7 days * 24 hours * 60 minutes * 60 seconds
