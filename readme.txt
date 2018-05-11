@@ -1,5 +1,5 @@
 === Power BI Embedded for WordPress ===
-Contributors: atlaspolicy 
+Contributors: atlaspolicy, upnrunn
 Tags: powerbi-embedded, wordpress-plugin, powerbi, wordpress
 Requires at least: 4.4.0
 Requires PHP: 5.2.4
