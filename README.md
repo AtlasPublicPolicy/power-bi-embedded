@@ -4,7 +4,7 @@
 
  **Title:** Power BI Embedded for WordPress
 
- **Contributors:** Nick Nigro [nick.nigro@atlaspolicy.com], aswingiri [aswingiri@upnrunn.com]
+ **Contributors:** Nick Nigro [nick.nigro@atlaspolicy.com], aswingiri [aswingiri@upnrunn.com], bankerrajendra [bankerrajendra@upnrunn.com]
 
  **Homepage:** [http://www.atlaspolicy.com](http://www.atlaspolicy.com)
 
