@@ -4,7 +4,7 @@ Tags: powerbi-embedded, wordpress-plugin, powerbi, wordpress
 Requires at least: 4.4.0
 Requires PHP: 5.2.4
 Tested up to: 4.9.3
-Stable tag: 1.0
+Stable tag: 1.0.1
 License: GNU General Public License v3.0
 License URI: https://www.gnu.org/licenses/lgpl.html
 
