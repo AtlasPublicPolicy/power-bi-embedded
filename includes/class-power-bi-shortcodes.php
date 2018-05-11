@@ -202,55 +202,14 @@ class Power_Bi_Shortcodes {
 			return;
 		}
 
-		// get saved power bi settings
-		$power_bi_settings 	= get_option( 'power_bi_settings' );
-		$subscription_id 	= $power_bi_settings['power_bi_azure_subscription_id'];
-		$resource_group 	= $power_bi_settings['power_bi_azure_resource_group'];
-		$capacity 			= $power_bi_settings['power_bi_azure_capacity'];
+		$powerbi_resource = Power_Bi_Schedule_Resources::get_instance();
+		$resource_capacity_state = $powerbi_resource->check_resource_capacity_state();
 
-		// get saved management azure credential for access token
-		$powerbi_azure_credientials = get_option('power_bi_management_azure_credentials');
-
-		// Request url
-		$request_url = "https://management.azure.com/subscriptions/" . $subscription_id  . "/resourceGroups/" . $resource_group . "/providers/Microsoft.PowerBIDedicated/capacities/" . $capacity . "?api-version=2017-10-01";
-
-		$curl = curl_init();
-
-		curl_setopt_array($curl, array(
-		  CURLOPT_URL => $request_url,
-		  CURLOPT_RETURNTRANSFER => true,
-		  CURLOPT_ENCODING => "",
-		  CURLOPT_MAXREDIRS => 10,
-		  CURLOPT_TIMEOUT => 30,
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		  CURLOPT_CUSTOMREQUEST => "GET",
-		  CURLOPT_HTTPHEADER => array(
-		    "Authorization: Bearer " . $powerbi_azure_credientials['access_token'],
-		    "Cache-Control: no-cache",
-		    "Postman-Token: 96d97831-7bea-4cc8-8955-1a97305b1c50"
-		  ),
-		));
-
-		$response = curl_exec($curl);
-		$err = curl_error($curl);
-
-		curl_close($curl);
-
-		ob_start();
-		if ($err) {
-			echo "cURL Error #:" . $err;
-		} else {
-			$response = json_decode( $response, true );
-
-			if ( ! empty( $response['properties']['state'] ) ) {
-				$resource_state = $response['properties']['state'];
-
-				if ( $state == $resource_state ) {
-					echo do_shortcode( $c );
-				}
+		if ( ! empty( $resource_capacity_state ) ) {
+			if ( $state == $resource_capacity_state ) {
+				echo do_shortcode( $c );
 			}
 		}
-		return ob_get_clean();
     }
 }
 

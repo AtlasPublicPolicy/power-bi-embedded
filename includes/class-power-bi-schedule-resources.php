@@ -48,7 +48,7 @@ class Power_Bi_Schedule_Resources {
 		$friday_pause_time 				= $power_bi_scheduler_settings['power_bi_schedule_friday_pause_time'];
 		$saturday_start_time 			= $power_bi_scheduler_settings['power_bi_schedule_saturday_start_time'];
 		$saturday_pause_time 			= $power_bi_scheduler_settings['power_bi_schedule_saturday_pause_time'];
-		
+
 		// Resource Start Event
 		$this->handle_start_pause_cron_power_bi_sch("start");
 		// Resource Pause Event
@@ -59,7 +59,7 @@ class Power_Bi_Schedule_Resources {
 			add_action( 'power_bi_schedule_resource_'.$day_name.'_start_cron', array( $this, 'power_bi_schedule_resource_start_fn') );
 			add_action( 'power_bi_schedule_resource_'.$day_name.'_pause_cron', array( $this, 'power_bi_schedule_resource_pause_fn') );
 		}
-		
+
 	}
 
 	function power_bi_schedule_resource_start_fn() {
@@ -218,5 +218,3 @@ class Power_Bi_Schedule_Resources {
 
 
 Power_Bi_Schedule_Resources::get_instance();
-
-
