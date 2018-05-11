@@ -48,9 +48,8 @@ function power_bi_client_secret_render() {
 function power_bi_oauth_success_render() {
 
 	$powerbi_credientials = get_option('power_bi_credientials');
-	$token = $powerbi_credientials['access_token'];
 
-	if( isset( $token ) ) {
+	if( isset( $powerbi_credientials['access_token'] ) ) {
 		echo '<span class="dashicons dashicons-yes"></span> Connected';
 	} elseif ( isset( $powerbi_credientials['error_description'] ) ) {
 		echo '<span class="dashicons dashicons-no-alt"></span> ' . $powerbi_credientials['error_description'];
