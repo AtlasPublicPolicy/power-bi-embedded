@@ -202,12 +202,22 @@ class Power_Bi_Shortcodes {
 			return;
 		}
 
-		$access_token = $this->get_azure_access_token();
+		// get saved power bi settings
+		$power_bi_settings 	= get_option( 'power_bi_settings' );
+		$subscription_id 	= $power_bi_settings['power_bi_azure_subscription_id'];
+		$resource_group 	= $power_bi_settings['power_bi_azure_resource_group'];
+		$capacity 			= $power_bi_settings['power_bi_azure_capacity'];
+
+		// get saved management azure credential for access token
+		$powerbi_azure_credientials = get_option('power_bi_management_azure_credentials');
+
+		// Request url
+		$request_url = "https://management.azure.com/subscriptions/" . $subscription_id  . "/resourceGroups/" . $resource_group . "/providers/Microsoft.PowerBIDedicated/capacities/" . $capacity . "?api-version=2017-10-01";
 
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
-		  CURLOPT_URL => "https://management.azure.com/subscriptions/b6e6a952-b4d5-40df-8dd5-90e826279ce7/resourceGroups/atlas_ev_hub/providers/Microsoft.PowerBIDedicated/capacities/atlasevhub?api-version=2017-10-01",
+		  CURLOPT_URL => $request_url,
 		  CURLOPT_RETURNTRANSFER => true,
 		  CURLOPT_ENCODING => "",
 		  CURLOPT_MAXREDIRS => 10,
@@ -215,7 +225,7 @@ class Power_Bi_Shortcodes {
 		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 		  CURLOPT_CUSTOMREQUEST => "GET",
 		  CURLOPT_HTTPHEADER => array(
-		    "Authorization: Bearer " . $access_token,
+		    "Authorization: Bearer " . $powerbi_azure_credientials['access_token'],
 		    "Cache-Control: no-cache",
 		    "Postman-Token: 96d97831-7bea-4cc8-8955-1a97305b1c50"
 		  ),
@@ -231,17 +241,16 @@ class Power_Bi_Shortcodes {
 			echo "cURL Error #:" . $err;
 		} else {
 			$response = json_decode( $response, true );
-			$resource_state = $response['properties']['state'];
 
-			if ( $state == $resource_state ) {
-				echo do_shortcode( $c );
+			if ( ! empty( $response['properties']['state'] ) ) {
+				$resource_state = $response['properties']['state'];
+
+				if ( $state == $resource_state ) {
+					echo do_shortcode( $c );
+				}
 			}
 		}
 		return ob_get_clean();
-    }
-
-	public function get_azure_access_token() {
-		return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6ImlCakwxUmNxemhpeTRmcHhJeGRacW9oTTJZayIsImtpZCI6ImlCakwxUmNxemhpeTRmcHhJeGRacW9oTTJZayJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0LzFiYjQ4ZGE0LTMxNDMtNDAzMS1iZGFlLWNjYzA0MDc1MDhmZS8iLCJpYXQiOjE1MjU4NjI0NDIsIm5iZiI6MTUyNTg2MjQ0MiwiZXhwIjoxNTI1ODY2MzQyLCJhY3IiOiIxIiwiYWlvIjoiQVNRQTIvOEhBQUFBdUNic3NFQlAyY3p5WndkbjhZdTZhRVA3VjRDUHlFeFBsYnVDbk5YK3c5RT0iLCJhbXIiOlsicHdkIl0sImFwcGlkIjoiZmJmYzdhNzEtMjU2Yi00NTRhLWJmMjctMTIxNjJmNjMwZTBhIiwiYXBwaWRhY3IiOiIwIiwiZmFtaWx5X25hbWUiOiJHdWVzdCIsImdpdmVuX25hbWUiOiJBdGxhcyIsImlwYWRkciI6IjQzLjI0NS4xMjMuMTc0IiwibmFtZSI6IkF0bGFzIEd1ZXN0Iiwib2lkIjoiOWMwYzY5YWMtNTlkZi00MzYwLWI0ZTktZDdjZDFiZTgzOGMzIiwicHVpZCI6IjEwMDNCRkZEQTMxNDRCODQiLCJzY3AiOiJ1c2VyX2ltcGVyc29uYXRpb24iLCJzdWIiOiI4TmxIUWxmcGJpMEdETU9UWmxSVXlHY2U4dEl4bkhqZWhYUFR0enBaVWFVIiwidGlkIjoiMWJiNDhkYTQtMzE0My00MDMxLWJkYWUtY2NjMDQwNzUwOGZlIiwidW5pcXVlX25hbWUiOiJndWVzdEBhdGxhc3BvbGljeS5jb20iLCJ1cG4iOiJndWVzdEBhdGxhc3BvbGljeS5jb20iLCJ1dGkiOiJLNUliNTFocnpFRzVsUl9IdTZ3OUFBIiwidmVyIjoiMS4wIn0.NPgc8DukL2PunOBEVJXf9Rj3Widw4fc_PEV0ssMPWSRj4gfDtJrbCg-IVOmzpKKvHkYGD-IvWXzLLx9jiRITWnJ71t0oZiPB0mTEfZSef94VSlFB2XeRvtkz55OjMtggi76TNJ0C1--BUbrFUQDVF0MmDELkYt1iKM2Jzeh1xyaMrZeGP9L7g5zdotqtHhCr3LqDq3qS1Xuae_Yd3uIL3kJabjnQv7UlgMIJG1RXG3yA0MBj6fvy4-vJXYHfyHmksaaKSigPOFsiOs-eZE9yas7yBD66fslr-_j-OQHCbCX2k-Vz1oRAGabF72_DIxVm-cn9015si1GTZJkOVbKfkg';
     }
 }
 
