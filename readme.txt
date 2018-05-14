@@ -100,6 +100,8 @@ N/A
 
 = 1.0 =
 * Initial release.
+
+= 1.0.1 =
 * Updated the JavaScript assets from v2.4.6 to v2.5.1
 * Add scheduling feature to the PowerBI setting page to start and stop resource automatically.
 * Add fields on the PowerBI setting page to configure Subscription ID, Tenant ID, Resource Group etc.

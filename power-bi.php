@@ -2,9 +2,9 @@
 /**
  * Plugin Name: Power BI Embedded for WordPress
  * Plugin URI: https://github.com/atlaspolicy/wordpress-power-bi-embedded
- * Description: Use Power BI Embedded to embed dashboards, reports, Q&A, visuals, and tiles in your WordPress website. 
- * Version: 1.0.0
- * Author: Atlas Public Policy 
+ * Description: Use Power BI Embedded to embed dashboards, reports, Q&A, visuals, and tiles in your WordPress website.
+ * Version: 1.0.1
+ * Author: Atlas Public Policy
  * Author URI: http://www.atlaspolicy.com
  * Text Domain: power-bi
  * Domain Path: /languages/
