@@ -42,7 +42,7 @@ class Power_Bi_Settings {
 	 * [add_admin_menu description]
 	 */
 	public function add_admin_menu() {
-		add_submenu_page( 'edit.php?post_type=powerbi', 'Power BI Settings', 'Settings', 'manage_options', 'powerbi', array( $this, 'power_bi__options_page' ) );
+		add_submenu_page( 'edit.php?post_type=powerbi', __( 'Power BI Settings', 'power-bi' ), __( 'Settings', 'power-bi' ), 'manage_options', 'powerbi', array( $this, 'power_bi__options_page' ) );
 	}
 
 	/**
@@ -188,6 +188,16 @@ class Power_Bi_Settings {
 
     }
 
+    /**
+     * get plugin setting page for further call
+     *
+     * @return [type] [description]
+     */
+    function get_power_bi_settings() {
+        return get_option( 'power_bi_settings' );    
+    }
+    
+
 	/**
 	 * [power_bi__options_page description]
 	 *
@@ -197,6 +207,14 @@ class Power_Bi_Settings {
 
 		if ( isset( $_GET['settings-updated'] ) ) {
 			add_settings_error( 'wporg_messages', 'wporg_message', __( 'Settings Saved', 'wporg' ), 'updated' );
+            // clear all cron setup previously //
+            $days_arry = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
+            foreach ($days_arry as $day_name) {
+                // START //
+                wp_clear_scheduled_hook( 'power_bi_schedule_resource_'.$day_name.'_start_cron' );
+                // PAUSE //
+                wp_clear_scheduled_hook( 'power_bi_schedule_resource_'.$day_name.'_pause_cron' );
+            }
 		}
 		
 		?>

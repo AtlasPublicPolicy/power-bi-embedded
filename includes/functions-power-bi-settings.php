@@ -1,5 +1,9 @@
 <?php
-
+// get power bi plugins setting in single call
+function get_power_bi_plugin_settings() {
+	$powerbi_resource_settings = Power_Bi_Settings::get_instance();
+	return $powerbi_resource_settings->get_power_bi_settings();
+}
 function power_bi_section_callback() {
 
 	echo __( 'The following fields must be filled correctly to get an access token.', 'power-bi' );
@@ -7,8 +11,7 @@ function power_bi_section_callback() {
 }
 
 function power_bi_username_render() {
-
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<input type='text' name='power_bi_settings[power_bi_username]' value='<?php echo $options['power_bi_username']; ?>'>
 	<?php
@@ -17,8 +20,7 @@ function power_bi_username_render() {
 
 
 function power_bi_password_render() {
-
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<input type='password' name='power_bi_settings[power_bi_password]' value='<?php echo $options['power_bi_password']; ?>'>
 	<?php
@@ -27,8 +29,7 @@ function power_bi_password_render() {
 
 
 function power_bi_client_id_render() {
-
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<input type='text' name='power_bi_settings[power_bi_client_id]' value='<?php echo $options['power_bi_client_id']; ?>'>
 	<?php
@@ -37,8 +38,7 @@ function power_bi_client_id_render() {
 
 
 function power_bi_client_secret_render() {
-
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<input type='text' name='power_bi_settings[power_bi_client_secret]' value='<?php echo $options['power_bi_client_secret']; ?>'>
 	<?php
@@ -64,31 +64,31 @@ function power_bi_schedule_section_callback() {
 }
 // Providing azure resource related details to render the fields
 function power_bi_azure_tenant_id_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<input type="text" name="power_bi_settings[power_bi_azure_tenant_id]" value="<?php echo $options['power_bi_azure_tenant_id']; ?>" />
 	<?php
 }
 function power_bi_azure_subscription_id_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<input type="text" name="power_bi_settings[power_bi_azure_subscription_id]" value="<?php echo $options['power_bi_azure_subscription_id']; ?>" />
 	<?php
 }
 function power_bi_azure_resource_group_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<input type="text" name="power_bi_settings[power_bi_azure_resource_group]" value="<?php echo $options['power_bi_azure_resource_group']; ?>" />
 	<?php
 }
 function power_bi_azure_capacity_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<input type="text" name="power_bi_settings[power_bi_azure_capacity]" value="<?php echo $options['power_bi_azure_capacity']; ?>" />
 	<?php
 }
 function power_bi_schedule_sunday_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<select name="power_bi_settings[power_bi_schedule_sunday_start_time]">
 		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
@@ -101,7 +101,7 @@ function power_bi_schedule_sunday_render() {
 
 }
 function power_bi_schedule_monday_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<select name="power_bi_settings[power_bi_schedule_monday_start_time]">
 		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
@@ -113,7 +113,7 @@ function power_bi_schedule_monday_render() {
 	<?php
 }
 function power_bi_schedule_tuesday_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<select name="power_bi_settings[power_bi_schedule_tuesday_start_time]">
 		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
@@ -125,7 +125,7 @@ function power_bi_schedule_tuesday_render() {
 	<?php
 }
 function power_bi_schedule_wednesday_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<select name="power_bi_settings[power_bi_schedule_wednesday_start_time]">
 		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
@@ -137,7 +137,7 @@ function power_bi_schedule_wednesday_render() {
 	<?php
 }
 function power_bi_schedule_thursday_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<select name="power_bi_settings[power_bi_schedule_thursday_start_time]">
 		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
@@ -149,7 +149,7 @@ function power_bi_schedule_thursday_render() {
 	<?php
 }
 function power_bi_schedule_friday_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<select name="power_bi_settings[power_bi_schedule_friday_start_time]">
 		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
@@ -161,7 +161,7 @@ function power_bi_schedule_friday_render() {
 	<?php
 }
 function power_bi_schedule_saturday_render() {
-	$options = get_option( 'power_bi_settings' );
+	$options = get_power_bi_plugin_settings();
 	?>
 	<select name="power_bi_settings[power_bi_schedule_saturday_start_time]">
 		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
@@ -211,7 +211,7 @@ if (!function_exists('_custlog')) {
         }
     }
 }
-if (!function_exists('_custlog')) {
+if (!function_exists('power_bi_debug_pr')) {
 	function power_bi_debug_pr($array, $exit = FALSE)
 	{
 	    echo "<pre>";
