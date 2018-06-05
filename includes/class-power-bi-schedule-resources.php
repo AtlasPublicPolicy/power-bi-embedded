@@ -65,8 +65,9 @@ class Power_Bi_Schedule_Resources {
 	function power_bi_schedule_resource_start_fn() {
 		// execute the code for running event starting
 		$resource_state = $this->check_resource_capacity_state();
-		if($resource_state != "Succeeded") {
-			if($this->handle_azure_resource_service("resume")) {
+		if($resource_state == "Paused") {
+			$process_response = $this->handle_azure_resource_service("resume");
+			if($process_response) {
 				_custlog("service started @ ".Date('Y-m-d : h:i:s'));
 			}
 		}
@@ -74,8 +75,9 @@ class Power_Bi_Schedule_Resources {
 	function power_bi_schedule_resource_pause_fn() {
 		//excute the code to stop / pause resource for power bi
 		$resource_state = $this->check_resource_capacity_state();
-		if($resource_state != "Paused") {
-			if($this->handle_azure_resource_service("suspend")) {
+		if($resource_state == "Succeeded") {
+			$process_response = $this->handle_azure_resource_service("suspend");
+			if($process_response) {
 				_custlog("service paused @ ".Date('Y-m-d : h:i:s'));
 			}
 		}
