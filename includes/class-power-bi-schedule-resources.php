@@ -90,11 +90,11 @@ class Power_Bi_Schedule_Resources {
 		$resource_group 	= $power_bi_settings['power_bi_azure_resource_group'];
 		$capacity 			= $power_bi_settings['power_bi_azure_capacity'];
 		// get saved management azure credential for access token
-		$powerbi_azure_credientials = get_option('power_bi_management_azure_credentials');
+		$powerbi_azure_credentials = get_option('power_bi_management_azure_credentials');
 		// call url for start / resume resource capacity
 		$request_url = "https://management.azure.com/subscriptions/".$subscription_id."/resourceGroups/".$resource_group."/providers/Microsoft.PowerBIDedicated/capacities/".$capacity."/".$action."?api-version=2017-10-01";
 
-		$authorization = "Authorization: Bearer " . $powerbi_azure_credientials['access_token'];
+		$authorization = "Authorization: Bearer " . $powerbi_azure_credentials['access_token'];
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
@@ -190,12 +190,12 @@ class Power_Bi_Schedule_Resources {
 		$resource_group 	= $power_bi_settings['power_bi_azure_resource_group'];
 		$capacity 			= $power_bi_settings['power_bi_azure_capacity'];
 		// get saved management azure credential for access token
-		$powerbi_azure_credientials = get_option('power_bi_management_azure_credentials');
+		$powerbi_azure_credentials = get_option('power_bi_management_azure_credentials');
 		// call url for start / resume resource capacity
 		$request_url = "https://management.azure.com/subscriptions/".$subscription_id."/resourceGroups/".$resource_group."/providers/Microsoft.PowerBIDedicated/capacities/".$capacity."?api-version=2017-10-01";
 
 
-		$authorization = "Authorization: Bearer " . $powerbi_azure_credientials['access_token'];
+		$authorization = "Authorization: Bearer " . $powerbi_azure_credentials['access_token'];
 
 		$curl = curl_init();
 

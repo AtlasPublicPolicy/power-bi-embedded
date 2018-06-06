@@ -61,10 +61,10 @@ class Power_Bi_Shortcodes {
     }
 
 	public function powerbi_js( $id ) {
-		$powerbi_credientials = get_option('power_bi_credientials');
+		$power_bi_credentials = get_option('power_bi_credentials');
 
-        if( isset( $powerbi_credientials['access_token'] ) ) {
-            $access_token = $powerbi_credientials['access_token'];
+        if( isset( $power_bi_credentials['access_token'] ) ) {
+            $access_token = $power_bi_credentials['access_token'];
         } else {
 			return;
 		}
