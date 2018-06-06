@@ -55,7 +55,7 @@ class Power_Bi_Settings {
 
     	add_settings_section(
     		'power_bi_section',
-    		__( 'Authorization', 'power-bi' ),
+    		__( 'Azure Authorization', 'power-bi' ),
     		'power_bi_section_callback',
     		'power_bi'
     	);
@@ -102,35 +102,35 @@ class Power_Bi_Settings {
 		// Schedule Power BI Resource
 		add_settings_section(
     		'power_bi_schedule_section',
-    		__( 'Schedule Power BI Resource', 'power-bi' ),
+    		__( 'Power BI Resource On/Off Schedule', 'power-bi' ),
     		'power_bi_schedule_section_callback',
     		'power_bi'
     	);
         // New setting for adding other required fields for make azure api call
         add_settings_field(
             'power_bi_azure_tenant_id',
-            __( 'Tenant ID', 'power-bi' ),
+            __( 'Tenant ID or Directory ID under Azure Active Directory for Office 365', 'power-bi' ),
             'power_bi_azure_tenant_id_render',
             'power_bi',
             'power_bi_schedule_section'
         );
         add_settings_field(
             'power_bi_azure_subscription_id',
-            __( 'Subscription ID', 'power-bi' ),
+            __( 'Subscription ID for Power BI Resource', 'power-bi' ),
             'power_bi_azure_subscription_id_render',
             'power_bi',
             'power_bi_schedule_section'
         );
         add_settings_field(
             'power_bi_azure_resource_group',
-            __( 'Resource Group', 'power-bi' ),
+            __( 'Resource Group Name', 'power-bi' ),
             'power_bi_azure_resource_group_render',
             'power_bi',
             'power_bi_schedule_section'
         );
         add_settings_field(
             'power_bi_azure_capacity',
-            __( 'Capacity', 'power-bi' ),
+            __( 'Resource Name', 'power-bi' ),
             'power_bi_azure_capacity_render',
             'power_bi',
             'power_bi_schedule_section'
