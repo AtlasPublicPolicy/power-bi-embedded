@@ -93,12 +93,12 @@ You can insert shortcode into pages/posts to display content based on resource s
 Display the content when resource is active.
     [powerbi_resource]
         Resource is active.
-    [powerbi_resource]
+    [/powerbi_resource]
 
 Display the content when resource is paused.
     [powerbi_resource state="Paused"]
         Resource is paused.
-    [powerbi_resource]
+    [/powerbi_resource]
 
 Learn more about states. [https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state](https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state)
 
