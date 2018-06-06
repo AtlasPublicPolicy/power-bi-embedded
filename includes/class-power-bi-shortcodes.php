@@ -207,7 +207,7 @@ class Power_Bi_Shortcodes {
 
 		if ( ! empty( $resource_capacity_state ) ) {
 			if ( $state == $resource_capacity_state ) {
-				echo do_shortcode( $c );
+				return do_shortcode( $c );
 			}
 		}
     }
