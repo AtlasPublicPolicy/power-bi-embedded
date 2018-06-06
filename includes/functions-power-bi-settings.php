@@ -6,7 +6,7 @@ function get_power_bi_plugin_settings() {
 }
 function power_bi_section_callback() {
 
-	echo __( 'The following fields must be filled correctly to get an access token. Help is available from Microsoft <a href="https://docs.microsoft.com/en-us/power-bi/developer/embedding-content" target=_blank>here</a>.', 'power-bi' );
+	echo __( 'The following fields must be filled correctly to get an access token.', 'power-bi' );
 
 }
 
@@ -47,19 +47,19 @@ function power_bi_client_secret_render() {
 
 function power_bi_oauth_success_render() {
 
-	$power_bi_credentials = get_option('power_bi_credentials');
+	$powerbi_credientials = get_option('power_bi_credientials');
 
-	if( isset( $power_bi_credentials['access_token'] ) ) {
+	if( isset( $powerbi_credientials['access_token'] ) ) {
 		echo '<span class="dashicons dashicons-yes"></span> Connected';
-	} elseif ( isset( $power_bi_credentials['error_description'] ) ) {
-		echo '<span class="dashicons dashicons-no-alt"></span> ' . $power_bi_credentials['error_description'];
+	} elseif ( isset( $powerbi_credientials['error_description'] ) ) {
+		echo '<span class="dashicons dashicons-no-alt"></span> ' . $powerbi_credientials['error_description'];
 	}
 
 }
 // For power_bi_schedule_section_callback
 function power_bi_schedule_section_callback() {
 
-	echo __( 'Configure schedule to suspend and resume the Power BI resource on Azure. When the resource is suspended, no charges are incurred. The WordPress time zone is used. Documentation of the Azure API used for this feature is available <a href="https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities" target=_blank>here</a>.', 'power-bi' );
+	echo __( 'User configurable schedule to start and pause Power BI Resource.', 'power-bi' );
 
 }
 // Providing azure resource related details to render the fields
