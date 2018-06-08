@@ -106,6 +106,14 @@ class Power_Bi_Settings {
     		'power_bi_schedule_section_callback',
     		'power_bi'
     	);
+        // Added Option to view resource status
+        add_settings_field(
+            'power_bi_azure_resource_state',
+            __( 'Power BI Resource Status', 'power-bi' ),
+            'power_bi_azure_resource_state_render',
+            'power_bi',
+            'power_bi_schedule_section'
+        );
         // New setting for adding other required fields for make azure api call
         add_settings_field(
             'power_bi_azure_tenant_id',

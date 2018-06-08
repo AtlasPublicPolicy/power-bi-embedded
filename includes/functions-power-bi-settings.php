@@ -62,6 +62,16 @@ function power_bi_schedule_section_callback() {
 	echo __( 'Configure schedule to suspend and resume the Power BI resource on Azure. When the resource is suspended, no charges are incurred. The WordPress time zone is used. Documentation of the Azure API used for this feature is available <a href="https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities" target=_blank>here</a>.', 'power-bi' );
 
 }
+// Providing azure resource related status to render the fields
+function power_bi_azure_resource_state_render() {
+	// get status of Power BI resource
+	$powerbi_resource = Power_Bi_Schedule_Resources::get_instance();
+	$resource_capacity_state = $powerbi_resource->check_resource_capacity_state();
+	if($resource_capacity_state != "") {
+		echo "<strong>".$resource_capacity_state."</strong>";
+	}
+
+}
 // Providing azure resource related details to render the fields
 function power_bi_azure_tenant_id_render() {
 	$options = get_power_bi_plugin_settings();
