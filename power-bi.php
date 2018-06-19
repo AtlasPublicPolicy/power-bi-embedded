@@ -25,9 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 define( 'POWER_BI_VERSION', '1.0.1' );
 define( 'POWER_BI_PLUGIN_DIR', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
 define( 'POWER_BI_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
-// Set default time as per the wp setup
-define( 'POWER_BI_TIMEZONE', (get_option( 'timezone_string' ) ? get_option( 'timezone_string' ) : date_default_timezone_get() ) );
-date_default_timezone_set( POWER_BI_TIMEZONE );
+
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.

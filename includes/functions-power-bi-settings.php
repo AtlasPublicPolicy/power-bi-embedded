@@ -232,3 +232,16 @@ if (!function_exists('power_bi_debug_pr')) {
 	    }
 	}
 }
+// Add custom strtotime converter
+function custom_power_bi_strtotime($strtotime) {
+	// temp set up the time zone for setting up the event
+	// Set default time as per the wp setup
+	// Server Time Zone
+	$server_time_zone = date_default_timezone_get();
+	define( 'POWER_BI_TIMEZONE', (get_option( 'timezone_string' ) ? get_option( 'timezone_string' ) : date_default_timezone_get() ) );
+	date_default_timezone_set( POWER_BI_TIMEZONE );
+	$custom_str = strtotime($strtotime);
+	// Reset server time zone
+	date_default_timezone_set( $server_time_zone );
+	return $custom_str;
+}
