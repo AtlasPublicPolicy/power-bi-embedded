@@ -238,10 +238,40 @@ function custom_power_bi_strtotime($strtotime) {
 	// Set default time as per the wp setup
 	// Server Time Zone
 	$server_time_zone = date_default_timezone_get();
-	define( 'POWER_BI_TIMEZONE', (get_option( 'timezone_string' ) ? get_option( 'timezone_string' ) : date_default_timezone_get() ) );
-	date_default_timezone_set( POWER_BI_TIMEZONE );
+	if(get_option( 'timezone_string' ) != "") {
+		define( 'POWER_BI_TIMEZONE', (get_option( 'timezone_string' ) ? get_option( 'timezone_string' ) : date_default_timezone_get() ) );
+		date_default_timezone_set( POWER_BI_TIMEZONE );
+	} else {
+		if(get_option('gmt_offset') != "") {
+			setTimezoneByOffsetPB(get_option('gmt_offset'));
+		}
+	}
 	$custom_str = strtotime($strtotime);
 	// Reset server time zone
 	date_default_timezone_set( $server_time_zone );
 	return $custom_str;
+}
+function setTimezoneByOffsetPB($offset) 
+{ 
+  	$testTimestamp = time(); 
+    date_default_timezone_set('UTC'); 
+    $testLocaltime = localtime($testTimestamp,true);
+    $testHour = $testLocaltime['tm_hour'];        
+
+  	$abbrarray = timezone_abbreviations_list(); 
+	foreach ($abbrarray as $abbr) 
+	{ 
+	  foreach ($abbr as $city) 
+	  { 
+	  	date_default_timezone_set($city['timezone_id']); 
+        $testLocaltime = localtime($testTimestamp,true); 
+        $hour = $testLocaltime['tm_hour'];        
+        $testOffset = $hour - $testHour; 
+        if($testOffset == $offset) 
+        { 
+            return true; 
+        } 
+	  } 
+	} 
+	return false; 
 }
