@@ -40,6 +40,8 @@ The plugin also includes support to control the Power BI Embedded resource on Az
  * Resource Name: Read directly from the Azure portal.
  * Sunday/Saturday: Set the time to start and pause the resource on a daily basis.
 
+ For scheduling, it is recommended to use cron on your web server instead of WP Cron. Many websites exist to walk you through the process of using your web server instead of WP Cron. For example, see[https://www.nextscripts.com/tutorials/wp-cron-scheduling-tasks-in-wordpress](https://www.nextscripts.com/tutorials/wp-cron-scheduling-tasks-in-wordpress).
+
 = Power BI Content =
 The plugin uses a custom content type for each Power BI component to embed (dashboard, report, etc.). Go to "All Power BI Items" to add a new component.
 
@@ -126,7 +128,12 @@ N/A
 * Initial release.
 
 = 1.0.1 =
-* Updated the JavaScript assets from v2.4.6 to v2.5.1
-* Add scheduling feature to the PowerBI setting page to start and stop resource automatically.
+* Updated the Power BI JavaScript assets from v2.4.6 to v2.5.1
+* Add scheduling feature to the Power BI setting page to start and stop resource automatically.
 * Add fields to the Power BI setting page to configure Subscription ID, Tenant ID, Resource Group etc.
-* Add shortcode to display content based on PowerBI resource's capacity status.
+* Add shortcode to display content based on Power BI resource's capacity status.
+
+== Upgrade Notice ==
+
+= 1.0.1 =
+Fix bugs from Power BI library.
