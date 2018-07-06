@@ -113,4 +113,4 @@ Learn more about states. [https://docs.microsoft.com/en-us/rest/api/power-bi-emb
 
 ## Plugin Dependencies
 
-powerbi-client v2.4.6 [https://github.com/Microsoft/PowerBI-JavaScript](https://github.com/Microsoft/PowerBI-JavaScript), CMB2 v2.3.0 [https://github.com/CMB2/CMB2](https://github.com/CMB2/CMB2), CMB2 Conditionals v1.0.4 [(https://github.com/jcchavezs/cmb2-conditionals)](https://github.com/jcchavezs/cmb2-conditionals)
+powerbi-client v2.5.1 [https://github.com/Microsoft/PowerBI-JavaScript](https://github.com/Microsoft/PowerBI-JavaScript), CMB2 v2.3.0 [https://github.com/CMB2/CMB2](https://github.com/CMB2/CMB2), CMB2 Conditionals v1.0.4 [(https://github.com/jcchavezs/cmb2-conditionals)](https://github.com/jcchavezs/cmb2-conditionals)
