@@ -39,6 +39,14 @@ The "app owns data" process requires that a single, master Power BI Pro account 
 
 After you save your changes, you'll see the authentication status on the settings page if it worked. Once you've configured the plugin, you can now add Power BI content to your WordPress site and embed it wherever you want.
 
+The plugin also includes support to control the Power BI Embedded resource on Azure. This can be really helpful if you're trying to control costs by disabling the resource when it's not in use. The scheduling can be controlled on a daily basis by setting the hour to enable and the hour to disable the resource. If you don't need to disable the resource, then you can ignore this section. 
+
+ * Tenant ID or Directory ID under Azure Active Directory for Office 365: The Directory ID is under the Properties section of the Azure Active Directory on the Azure portal. 
+ * Subscription ID for Power BI Resource: Read directly from Azure portal.
+ * Resource Group Name: Read directly from the Azure portal.
+ * Resource Name: Read directly from the Azure portal.
+ * Sunday/Saturday: Set the time to start and pause the resource on a daily basis.
+
 ## Power BI Content
 The plugin uses a custom content type for each Power BI component to embed (dashboard, report, etc.). Go to "All Power BI Items" to add a new component.
 
@@ -85,10 +93,9 @@ You can also configure how the content is embedded including whether to show the
 ## Embedding Content in WordPress
 Once the Power BI content is created in WordPress, you can embed it anywhere with a shortcode. The shortcode accepts the unique identifier for the Power BI content (visible from "All Power BI Items") and an optional width and height to customize the size of the content where it is being embedded, if you want to override the default width and/or height for the content.
 
-[powerbi id=X width=X height=X]
+    [powerbi id=X width=X height=X]
 
-## Check Resource State
-You can insert shortcode into pages/posts to display content based on resource state. Check the following examples.
+You also can use a shortcode to display content based on the Power BI Embedded resource state. This shortcode allows you to show content when the resource is active and other content when the resource is paused. 
 
 Display the content when resource is active.
     [powerbi_resource]
