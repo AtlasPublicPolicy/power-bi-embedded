@@ -35,6 +35,7 @@ class Power_Bi_Shortcodes {
 	 */
 	private function setup_shortcodes() {
 		add_shortcode( 'powerbi', array( $this, 'power_bi_html' ) );
+		add_shortcode( 'powerbi_resource', array( $this, 'power_bi_resource_html' ) );
 	}
 
     public function power_bi_html( $atts ) {
@@ -60,22 +61,21 @@ class Power_Bi_Shortcodes {
     }
 
 	public function powerbi_js( $id ) {
-		$powerbi_credentials = get_option('power_bi_credentials');
+		$power_bi_credentials = get_option('power_bi_credentials');
 
-        if( isset( $powerbi_credentials['access_token'] ) ) {
-            $access_token = $powerbi_credentials['access_token'];
+        if( isset( $power_bi_credentials['access_token'] ) ) {
+            $access_token = $power_bi_credentials['access_token'];
         } else {
 			return;
 		}
 
 		// Common metas
 		$token_type     = 'Aad';
-		$layout_type    = 'Master'; // 'MobilePortrait';
 		$api_url        = "https://app.powerbi.com/";
 		$embed_type 	= get_post_meta( $id, '_power_bi_embed_type', true );
 		$dashboard_id 	= get_post_meta( $id, '_power_bi_dashboard_id', true );
 		$group_id 	    = get_post_meta( $id, '_power_bi_group_id', true );
-		$report_id 		= get_post_meta( $id, '_power_bi_report_id', true );		
+		$report_id 		= get_post_meta( $id, '_power_bi_report_id', true );
 		$dataset_id 	= get_post_meta( $id, '_power_bi_dataset_id', true );
 
 		$filter_pane 	 = get_post_meta( $id, '_power_bi_filter_pane', true );
@@ -129,7 +129,7 @@ class Power_Bi_Shortcodes {
 				"use strict";
 
 				var models = window['powerbi-client'].models;
-				
+
 				var embedConfiguration = {
 					type: '<?php echo $embed_type; ?>',
 					embedUrl: '<?php echo $embed_url; ?>',
@@ -138,7 +138,6 @@ class Power_Bi_Shortcodes {
 					settings: {
 						filterPaneEnabled: <?php echo ($filter_pane ? 'true': 'false'); ?>,
 						navContentPaneEnabled: <?php echo ($page_navigation ? 'true': 'false'); ?>,
-						layoutType: models.LayoutType.<?php echo $layout_type; ?>,
 						localeSettings: {
 							language: '<?php echo $language; ?>',
 							formatLocale: '<?php echo $format_local; ?>'
@@ -193,6 +192,25 @@ class Power_Bi_Shortcodes {
 		<?php
 		return ob_get_clean();
 	}
+
+	public function power_bi_resource_html( $atts, $c ) {
+        extract( shortcode_atts( array(
+			'state' => 'Succeeded',
+        ), $atts ) );
+
+		if ( empty( $c ) ) {
+			return;
+		}
+
+		$powerbi_resource = Power_Bi_Schedule_Resources::get_instance();
+		$resource_capacity_state = $powerbi_resource->check_resource_capacity_state();
+
+		if ( ! empty( $resource_capacity_state ) ) {
+			if ( $state == $resource_capacity_state ) {
+				return do_shortcode( $c );
+			}
+		}
+    }
 }
 
 Power_Bi_Shortcodes::get_instance();
