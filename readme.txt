@@ -91,11 +91,13 @@ Once the Power BI content is created in WordPress, you can embed it anywhere wit
 You also can use a shortcode to display content based on the Power BI Embedded resource state. This shortcode allows you to show content when the resource is active and other content when the resource is paused. 
 
 Display the content when resource is active.
+
     [powerbi_resource]
         Resource is active.
     [/powerbi_resource]
 
 Display the content when resource is paused.
+
     [powerbi_resource state="Paused"]
         Resource is paused.
     [/powerbi_resource]
@@ -126,5 +128,5 @@ N/A
 = 1.0.1 =
 * Updated the JavaScript assets from v2.4.6 to v2.5.1
 * Add scheduling feature to the PowerBI setting page to start and stop resource automatically.
-* Add fields on the PowerBI setting page to configure Subscription ID, Tenant ID, Resource Group etc.
+* Add fields to the Power BI setting page to configure Subscription ID, Tenant ID, Resource Group etc.
 * Add shortcode to display content based on PowerBI resource's capacity status.
