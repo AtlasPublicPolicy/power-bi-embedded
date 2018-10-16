@@ -236,7 +236,7 @@ class Power_Bi_Post_Types {
 			'default' => 'ReportSection',
 			'attributes' => array(
 				'data-conditional-id'    => $prefix . 'embed_type',
-				'data-conditional-value' => wp_json_encode( array( 'visual' ) ),
+				'data-conditional-value' => wp_json_encode( array( 'report', 'visual' ) ),
 			),
 		) );
 
