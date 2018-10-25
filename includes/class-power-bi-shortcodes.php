@@ -43,6 +43,7 @@ class Power_Bi_Shortcodes {
 			'id' => '',
 			'width' => '',
 			'height' => '',
+ 			'filter' => '',
         ), $atts ) );
 
 		if ( empty( $id ) ) {
@@ -52,7 +53,7 @@ class Power_Bi_Shortcodes {
 		$container_width = empty( $width ) ? get_post_meta( $id, '_power_bi_width', true ) : $width;
 		$container_height = empty( $height ) ? get_post_meta( $id, '_power_bi_height', true ) : $height;
 
-		$powerbi_js = $this->powerbi_js( $id );
+		$powerbi_js = $this->powerbi_js( $id, $filter );
 
 		ob_start();
 		echo '<div id="powerbi-embedded-'. $id .'" style="height: ' . $container_height . '; width: ' . $container_width . ';"></div>';
@@ -60,7 +61,7 @@ class Power_Bi_Shortcodes {
 		return ob_get_clean();
     }
 
-	public function powerbi_js( $id ) {
+	public function powerbi_js( $id, $filter ) {
 		$power_bi_credentials = get_option('power_bi_credentials');
 
         if( isset( $power_bi_credentials['access_token'] ) ) {
@@ -90,7 +91,7 @@ class Power_Bi_Shortcodes {
 		if( 'report' === $embed_type ) {
 			$report_mode = get_post_meta( $id, '_power_bi_report_mode', true );
 			$page_name 	 = get_post_meta( $id, '_power_bi_page_name', true );
-			$filter 	 = get_post_meta( $id, '_power_bi_filter', true );
+			$filter 	 = empty( $filter ) ? get_post_meta( $id, '_power_bi_filter', true ) : $filter;
 
 			if ( 'create' === $report_mode ) {
 				$embed_url = $api_url . "reportEmbed?groupId=" . $group_id;
