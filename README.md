@@ -62,6 +62,7 @@ The Embed Type determines the remaining fields to fill out.
  * Report ID: Enter the unique identifier for the report. You can find the identifier by viewing a report in the Power BI Service. The identifier is in the URL.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Dataset ID: Enter the unique identifier for the dataset. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL. This is only needed for Create Mode.
+ * Page Name: Enter the unique identifier for the Page. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL. This is is an optional parameter. If left blank, the report's default page will be shown.
 
 ### Report Visual
 

@@ -89,6 +89,7 @@ class Power_Bi_Shortcodes {
 
 		if( 'report' === $embed_type ) {
 			$report_mode = get_post_meta( $id, '_power_bi_report_mode', true );
+			$page_name 	 = get_post_meta( $id, '_power_bi_page_name', true );
 
 			if ( 'create' === $report_mode ) {
 				$embed_url = $api_url . "reportEmbed?groupId=" . $group_id;
@@ -150,6 +151,7 @@ class Power_Bi_Shortcodes {
 
 					<?php if ('report' === $embed_type) : ?>
 					id: '<?php echo $report_id; ?>',
+					pageName: '<?php echo $page_name; ?>',
 					<?php endif; ?>
 
 					<?php if ('qna' === $embed_type) : ?>
