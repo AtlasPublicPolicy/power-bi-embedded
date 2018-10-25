@@ -241,6 +241,18 @@ class Power_Bi_Post_Types {
 		) );
 
 		$metabox_details->add_field( array(
+			'name'    => 'Filter',
+			'desc'    => 'Enter a filter object. Refer to the Power BI JavaScript Wiki for more information about filters.',
+			'id'      => $prefix . 'filter',
+			'type'    => 'textarea',
+			'default' => '',
+			'attributes' => array(
+				'data-conditional-id'    => $prefix . 'embed_type',
+				'data-conditional-value' => wp_json_encode( array( 'report' ) ),
+			),
+		) );
+
+		$metabox_details->add_field( array(
 			'name'    => 'Visual Name',
 			'desc'    => 'The Visual Name can be retrieved using the GetVisuals method on the Page object.',
 			'id'      => $prefix . 'visual_name',
