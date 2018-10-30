@@ -268,6 +268,14 @@ class Power_Bi_Post_Types {
 			'type' => 'checkbox',
 		) );
 
+		$metabox_details->add_field( array(
+			'name'    => 'Background color',
+			'desc'    => 'Optionally enter a background for your embed. For transparent, use models.BackgroundType.Transparent.',
+			'id'      => $prefix . 'background',
+			'type'    => 'text',
+			'default' => '',
+		) );
+
 		$metabox_settings->add_field( array(
 			'name'             => 'Language',
 			'desc'             => 'Select a language.',
