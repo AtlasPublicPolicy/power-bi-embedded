@@ -143,7 +143,7 @@ class Power_Bi_Shortcodes {
 						filterPaneEnabled: <?php echo ($filter_pane ? 'true': 'false'); ?>,
 						navContentPaneEnabled: <?php echo ($page_navigation ? 'true': 'false'); ?>,
 						<?php if ( !empty( $background ) ) : ?>
-							background: '<?php echo $background; ?>',
+							background: <?php echo $background; ?>,
 						<?php endif; ?>
 						localeSettings: {
 							language: '<?php echo $language; ?>',
