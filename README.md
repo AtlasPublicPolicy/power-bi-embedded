@@ -64,6 +64,7 @@ The Embed Type determines the remaining fields to fill out.
  * Dataset ID: Enter the unique identifier for the dataset. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL. This is only needed for Create Mode.
  * Page Name: Enter the unique identifier for the Page. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL. This is is an optional parameter. If left blank, the report's default page will be shown.
  * Filter: An optional pre-set filter, given as a JavaScript object.
+ * Background: Optionally entender a background color for your embed. For instance, entering `models.BackgroundType.Transparent` in this field will make your embed have a transparent background.
 
 ### Report Visual
 
@@ -71,6 +72,7 @@ The Embed Type determines the remaining fields to fill out.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Page Name: Enter the unique identifier for the Page. You can find the identifier by entering viewing the page within a report in the Power BI Service. The identifier is in the URL.
  * Visual Name: The Visual Name can be retrieved using the GetVisuals method on the Page object.
+ * Background: Optionally entender a background color for your embed. For instance, entering `models.BackgroundType.Transparent` in this field will make your embed have a transparent background.
 
 ### Q&A
 
@@ -78,17 +80,20 @@ The Embed Type determines the remaining fields to fill out.
  * Q&A Input Question: Only necessary for "Show Q&A with predefined question" and "Show answer only with predefined question"
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Dataset ID: Enter the unique identifier for the dataset. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL. This is only needed for Create Mode.
+ * Background: Optionally entender a background color for your embed. For instance, entering `models.BackgroundType.Transparent` in this field will make your embed have a transparent background.
 
 ### Dashboard
 
  * Dashboard ID: Enter the unique identifier for the dashboard. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
+ * Background: Optionally entender a background color for your embed. For instance, entering `models.BackgroundType.Transparent` in this field will make your embed have a transparent background.
 
 ### Tile
 
  * Dashboard ID: Enter the unique identifier for the dashboard. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Tile ID: Enter the unique identifier for the dashboard tile. You can find the identifier by entering the focus mode for a tile when viewing a dashboard in the Power BI Service. The identifier is in the URL.
+ * Background: Optionally entender a background color for your embed. For instance, entering `models.BackgroundType.Transparent` in this field will make your embed have a transparent background.
 
 
 ### Other Settings for Power BI Content

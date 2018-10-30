@@ -81,6 +81,7 @@ class Power_Bi_Shortcodes {
 
 		$filter_pane 	 = get_post_meta( $id, '_power_bi_filter_pane', true );
 		$page_navigation = get_post_meta( $id, '_power_bi_page_navigation', true );
+		$background 	 = get_post_meta( $id, '_power_bi_background', true );
 		$language 	     = get_post_meta( $id, '_power_bi_language', true );
 		$format_local 	 = get_post_meta( $id, '_power_bi_format_local', true );
 
@@ -141,6 +142,9 @@ class Power_Bi_Shortcodes {
 					settings: {
 						filterPaneEnabled: <?php echo ($filter_pane ? 'true': 'false'); ?>,
 						navContentPaneEnabled: <?php echo ($page_navigation ? 'true': 'false'); ?>,
+						<?php if ( !empty( $background ) ) : ?>
+							background: '<?php echo $background; ?>',
+						<?php endif; ?>
 						localeSettings: {
 							language: '<?php echo $language; ?>',
 							formatLocale: '<?php echo $format_local; ?>'
