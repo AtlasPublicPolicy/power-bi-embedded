@@ -12,7 +12,11 @@
 
  **Tested up to:** 4.9.4
 
+<<<<<<< HEAD
  **Stable tag:** 1.1.0
+=======
+ **Stable tag:** 1.0.1
+>>>>>>> parent of 82231a7... Updated release notes.
 
  **License:** GNU General Public License v3.0
 
