@@ -126,73 +126,143 @@ class Power_Bi_Shortcodes {
 		ob_start();
 		?>
 		<script type="text/javascript">
+			
 			(function( $ ) {
 
 				"use strict";
+				$(document).ready(function() {
+					var models = window['powerbi-client'].models;	
+				
+					var embedConfiguration = {
+						type: '<?php echo $embed_type; ?>',
+						embedUrl: '<?php echo $embed_url; ?>',
+						tokenType: models.TokenType.<?php echo $token_type; ?>,
+						accessToken: '<?php echo $access_token; ?>',
+						settings: {
+							filterPaneEnabled: <?php echo ($filter_pane ? 'true': 'false'); ?>,
+							navContentPaneEnabled: <?php echo ($page_navigation ? 'true': 'false'); ?>,
+							<?php if ( !empty( $background ) ) : ?>
+								background: <?php echo $background; ?>,
+							<?php endif; ?>
+							localeSettings: {
+								language: '<?php echo $language; ?>',
+								formatLocale: '<?php echo $format_local; ?>'
+							}
+						},
 
-				var models = window['powerbi-client'].models;
-
-				var embedConfiguration = {
-					type: '<?php echo $embed_type; ?>',
-					embedUrl: '<?php echo $embed_url; ?>',
-					tokenType: models.TokenType.<?php echo $token_type; ?>,
-					accessToken: '<?php echo $access_token; ?>',
-					settings: {
-						filterPaneEnabled: <?php echo ($filter_pane ? 'true': 'false'); ?>,
-						navContentPaneEnabled: <?php echo ($page_navigation ? 'true': 'false'); ?>,
-						<?php if ( !empty( $background ) ) : ?>
-							background: <?php echo $background; ?>,
+						<?php if ('dashboard' === $embed_type) : ?>
+						dashboardId: '<?php echo $dashboard_id; ?>',
 						<?php endif; ?>
-						localeSettings: {
-							language: '<?php echo $language; ?>',
-							formatLocale: '<?php echo $format_local; ?>'
-						}
-					},
 
-					<?php if ('dashboard' === $embed_type) : ?>
-					dashboardId: '<?php echo $dashboard_id; ?>',
-					<?php endif; ?>
+						<?php if ('report' === $embed_type) : ?>
+						id: '<?php echo $report_id; ?>',
+						pageName: '<?php echo $page_name; ?>',
+						<?php endif; ?>
 
-					<?php if ('report' === $embed_type) : ?>
-					id: '<?php echo $report_id; ?>',
-					pageName: '<?php echo $page_name; ?>',
-					<?php endif; ?>
+						<?php if ('qna' === $embed_type) : ?>
+						viewMode: models.QnaMode['<?php echo $qna_mode; ?>'],
+						datasetIds: ['<?php echo $dataset_id; ?>'],
+						question: '<?php echo $input_question; ?>',
+						<?php endif; ?>
 
-					<?php if ('qna' === $embed_type) : ?>
-					viewMode: models.QnaMode['<?php echo $qna_mode; ?>'],
-					datasetIds: ['<?php echo $dataset_id; ?>'],
-					question: '<?php echo $input_question; ?>',
-					<?php endif; ?>
+						<?php if ('visual' === $embed_type) : ?>
+						pageName: '<?php echo $page_name; ?>',
+						visualName: '<?php echo $visual_name; ?>',
+						id: '<?php echo $report_id; ?>',
+						<?php endif; ?>
 
-					<?php if ('visual' === $embed_type) : ?>
-					pageName: '<?php echo $page_name; ?>',
-					visualName: '<?php echo $visual_name; ?>',
-					id: '<?php echo $report_id; ?>',
-					<?php endif; ?>
+						<?php if ('tile' === $embed_type) : ?>
+						id: '<?php echo $tile_id; ?>',
+						dashboardId: '<?php echo $dashboard_id; ?>',
+						<?php endif; ?>
 
-					<?php if ('tile' === $embed_type) : ?>
-					id: '<?php echo $tile_id; ?>',
-					dashboardId: '<?php echo $dashboard_id; ?>',
-					<?php endif; ?>
+						<?php if ( 'edit' === $report_mode && 'report' === $embed_type ) : ?>
+						viewMode: models.ViewMode.Edit,
+						permissions: models.Permissions.All,
+						<?php endif; ?>
 
-					<?php if ( 'edit' === $report_mode && 'report' === $embed_type ) : ?>
-					viewMode: models.ViewMode.Edit,
-					permissions: models.Permissions.All,
-					<?php endif; ?>
+						<?php if ( 'create' === $report_mode && 'report' === $embed_type ) : ?>
+						datasetId: '<?php echo $dataset_id; ?>',
+						permissions: models.Permissions.All,
+						<?php endif; ?>
+					};
+
+					// get query string and convert to powerbi filter
+					var urlParams = new URLSearchParams(window.location.search);
+
+					// if filters value exists parse the encoded string to JSON and set as filter
+					if ( urlParams.has('filters') ) {
+						var urlFilters = JSON.parse(urlParams.get("filters"));
+						var filters = urlFilters;
+						
+						embedConfiguration.filters = filters;
+					}
+
+					var $container = $('#powerbi-embedded-<?php echo $id; ?>');
 
 					<?php if ( 'create' === $report_mode && 'report' === $embed_type ) : ?>
-					datasetId: '<?php echo $dataset_id; ?>',
-					permissions: models.Permissions.All,
+						var report = powerbi.createReport($container.get(0), embedConfiguration);
+					<?php else: ?>
+						var report = powerbi.embed($container.get(0), embedConfiguration);
+
+						// set timeOut to refresh token
+						report.on("loaded", function(event) {
+							function test(report) {
+								setTimeout(function() {
+									updateToken().then(function(data)  {
+										console.log("Resetting token: " + report.getAccessToken());
+										// console.log(data);
+										report.setAccessToken(data)
+											.then(function(resp) {
+												console.log("New token: " + report.getAccessToken());
+											})
+											.catch(function(error) {console.log(error)} );
+										
+										test(report);
+									}).catch(function(error) { console.log(error)});
+
+								}, 1000*60*50);
+							}
+
+							test(report);
+							
+							
+						});
+
+						function updateToken() {
+							
+							var restURL = "<?php echo get_rest_url('','wp/v2/powerbi/getToken'); ?>";
+							return new Promise(function(resolve, reject) {
+								$.ajax({
+									url : restURL,
+									method : "GET",
+								}).done(function(response) {
+									resolve(response);
+								}).fail(function(error) {
+									console.log("Error: " + error);
+									reject(error);
+								});
+							});
+						}
+							// var xhttp = new XMLHttpRequest();
+							// xhttp.onreadystatechange = function() {
+							// 	if (this.readyState == 4 && this.status == 200) {
+							// 		// console.log("Resetting token: " + report.getAccessToken());
+							// 		// report.setAccessToken(this.responseText);
+							// 		// console.log("New token: " + report.getAccessToken());
+							// 		return this.responseText;
+							// 	}
+							// };
+							// setTimeout(() => {
+							// 	xhttp.open("GET", restURL, true);
+							// 	xhttp.setRequestHeader("Content-type", "application/json");
+							// 	xhttp.send();
+							// 	updateToken();
+							// }, 1000*60*55);
+					
 					<?php endif; ?>
-				};
-
-				var $container = $('#powerbi-embedded-<?php echo $id; ?>');
-
-				<?php if ( 'create' === $report_mode && 'report' === $embed_type ) : ?>
-				var report = powerbi.createReport($container.get(0), embedConfiguration);
-				<?php else: ?>
-				var report = powerbi.embed($container.get(0), embedConfiguration);
-				<?php endif; ?>
+				})
+				
 			})(jQuery);
 		</script>
 		<?php

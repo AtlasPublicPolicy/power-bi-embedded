@@ -70,9 +70,30 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			// Register scripts, styles, and fonts.
 			add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
 			add_action( 'wp_enqueue_scripts', array( $this, 'styles' ) );
-
+			add_action('rest_api_init', array($this, 'register_get_powerbi_access_token'));
 			add_filter( 'the_content', array( $this, 'insert_shortcode' ) );
 		}
+
+		/**
+		 * Register a REST route to get a new access token
+		 * @since 2.0.0
+		 * @access private
+		 * @return void
+		 */
+		function register_get_powerbi_access_token() {
+			register_rest_route( 'wp/v2/powerbi', '/getToken', array(
+				'methods' => 'GET',
+				'callback' => array ($this, 'get_powerbi_access_token')
+			) );
+		}
+
+		function get_powerbi_access_token() {
+			$returnObject = Power_Bi_Oauth::get_token();
+			return $returnObject['access_token'];
+		}
+
+
+
 
 		/**
 		 * Filter content and insert shortcode.
@@ -91,7 +112,10 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 		 * Enqueue scripts.
 		 */
 		public function scripts() {
-			wp_enqueue_script( $this->plugin_name . '-main', POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js', array( 'jquery' ), '1232018', false );
+			wp_register_script($this->plugin_name . '-main', POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js', array('jquery'), filemtime(POWER_BI_PLUGIN_DIR . '/assets/js/powerbi.min.js'), true );
+			wp_enqueue_script( $this->plugin_name . '-main');
+			//wp_enqueue_script( $this->plugin_name . '-main', POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js', array( 'jquery' ), filemtime(POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js'), false );
+			wp_enqueue_script( 'url-search-params-polyfill', POWER_BI_PLUGIN_URL . '/assets/js/url-search-params-polyfill.js', array(  ), filemtime(POWER_BI_PLUGIN_DIR. '/assets/js/url-search-params-polyfill.js'), true );
 		}
 
 		/**
