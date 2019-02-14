@@ -230,7 +230,7 @@ class Power_Bi_Post_Types {
 
 		$metabox_details->add_field( array(
 			'name'    => 'Page Name',
-			'desc'    => 'Enter the unique identifier for the Page. You can find the identifier by entering viewing the page within a report in the Power BI Service. The identifier is in the URL.',
+			'desc'    => 'Enter the unique identifier for the Page. You can find the identifier by viewing the page within a report in the Power BI Service. The identifier is in the URL.',
 			'id'      => $prefix . 'page_name',
 			'type'    => 'text',
 			'default' => 'ReportSection',
