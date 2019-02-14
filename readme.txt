@@ -55,8 +55,6 @@ The Embed Type determines the remaining fields to fill out.
  * Report ID: Enter the unique identifier for the report. You can find the identifier by viewing a report in the Power BI Service. The identifier is in the URL.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Dataset ID: Enter the unique identifier for the dataset. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL. This is only needed for Create Mode.
- * Background: Optionally enter `models.BackgroundType.Transparent` in this field to make the background transparent.
-
 
 = Report Visual =
 
@@ -64,7 +62,6 @@ The Embed Type determines the remaining fields to fill out.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Page Name: Enter the unique identifier for the Page. You can find the identifier by viewing the page within a report in the Power BI Service. The identifier is in the URL.
  * Visual Name: The Visual Name can be retrieved using the GetVisuals method on the Page object.
- * Background: Optionally enter `models.BackgroundType.Transparent` in this field to make the background transparent.
 
 = Q&A =
 
@@ -72,20 +69,18 @@ The Embed Type determines the remaining fields to fill out.
  * Q&A Input Question: Only necessary for "Show Q&A with predefined question" and "Show answer only with predefined question"
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Dataset ID: Enter the unique identifier for the dataset. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL. This is only needed for Create Mode.
- * Background: Optionally enter `models.BackgroundType.Transparent` in this field to make the background transparent.
 
 = Dashboard =
 
  * Dashboard ID: Enter the unique identifier for the dashboard. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
- * Background: Optionally enter `models.BackgroundType.Transparent` in this field to make the background transparent.
 
 = Tile =
 
  * Dashboard ID: Enter the unique identifier for the dashboard. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Tile ID: Enter the unique identifier for the dashboard tile. You can find the identifier by entering the focus mode for a tile when viewing a dashboard in the Power BI Service. The identifier is in the URL.
- * Background: Optionally enter `models.BackgroundType.Transparent` in this field to make the background transparent.
+
 
 = Other Settings for Power BI Content =
 You can also configure how the content is embedded including whether to show the filter pane or page navigation along with the language (defines the language Power BI uses for localization and locale format (defines the text formatting that powerBI uses for dates, currency, etc.). Finally, you can set the default width and height for the container in pixels or as a percentage.
