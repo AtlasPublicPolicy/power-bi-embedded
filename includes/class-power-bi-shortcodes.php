@@ -83,7 +83,7 @@ class Power_Bi_Shortcodes {
 		$background 	 = get_post_meta( $id, '_power_bi_background', true );
 		$language 	     = get_post_meta( $id, '_power_bi_language', true );
 		$format_local 	 = get_post_meta( $id, '_power_bi_format_local', true );
-
+		
 		if( 'dashboard' === $embed_type ) {
 			$embed_url = $api_url . "dashboardEmbed?dashboardId=" . $dashboard_id . "&groupId=" . $group_id;
 		}
@@ -186,7 +186,7 @@ class Power_Bi_Shortcodes {
 						permissions: models.Permissions.All,
 						<?php endif; ?>
 					};
-
+					console.log(embedConfiguration);
 					// get query string and convert to powerbi filter
 					var urlParams = new URLSearchParams(window.location.search);
 
