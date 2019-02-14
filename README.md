@@ -12,7 +12,7 @@
 
  **Tested up to:** 4.9.4
 
- **Stable tag:** 1.1.0
+ **Stable tag:** 1.0.1
 
  **License:** GNU General Public License v3.0
 
