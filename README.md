@@ -119,7 +119,7 @@ Display the content when resource is paused.
 
 Learn more about states. [https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state](https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state)
 
-### Applying Filters
+## Applying Filters
 The plugin is able to filter *Reports* using the [https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters](Report Level Filters) API functions in PowerBI embedded. To use filters you need to pass the filter object in the querystring as a serialized JSON string.
 
 **Example**
@@ -139,7 +139,7 @@ var relatedFilterObj = [{
 var relatedURL = pageURL + "?filters=" +  encodeURIComponent(JSON.stringify(relatedFilterObj));
 ```
 
-### Applying Slicers
+## Applying Slicers
 The plugin can also apply Slicers before the report loads based on passing stringified JSON in the URL. Read more about [Slicers](https://github.com/Microsoft/PowerBI-JavaScript/wiki/Slicers)
 
 **Example**
