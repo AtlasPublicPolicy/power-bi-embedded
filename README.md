@@ -120,7 +120,7 @@ Display the content when resource is paused.
 Learn more about states. [https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state](https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state)
 
 ## Applying Filters
-The plugin is able to filter *Reports* using the [https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters](Report Level Filters) API functions in PowerBI embedded. To use filters you need to pass the filter object in the querystring as a serialized JSON string.
+The plugin is able to filter *Reports* using the [Report Level Filters)[https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters] API functions in PowerBI embedded. To use filters you need to pass the filter object in the querystring as a serialized JSON string.
 
 **Example**
 ```
