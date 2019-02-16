@@ -187,6 +187,10 @@ class Power_Bi_Shortcodes {
 						<?php endif; ?>
 					};
 
+					// ****
+					// apply filters before report load
+					// ****
+					
 					// get query string and convert to powerbi filter
 					var urlParams = new URLSearchParams(window.location.search);
 
@@ -198,6 +202,14 @@ class Power_Bi_Shortcodes {
 						embedConfiguration.filters = filters;
 					}
 
+					// ****
+					// apply slicers before report load
+					// ****
+					if ( urlParams.has("slicers") ) {
+						var urlSlicers = JSON.parse(urlParams.get("slicers"));
+						embedConfiguration.slicers = slicers;
+					}
+					
 					var $container = $('#powerbi-embedded-<?php echo $id; ?>');
 
 					<?php if ( 'create' === $report_mode && 'report' === $embed_type ) : ?>
@@ -225,8 +237,7 @@ class Power_Bi_Shortcodes {
 							}
 
 							test(report);
-							
-							
+
 						});
 
 						function updateToken() {
