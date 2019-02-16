@@ -207,7 +207,7 @@ class Power_Bi_Shortcodes {
 					// ****
 					if ( urlParams.has("slicers") ) {
 						var urlSlicers = JSON.parse(urlParams.get("slicers"));
-						embedConfiguration.slicers = slicers;
+						embedConfiguration.slicers = urlSlicers;
 					}
 					
 					var $container = $('#powerbi-embedded-<?php echo $id; ?>');
