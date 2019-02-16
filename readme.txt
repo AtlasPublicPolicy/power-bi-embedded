@@ -126,6 +126,36 @@ var relatedFilterObj = [{
 var relatedURL = pageURL + "?filters=" +  encodeURIComponent(JSON.stringify(relatedFilterObj));
 ```
 
+== Applying Slicers ==
+The plugin can also apply Slicers before the report loads based on passing stringified JSON in the URL. Read more about [Slicers](https://github.com/Microsoft/PowerBI-JavaScript/wiki/Slicers)
+
+**Example**
+```
+var slicers = [
+    {
+        selector : {
+            $schema: "http://powerbi.com/product/schema#visualSelector",
+            visualName: "fee64d853d2c3e579085"
+        },
+        state : {
+            filters : [
+                {
+                    $schema: "http://powerbi.com/product/schema#basic",
+                    target : {
+                        table : "Tools",
+                        column : "Tool"
+                    },
+                    operator: "In",
+                    values: ["Information Operations"],
+                }
+            ]
+        }
+    }
+];
+
+var relatedURL = pageURL + "?slicers=" +  encodeURIComponent(JSON.stringify(slicers));
+```
+
 == Installation ==
 
 1. Visit 'Plugins > Add New'

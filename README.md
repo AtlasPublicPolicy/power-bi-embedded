@@ -119,6 +119,56 @@ Display the content when resource is paused.
 
 Learn more about states. [https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state](https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state)
 
+### Applying Filters
+The plugin is able to filter *Reports* using the [https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters](Report Level Filters) API functions in PowerBI embedded. To use filters you need to pass the filter object in the querystring as a serialized JSON string.
+
+**Example**
+```
+var relatedFilterObj = [{
+        $schema : "http://powerbi.com/product/schema#basic",
+        target : {
+            table : "Countries",
+            column : "Country",
+        },
+        operator : "=",
+        values : [country]
+        
+    }
+];
+
+var relatedURL = pageURL + "?filters=" +  encodeURIComponent(JSON.stringify(relatedFilterObj));
+```
+
+### Applying Slicers
+The plugin can also apply Slicers before the report loads based on passing stringified JSON in the URL. Read more about [Slicers](https://github.com/Microsoft/PowerBI-JavaScript/wiki/Slicers)
+
+**Example**
+```
+var slicers = [
+    {
+        selector : {
+            $schema: "http://powerbi.com/product/schema#visualSelector",
+            visualName: "fee64d853d2c3e579085"
+        },
+        state : {
+            filters : [
+                {
+                    $schema: "http://powerbi.com/product/schema#basic",
+                    target : {
+                        table : "Tools",
+                        column : "Tool"
+                    },
+                    operator: "In",
+                    values: ["Information Operations"],
+                }
+            ]
+        }
+    }
+];
+
+var relatedURL = pageURL + "?slicers=" +  encodeURIComponent(JSON.stringify(slicers));
+```
+
 ## Plugin Dependencies
 
-powerbi-client v2.5.1 [https://github.com/Microsoft/PowerBI-JavaScript](https://github.com/Microsoft/PowerBI-JavaScript), CMB2 v2.3.0 [https://github.com/CMB2/CMB2](https://github.com/CMB2/CMB2), CMB2 Conditionals v1.0.4 [(https://github.com/jcchavezs/cmb2-conditionals)](https://github.com/jcchavezs/cmb2-conditionals)
+powerbi-client v2.5.1 [https://github.com/Microsoft/PowerBI-JavaScript](https://github.com/Microsoft/PowerBI-JavaScript), CMB2 v2.3.0 [https://github.com/CMB2/CMB2](https://github.com/CMB2/CMB2), CMB2 Conditionals v1.0.4 [(https://github.com/jcchavezs/cmb2-conditionals)](https://github.com/jcchavezs/cmb2-conditionals), URL Search Params Polyfill v5.0.0 [https://github.com/jerrybendy/url-search-params-polyfill](https://github.com/jerrybendy/url-search-params-polyfill)
