@@ -1,14 +1,14 @@
 === Power BI Embedded for WordPress ===
-Contributors: atlaspolicy, upnrunn
+Contributors: atlaspolicy, upnrunn, stegel
 Tags: powerbi-embedded, wordpress-plugin, powerbi, wordpress
 Requires at least: 4.4.0
 Requires PHP: 5.2.4
 Tested up to: 4.9.8
-Stable tag: 1.0.2
+Stable tag: 1.1.0
 License: GNU General Public License v3.0
 License URI: https://www.gnu.org/licenses/lgpl.html
 
-This WordPress plugin supports Microsoft Power BI Embedded, including  dashboards, reports, report visuals, Q&A, and tiles.
+This WordPress plugin supports Microsoft Power BI Embedded, including dashboards, reports, report visuals, Q&A, and tiles. It also supports filters and slicers passed in as a JSON object.
 
 == Description ==
 
@@ -55,16 +55,13 @@ The Embed Type determines the remaining fields to fill out.
  * Report ID: Enter the unique identifier for the report. You can find the identifier by viewing a report in the Power BI Service. The identifier is in the URL.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Dataset ID: Enter the unique identifier for the dataset. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL. This is only needed for Create Mode.
- * Background: Optionally enter `models.BackgroundType.Transparent` in this field to make the background transparent.
-
 
 = Report Visual =
 
  * Report ID: Enter the unique identifier for the report. You can find the identifier by viewing a report in the Power BI Service. The identifier is in the URL.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
- * Page Name: Enter the unique identifier for the Page. You can find the identifier by entering viewing the page within a report in the Power BI Service. The identifier is in the URL.
+ * Page Name: Enter the unique identifier for the Page. You can find the identifier by viewing the page within a report in the Power BI Service. The identifier is in the URL.
  * Visual Name: The Visual Name can be retrieved using the GetVisuals method on the Page object.
- * Background: Optionally enter `models.BackgroundType.Transparent` in this field to make the background transparent.
 
 = Q&A =
 
@@ -72,20 +69,18 @@ The Embed Type determines the remaining fields to fill out.
  * Q&A Input Question: Only necessary for "Show Q&A with predefined question" and "Show answer only with predefined question"
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Dataset ID: Enter the unique identifier for the dataset. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL. This is only needed for Create Mode.
- * Background: Optionally enter `models.BackgroundType.Transparent` in this field to make the background transparent.
 
 = Dashboard =
 
  * Dashboard ID: Enter the unique identifier for the dashboard. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
- * Background: Optionally enter `models.BackgroundType.Transparent` in this field to make the background transparent.
 
 = Tile =
 
  * Dashboard ID: Enter the unique identifier for the dashboard. You can find the identifier by viewing a dashboard in the Power BI Service. The identifier is in the URL.
  * Group ID: Enter the unique identifier for the group. You can find the identifier by viewing a dashboard or report in the Power BI Service. The identifier is in the URL.
  * Tile ID: Enter the unique identifier for the dashboard tile. You can find the identifier by entering the focus mode for a tile when viewing a dashboard in the Power BI Service. The identifier is in the URL.
- * Background: Optionally enter `models.BackgroundType.Transparent` in this field to make the background transparent.
+
 
 = Other Settings for Power BI Content =
 You can also configure how the content is embedded including whether to show the filter pane or page navigation along with the language (defines the language Power BI uses for localization and locale format (defines the text formatting that powerBI uses for dates, currency, etc.). Finally, you can set the default width and height for the container in pixels or as a percentage.
@@ -110,6 +105,56 @@ Display the content when resource is paused.
     [/powerbi_resource]
 
 Learn more about states. [https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state](https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state)
+
+== Filters ==
+The plugin is able to filter *Reports* using the [https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters](Report Level Filters) API functions in PowerBI embedded. To use filters you need to pass the filter object in the querystring as a serialized JSON string.
+
+Example 
+```
+var relatedFilterObj = [{
+        $schema : "http://powerbi.com/product/schema#basic",
+        target : {
+            table : "Countries",
+            column : "Country",
+        },
+        operator : "=",
+        values : [country]
+        
+    }
+];
+
+var relatedURL = pageURL + "?filters=" +  encodeURIComponent(JSON.stringify(relatedFilterObj));
+```
+
+== Applying Slicers ==
+The plugin can also apply Slicers before the report loads based on passing stringified JSON in the URL. Read more about [Slicers](https://github.com/Microsoft/PowerBI-JavaScript/wiki/Slicers)
+
+**Example**
+```
+var slicers = [
+    {
+        selector : {
+            $schema: "http://powerbi.com/product/schema#visualSelector",
+            visualName: "fee64d853d2c3e579085"
+        },
+        state : {
+            filters : [
+                {
+                    $schema: "http://powerbi.com/product/schema#basic",
+                    target : {
+                        table : "Tools",
+                        column : "Tool"
+                    },
+                    operator: "In",
+                    values: ["Information Operations"],
+                }
+            ]
+        }
+    }
+];
+
+var relatedURL = pageURL + "?slicers=" +  encodeURIComponent(JSON.stringify(slicers));
+```
 
 == Installation ==
 
@@ -142,3 +187,14 @@ N/A
 
 = 1.0.1 =
 Fix bugs from Power BI library.
+
+= 1.0.2 =
+* Added transparent background option. 
+* Added page name configuration for reports.
+
+= 1.1.0 = 
+* Added abiltiy to use filters on report
+* Updated documentation on using filters
+* Increased timeout so report would still work after being open for an hour
+* Updated Power BI JavaScript assets from v2.5.1 to v2.6.6
+* Added url-search-params-polyfill to be backwards compatible with IE11
