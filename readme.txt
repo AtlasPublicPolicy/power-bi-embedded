@@ -110,51 +110,49 @@ Learn more about states. [https://docs.microsoft.com/en-us/rest/api/power-bi-emb
 The plugin is able to filter *Reports* using the [https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters](Report Level Filters) API functions in PowerBI embedded. To use filters you need to pass the filter object in the querystring as a serialized JSON string.
 
 Example 
-```
-var relatedFilterObj = [{
-        $schema : "http://powerbi.com/product/schema#basic",
-        target : {
-            table : "Countries",
-            column : "Country",
-        },
-        operator : "=",
-        values : [country]
-        
-    }
-];
 
-var relatedURL = pageURL + "?filters=" +  encodeURIComponent(JSON.stringify(relatedFilterObj));
-```
+    var relatedFilterObj = [{
+            $schema : "http://powerbi.com/product/schema#basic",
+            target : {
+                table : "Countries",
+                column : "Country",
+            },
+            operator : "=",
+            values : [country]
+            
+        }
+    ];
+
+    var relatedURL = pageURL + "?filters=" +  encodeURIComponent(JSON.stringify(relatedFilterObj));
 
 == Applying Slicers ==
 The plugin can also apply Slicers before the report loads based on passing stringified JSON in the URL. Read more about [Slicers](https://github.com/Microsoft/PowerBI-JavaScript/wiki/Slicers)
 
 **Example**
-```
-var slicers = [
-    {
-        selector : {
-            $schema: "http://powerbi.com/product/schema#visualSelector",
-            visualName: "fee64d853d2c3e579085"
-        },
-        state : {
-            filters : [
-                {
-                    $schema: "http://powerbi.com/product/schema#basic",
-                    target : {
-                        table : "Tools",
-                        column : "Tool"
-                    },
-                    operator: "In",
-                    values: ["Information Operations"],
-                }
-            ]
-        }
-    }
-];
 
-var relatedURL = pageURL + "?slicers=" +  encodeURIComponent(JSON.stringify(slicers));
-```
+    var slicers = [
+        {
+            selector : {
+                $schema: "http://powerbi.com/product/schema#visualSelector",
+                visualName: "fee64d853d2c3e579085"
+            },
+            state : {
+                filters : [
+                    {
+                        $schema: "http://powerbi.com/product/schema#basic",
+                        target : {
+                            table : "Tools",
+                            column : "Tool"
+                        },
+                        operator: "In",
+                        values: ["Information Operations"],
+                    }
+                ]
+            }
+        }
+    ];
+
+    var relatedURL = pageURL + "?slicers=" +  encodeURIComponent(JSON.stringify(slicers));
 
 == Installation ==
 
