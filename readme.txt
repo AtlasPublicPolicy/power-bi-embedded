@@ -183,11 +183,6 @@ N/A
 * Add fields to the Power BI setting page to configure Subscription ID, Tenant ID, Resource Group etc.
 * Add shortcode to display content based on Power BI resource's capacity status.
 
-== Upgrade Notice ==
-
-= 1.0.1 =
-Fix bugs from Power BI library.
-
 = 1.0.2 =
 * Added transparent background option. 
 * Added page name configuration for reports.
@@ -198,3 +193,14 @@ Fix bugs from Power BI library.
 * Increased timeout so report would still work after being open for an hour
 * Updated Power BI JavaScript assets from v2.5.1 to v2.6.6
 * Added url-search-params-polyfill to be backwards compatible with IE11
+
+== Upgrade Notice ==
+
+= 1.0.1 =
+This release contains bug fixes from the Power BI library.
+
+= 1.0.2 =
+This release contains feature enhancements. 
+
+= 1.1.0 = 
+This release contains feature enhancements and bug fixes.
