@@ -1,6 +1,6 @@
 # power-bi-embedded
 
-![Atlas](https://atlaspolicy.com/wp-content/uploads/2019/05/website_logo_horiz_retina.png)
+![Atlas](https://atlaspolicy.com/public/website_logo_horiz.png)
 
  **Title:** Power BI Embedded for WordPress
 
