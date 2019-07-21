@@ -132,18 +132,40 @@ class Power_Bi_Shortcodes {
 				"use strict";
 				$(document).ready(function() {
 					var models = window['powerbi-client'].models;	
+					var restURL = "<?php echo get_rest_url('','wp/v2/powerbi/getToken'); ?>";
+					var tmpdata = jQuery.get({
+						url: restURL,
+						async: false,
+						success: function(data) {
+							var access_token = data.responseText;
+						}
+					});
+
+					var access_token = tmpdata.responseText;
+					access_token = access_token.replace(/"/g,"");
+					
+					
+					// console.log('New Access Token:  ' + access_token );
+					// sessionStorage.setItem('access_token', 'access_token' );
+					sessionStorage.setItem('access_token', access_token );
+					// console.log(sessionStorage.getItem('access_token'));
 				
 					var embedConfiguration = {
 						type: '<?php echo $embed_type; ?>',
 						embedUrl: '<?php echo $embed_url; ?>',
 						tokenType: models.TokenType.<?php echo $token_type; ?>,
-						accessToken: '<?php echo $access_token; ?>',
+						accessToken: access_token,
 						settings: {
 							filterPaneEnabled: <?php echo ($filter_pane ? 'true': 'false'); ?>,
 							navContentPaneEnabled: <?php echo ($page_navigation ? 'true': 'false'); ?>,
+                            <?php if( isset( $background ) ): ?>
 							<?php if ( !empty( $background ) ) : ?>
 								background: <?php echo $background; ?>,
 							<?php endif; ?>
+                            <?php else : ?>
+                                background: models.BackgroundType.Transparent,
+                            <?php endif; ?>
+
 							localeSettings: {
 								language: '<?php echo $language; ?>',
 								formatLocale: '<?php echo $format_local; ?>'
@@ -227,13 +249,14 @@ class Power_Bi_Shortcodes {
 										report.setAccessToken(data)
 											.then(function(resp) {
 												console.log("New token: " + report.getAccessToken());
+												sessionStorage.setItem('access_token', report.getAccessToken() );
 											})
 											.catch(function(error) {console.log(error)} );
 										
 										test(report);
 									}).catch(function(error) { console.log(error)});
 
-								}, 1000*60*50);
+								}, 1000*60*10);
 							}
 
 							test(report);

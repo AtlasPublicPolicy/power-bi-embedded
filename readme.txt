@@ -3,8 +3,8 @@ Contributors: atlaspolicy, upnrunn, stegel
 Tags: powerbi-embedded, wordpress-plugin, powerbi, wordpress
 Requires at least: 4.4.0
 Requires PHP: 5.2.4
-Tested up to: 5.2.0
-Stable tag: 1.1.0
+Tested up to: 5.2.2
+Stable tag: 1.1.1
 License: GNU General Public License v3.0
 License URI: https://www.gnu.org/licenses/lgpl.html
 
@@ -192,6 +192,10 @@ N/A
 * Updated Power BI JavaScript assets from v2.5.1 to v2.6.6
 * Added url-search-params-polyfill to be backwards compatible with IE11
 
+= 1.1.1 = 
+* Added support for caching plugins (must not cache /wp-json/wp/v2/powerbi/getToken directory)
+* Attempt at fixes for WP Bakery theme
+
 == Upgrade Notice ==
 
 = 1.0.1 =
@@ -202,3 +206,6 @@ This release contains feature enhancements.
 
 = 1.1.0 = 
 This release contains feature enhancements and bug fixes.
+
+= 1.1.1 = 
+This release contains important bug fixes. 
