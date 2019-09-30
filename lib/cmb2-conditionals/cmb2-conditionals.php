@@ -39,7 +39,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-if ( ! class_exists( 'CMB2_Conditionals' ) ) {
+if ( ! class_exists( 'CMB2_Conditionals', false ) ) {
 
 	/**
 	 * CMB2_Conditionals Plugin.
@@ -100,17 +100,40 @@ if ( ! class_exists( 'CMB2_Conditionals' ) ) {
 		 * Decide whether to include the js-script or not.
 		 */
 		public function admin_footer() {
-		    if ( ! in_array( $GLOBALS['pagenow'], array( 'post-new.php', 'post.php' ), true ) ) {
-		    	return;
-		    }
+			// enqueue on editor
+			$enqueue_script = in_array( $GLOBALS['pagenow'], array( 'post-new.php', 'post.php' ), true );
 
-			wp_enqueue_script(
-				'cmb2-conditionals',
-				plugins_url( '/cmb2-conditionals.js', __FILE__ ),
-				array( 'jquery', 'cmb2-scripts' ),
-				self::VERSION,
-				true
-			);
+			// if not editor, check if current screen contains cmb2 option page
+			if ( is_admin() && ! $enqueue_script ) {
+				// get current screen object
+				$screen = get_current_screen();
+				// get all option page metaboxes
+				$option_page_boxes = CMB2_Boxes::get_by( 'object_types', array('options-page') );
+				// loop option page metaboxes and check if existing on curent screen
+				foreach( $option_page_boxes as $option_box_id => $option_box ) {
+					if ( $enqueue_script === true )
+						break;
+					if ( str_replace( '.php', '', $option_box->meta_box['parent_slug'] ) === $screen->parent_base && strpos( $screen->base, $option_box_id ) !== false )
+						$enqueue_script = true;
+				}
+			}
+
+			// last chance to skip or force enqueue
+			$enqueue_script = apply_filters( 'cmb2_conditionals_enqueue_script', $enqueue_script );
+
+			// possibility to change script source
+			$script_src = apply_filters( 'cmb2_conditionals_enqueue_script_src', plugins_url( '/cmb2-conditionals.js', __FILE__ ) );
+
+			if ( $enqueue_script ) {
+				wp_enqueue_script(
+					'cmb2-conditionals',
+					$script_src,
+					array( 'jquery', 'cmb2-scripts' ),
+					self::VERSION,
+					true
+				);
+			}
+
 		}
 
 
@@ -261,7 +284,12 @@ if ( ! class_exists( 'CMB2_Conditionals' ) ) {
 		 * Initialize the class.
 		 */
 		function cmb2_conditionals_init() {
-			$cmb2_conditionals = new CMB2_Conditionals();
+			static $cmb2_conditionals = null;
+			if ( null === $cmb2_conditionals ) {
+				$cmb2_conditionals = new CMB2_Conditionals();
+			}
+
+			return $cmb2_conditionals;
 		}
 	}
 } /* End of class-exists wrapper. */
