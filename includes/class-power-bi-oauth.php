@@ -124,7 +124,6 @@ class Power_Bi_Oauth {
             } else {
                 $token = json_decode($response, true);
                 set_transient( 't_token', $token, HOUR_IN_SECONDS );
-                // set_transient( 't_token', $token, 120 );
                 return $token;
             }
         } }
