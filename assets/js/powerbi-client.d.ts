@@ -1,5 +1,11 @@
-/*! powerbi-client v2.5.1 | (c) 2016 Microsoft Corporation MIT */
+/*! powerbi-client v2.10.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
+    import { HttpPostMessage } from 'http-post-message';
+    global  {
+        interface Window {
+            msCrypto: Crypto;
+        }
+    }
     /**
      * Raises a custom event with event data on the specified HTML element.
      *
@@ -39,12 +45,19 @@ declare module "util" {
      */
     export function assign(...args: any[]): any;
     /**
-     * Generates a random 7 character string.
+     * Generates a random 5 to 6 character string.
      *
      * @export
      * @returns {string}
      */
     export function createRandomString(): string;
+    /**
+     * Generates a 20 charachter uuid.
+     *
+     * @export
+     * @returns {string}
+     */
+    export function generateUUID(): string;
     /**
      * Adds a parameter to the given url
      *
@@ -55,6 +68,42 @@ declare module "util" {
      * @returns {string}
      */
     export function addParamToUrl(url: string, paramName: string, value: string): string;
+    /**
+     * Checks if the report is saved.
+     *
+     * @export
+     * @param {HttpPostMessage} hpm
+     * @param {string} uid
+     * @param {Window} contentWindow
+     * @returns {Promise<boolean>}
+     */
+    export function isSavedInternal(hpm: HttpPostMessage, uid: string, contentWindow: Window): Promise<boolean>;
+    /**
+     * Checks if the embed url is for RDL report.
+     *
+     * @export
+      * @param {string} embedUrl
+      * @returns {boolean}
+     */
+    export function isRDLEmbed(embedUrl: string): boolean;
+    /**
+     * Returns random number
+     */
+    export function getRandomValue(): number;
+}
+declare module "config" {
+    const config: {
+        version: string;
+        type: string;
+    };
+    export default config;
+}
+declare module "defaults" {
+    import * as models from 'powerbi-models';
+    export abstract class Defaults {
+        static defaultSettings: models.ISettings;
+        static defaultQnaSettings: models.IQnaSettings;
+    }
 }
 declare module "embed" {
     import * as service from "service";
@@ -70,16 +119,28 @@ declare module "embed" {
         }
     }
     /**
+     * Prepare configuration for Power BI embed components.
+     *
+     * @export
+     * @interface IBootstrapEmbedConfiguration
+     */
+    export interface IBootstrapEmbedConfiguration {
+        hostname?: string;
+        embedUrl?: string;
+        settings?: ISettings;
+        uniqueId?: string;
+        type?: string;
+        groupId?: string;
+        bootstrapped?: boolean;
+    }
+    /**
      * Base Configuration settings for Power BI embed components
      *
      * @export
      * @interface IEmbedConfigurationBase
+     * @extends IBootstrapEmbedConfiguration
      */
-    export interface IEmbedConfigurationBase {
-        settings?: ISettings;
-        embedUrl?: string;
-        uniqueId?: string;
-        type?: string;
+    export interface IEmbedConfigurationBase extends IBootstrapEmbedConfiguration {
         accessToken?: string;
         tokenType?: models.TokenType;
     }
@@ -102,6 +163,7 @@ declare module "embed" {
         dashboardId?: string;
         height?: number;
         width?: number;
+        theme?: models.IReportTheme;
     }
     export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
         visualName: string;
@@ -145,7 +207,9 @@ declare module "embed" {
         static embedUrlAttribute: string;
         static nameAttribute: string;
         static typeAttribute: string;
+        static defaultEmbedHostName: string;
         static type: string;
+        static maxFrontLoadTimes: number;
         allowedEvents: any[];
         /**
          * Gets or sets the event handler registered for this embed component.
@@ -178,6 +242,12 @@ declare module "embed" {
          */
         config: IEmbedConfigurationBase;
         /**
+         * Gets or sets the bootstrap configuration for the Power BI embed component received by powerbi.bootstrap().
+         *
+         * @type {IBootstrapEmbedConfiguration}
+         */
+        bootstrapConfig: IBootstrapEmbedConfiguration;
+        /**
          * Gets or sets the configuration settings for creating report.
          *
          * @type {models.IReportCreateConfiguration}
@@ -196,6 +266,10 @@ declare module "embed" {
          */
         embeType: string;
         /**
+         * Handler function for the 'ready' event
+         */
+        frontLoadHandler: () => any;
+        /**
          * Creates an instance of Embed.
          *
          * Note: there is circular reference between embeds and the service, because
@@ -205,7 +279,7 @@ declare module "embed" {
          * @param {HTMLElement} element
          * @param {IEmbedConfigurationBase} config
          */
-        constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean);
+        constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * Sends createReport configuration data.
          *
@@ -322,7 +396,7 @@ declare module "embed" {
          * @param {IEmbedConfiguration}
          * @returns {void}
          */
-        populateConfig(config: IEmbedConfigurationBase): void;
+        populateConfig(config: IBootstrapEmbedConfiguration, isBootstrap: boolean): void;
         /**
          * Adds locale parameters to embedUrl
          *
@@ -336,7 +410,8 @@ declare module "embed" {
          * @private
          * @returns {string}
          */
-        private getEmbedUrl();
+        private getEmbedUrl(isBootstrap);
+        private getDefaultEmbedUrl(hostname);
         /**
          * Gets a unique ID from the first available location: options, attribute.
          * If neither is provided generate a unique string.
@@ -346,12 +421,33 @@ declare module "embed" {
          */
         private getUniqueId();
         /**
+         * Gets the group ID from the first available location: options, embeddedUrl.
+         *
+         * @private
+         * @returns {string}
+         */
+        private getGroupId();
+        /**
          * Gets the report ID from the first available location: options, attribute.
          *
          * @abstract
          * @returns {string}
          */
         abstract getId(): string;
+        /**
+         * Raise a config changed event.
+         *
+         * @returns {void}
+         */
+        abstract configChanged(isBootstrap: boolean): void;
+        /**
+         * Gets default embed endpoint for each entity.
+         * For example: report embed endpoint is reportEmbed.
+         * This will help creating a default embed URL such as: https://app.powerbi.com/reportEmbed
+         *
+         * @returns {string} endpoint.
+         */
+        abstract getDefaultEmbedUrlEndpoint(): string;
         /**
          * Requests the browser to render the component's iframe in fullscreen mode.
          */
@@ -376,8 +472,36 @@ declare module "embed" {
         /**
          * Sets Iframe for embed
          */
-        private setIframe(isLoad, phasedRender?);
+        private setIframe(isLoad, phasedRender?, isBootstrap?);
+        /**
+         * Sets Iframe's title
+         */
+        setComponentTitle(title: string): void;
+        /**
+         * Sets element's tabindex attribute
+         */
+        setComponentTabIndex(tabIndex?: number): void;
+        /**
+         * Removes element's tabindex attribute
+         */
+        removeComponentTabIndex(tabIndex?: number): void;
+        /**
+         * Adds the ability to get groupId from url.
+         * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
+         *
+         * @static
+         * @param {string} url
+         * @returns {string}
+         */
+        static findGroupIdFromEmbedUrl(url: string): string;
+        /**
+         * Sends the config for front load calls, after 'ready' message is received from the iframe
+         */
+        private frontLoadSendConfig(config);
     }
+}
+declare module "errors" {
+    export let APINotSupportedForRDLError: string;
 }
 declare module "ifilterable" {
     import * as models from 'powerbi-models';
@@ -509,9 +633,48 @@ declare module "visualDescriptor" {
          *  .then(data => { ... });
          * ```
          *
-         * @returns {(Promise<string>)}
+         * @returns {(Promise<models.ExportDataType>)}
          */
-        exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<string>;
+        exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<models.ExportDataType>;
+        /**
+         * Set slicer state.
+         * Works only for visuals of type slicer.
+         * @param state: A new state which contains the slicer filters.
+         * ```javascript
+         * visual.setSlicerState()
+         *  .then(() => { ... });
+         * ```
+         */
+        setSlicerState(state: models.ISlicerState): Promise<void>;
+        /**
+         * Get slicer state.
+         * Works only for visuals of type slicer.
+         *
+         * ```javascript
+         * visual.getSlicerState()
+         *  .then(state => { ... });
+         * ```
+         *
+         * @returns {(Promise<models.ISlicerState>)}
+         */
+        getSlicerState(): Promise<models.ISlicerState>;
+        /**
+         * Clone existing visual to a new instance.
+         *
+         * @returns {(Promise<models.ICloneVisualResponse>)}
+         */
+        clone(request?: models.ICloneVisualRequest): Promise<models.ICloneVisualResponse>;
+        /**
+         * Sort a visual by dataField and direction.
+         *
+         * @param request: Sort by visual request.
+         *
+         * ```javascript
+         * visual.sortBy(request)
+         *  .then(() => { ... });
+         * ```
+         */
+        sortBy(request: models.ISortByVisualRequest): Promise<void>;
     }
 }
 declare module "page" {
@@ -563,14 +726,33 @@ declare module "page" {
          */
         isActive: boolean;
         /**
+         * The visibility of the page.
+         * 0 - Always Visible
+         * 1 - Hidden in View Mode
+         *
+         * @type {models.SectionVisibility}
+         */
+        visibility: models.SectionVisibility;
+        /**
+         * Page size as saved in the report.
+         * @type {models.ICustomPageSize}
+         */
+        defaultSize: models.ICustomPageSize;
+        /**
+         * Page display options as saved in the report.
+         * @type {models.ICustomPageSize}
+         */
+        defaultDisplayOption: models.DisplayOption;
+        /**
          * Creates an instance of a Power BI report page.
          *
          * @param {IReportNode} report
          * @param {string} name
          * @param {string} [displayName]
          * @param {boolean} [isActivePage]
+         * @param {models.SectionVisibility} [visibility]
          */
-        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean);
+        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility, defaultSize?: models.ICustomPageSize, defaultDisplayOption?: models.DisplayOption);
         /**
          * Gets all page level filters within the report.
          *
@@ -638,13 +820,6 @@ declare module "page" {
         hasLayout(layoutType: any): Promise<boolean>;
     }
 }
-declare module "defaults" {
-    import * as models from 'powerbi-models';
-    export abstract class Defaults {
-        static defaultSettings: models.ISettings;
-        static defaultQnaSettings: models.IQnaSettings;
-    }
-}
 declare module "report" {
     import * as service from "service";
     import * as embed from "embed";
@@ -688,7 +863,7 @@ declare module "report" {
          * @param {HTMLElement} element
          * @param {embed.IEmbedConfiguration} config
          */
-        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, iframe?: HTMLIFrameElement);
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
         /**
          * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
          * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
@@ -768,7 +943,7 @@ declare module "report" {
          * @param {boolean} [isActive]
          * @returns {Page}
          */
-        page(name: string, displayName?: string, isActive?: boolean): Page;
+        page(name: string, displayName?: string, isActive?: boolean, visibility?: models.SectionVisibility): Page;
         /**
          * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
          */
@@ -835,18 +1010,18 @@ declare module "report" {
          */
         validate(config: embed.IEmbedConfigurationBase): models.IError[];
         /**
-         * Populate config for load config
+         * Handle config changes.
          *
-         * @param {IEmbedConfigurationBase}
          * @returns {void}
          */
-        populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
+        configChanged(isBootstrap: boolean): void;
+        getDefaultEmbedUrlEndpoint(): string;
         /**
          * Switch Report view mode.
          *
          * @returns {Promise<void>}
          */
-        switchMode(viewMode: models.ViewMode): Promise<void>;
+        switchMode(viewMode: models.ViewMode | string): Promise<void>;
         /**
         * Refreshes data sources for the report.
         *
@@ -855,6 +1030,35 @@ declare module "report" {
         * ```
         */
         refresh(): Promise<void>;
+        /**
+         * checks if the report is saved.
+         *
+         * ```javascript
+         * report.isSaved()
+         * ```
+         *
+         * @returns {Promise<boolean>}
+         */
+        isSaved(): Promise<boolean>;
+        /**
+         * Apply a theme to the report
+         *
+         * ```javascript
+         * report.applyTheme(theme);
+         * ```
+         */
+        applyTheme(theme: models.IReportTheme): Promise<void>;
+        /**
+        * Reset and apply the default theme of the report
+        *
+        * ```javascript
+        * report.resetTheme();
+        * ```
+        */
+        resetTheme(): Promise<void>;
+        private applyThemeInternal(theme);
+        private viewModeToString(viewMode);
+        private isMobileSettings(settings);
     }
 }
 declare module "create" {
@@ -862,7 +1066,7 @@ declare module "create" {
     import * as models from 'powerbi-models';
     import * as embed from "embed";
     export class Create extends embed.Embed {
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean);
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * Gets the dataset ID from the first available location: createConfig or embed url.
          *
@@ -874,12 +1078,22 @@ declare module "create" {
          */
         validate(config: embed.IEmbedConfigurationBase): models.IError[];
         /**
-         * Populate config for create
+         * Handle config changes.
          *
-         * @param {IEmbedConfigurationBase}
          * @returns {void}
          */
-        populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
+        configChanged(isBootstrap: boolean): void;
+        getDefaultEmbedUrlEndpoint(): string;
+        /**
+         * checks if the report is saved.
+         *
+         * ```javascript
+         * report.isSaved()
+         * ```
+         *
+         * @returns {Promise<boolean>}
+         */
+        isSaved(): Promise<boolean>;
         /**
          * Adds the ability to get datasetId from url.
          * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?datasetId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
@@ -928,7 +1142,7 @@ declare module "dashboard" {
          * @param {service.Service} service
          * @param {HTMLElement} element
          */
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean);
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * This adds backwards compatibility for older config which used the dashboardId query param to specify dashboard id.
          * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
@@ -951,12 +1165,12 @@ declare module "dashboard" {
          */
         validate(baseConfig: embed.IEmbedConfigurationBase): models.IError[];
         /**
-         * Populate config for load config
+         * Handle config changes.
          *
-         * @param {IEmbedConfigurationBase}
          * @returns {void}
          */
-        populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
+        configChanged(isBootstrap: boolean): void;
+        getDefaultEmbedUrlEndpoint(): string;
         /**
          * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
          */
@@ -977,7 +1191,7 @@ declare module "tile" {
     export class Tile extends embed.Embed {
         static type: string;
         static allowedEvents: string[];
-        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean);
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * The ID of the tile
          *
@@ -989,12 +1203,12 @@ declare module "tile" {
          */
         validate(config: embed.IEmbedConfigurationBase): models.IError[];
         /**
-         * Populate config for load config
+         * Handle config changes.
          *
-         * @param {IEmbedConfigurationBase}
          * @returns {void}
          */
-        populateConfig(baseConfig: embed.IEmbedConfigurationBase): void;
+        configChanged(isBootstrap: boolean): void;
+        getDefaultEmbedUrlEndpoint(): string;
         /**
          * Adds the ability to get tileId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
@@ -1020,7 +1234,7 @@ declare module "qna" {
     export class Qna extends embed.Embed {
         static type: string;
         static allowedEvents: string[];
-        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean);
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * The ID of the Qna embed component
          *
@@ -1034,6 +1248,13 @@ declare module "qna" {
          * @returns {string}
          */
         setQuestion(question: string): Promise<void>;
+        /**
+         * Handle config changes.
+         *
+         * @returns {void}
+         */
+        configChanged(isBootstrap: boolean): void;
+        getDefaultEmbedUrlEndpoint(): string;
         /**
          * Validate load configuration.
          */
@@ -1054,8 +1275,6 @@ declare module "visual" {
      */
     export class Visual extends Report {
         static type: string;
-        static GetFiltersNotSupportedError: string;
-        static SetFiltersNotSupportedError: string;
         static GetPagesNotSupportedError: string;
         static SetPageNotSupportedError: string;
         /**
@@ -1065,7 +1284,7 @@ declare module "visual" {
          * @param {HTMLElement} element
          * @param {embed.IEmbedConfiguration} config
          */
-        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, iframe?: HTMLIFrameElement);
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
         load(baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean): Promise<void>;
         /**
          * Gets the list of pages within the report - not supported in visual embed.
@@ -1081,11 +1300,11 @@ declare module "visual" {
          */
         setPage(pageName: string): Promise<void>;
         /**
-         * Gets filters that are applied at the visual level.
+         * Gets filters that are applied to the filter level.
+         * Default filter level is visual level.
          *
          * ```javascript
-         * // Get filters applied at visual level
-         * visual.getFilters()
+         * visual.getFilters(filtersLevel)
          *   .then(filters => {
          *     ...
          *   });
@@ -1093,16 +1312,17 @@ declare module "visual" {
          *
          * @returns {Promise<models.IFilter[]>}
          */
-        getFilters(): Promise<models.IFilter[]>;
+        getFilters(filtersLevel?: models.FiltersLevel): Promise<models.IFilter[]>;
         /**
-         * Sets filters at the visual level.
+         * Sets filters at the filter level.
+         * Default filter level is visual level.
          *
          * ```javascript
          * const filters: [
          *    ...
          * ];
          *
-         * visual.setFilters(filters)
+         * visual.setFilters(filters, filtersLevel)
          *  .catch(errors => {
          *    ...
          *  });
@@ -1111,7 +1331,19 @@ declare module "visual" {
          * @param {(models.IFilter[])} filters
          * @returns {Promise<void>}
          */
-        setFilters(filters: models.IFilter[]): Promise<void>;
+        setFilters(filters: models.IFilter[], filtersLevel?: models.FiltersLevel): Promise<void>;
+        /**
+         * Removes all filters from the current filter level.
+         * Default filter level is visual level.
+         *
+         * ```javascript
+         * visual.removeFilters(filtersLevel);
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        removeFilters(filtersLevel?: models.FiltersLevel): Promise<void>;
+        private getFiltersLevelUrl(filtersLevel);
     }
 }
 declare module "service" {
@@ -1187,7 +1419,7 @@ declare module "service" {
         /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
         wpmp: wpmp.WindowPostMessageProxy;
         private router;
-        private static DefaultInitEmbedUrl;
+        private uniqueSessionId;
         /**
          * Creates an instance of a Power BI Service.
          *
@@ -1233,7 +1465,16 @@ declare module "service" {
          * @returns {embed.Embed}
          */
         load(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
-        embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase, phasedRender?: boolean): embed.Embed;
+        /**
+         * Given an HTML element and entityType, creates a new component instance, and bootstrap the iframe for embedding.
+         *
+         * @param {HTMLElement} element
+         * @param {embed.IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
+         */
+        bootstrap(element: HTMLElement, config: embed.IBootstrapEmbedConfiguration): embed.Embed;
+        embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed;
+        getNumberOfComponents(): number;
+        getSdkSessionId(): string;
         /**
          * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
          *
@@ -1242,7 +1483,7 @@ declare module "service" {
          * @param {embed.IEmbedConfigurationBase} config
          * @returns {embed.Embed}
          */
-        private embedNew(element, config, phasedRender?);
+        private embedNew(element, config, phasedRender?, isBootstrap?);
         /**
          * Given an element that already contains an embed component, load with a new configuration.
          *
@@ -1391,13 +1632,6 @@ declare module "bookmarksManager" {
          */
         applyState(state: string): Promise<void>;
     }
-}
-declare module "config" {
-    const config: {
-        version: string;
-        type: string;
-    };
-    export default config;
 }
 declare module "factories" {
     /**
