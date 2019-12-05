@@ -72,6 +72,7 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			add_action( 'wp_enqueue_scripts', array( $this, 'styles' ) );
 			add_action('rest_api_init', array($this, 'register_get_powerbi_access_token'));
 			add_filter( 'the_content', array( $this, 'insert_shortcode' ) );
+			add_action('update_option_power_bi_settings', function( $old_value, $value ) { delete_transient('t_token'); }, 10, 2);
 		}
 
 		/**
