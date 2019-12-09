@@ -127,9 +127,9 @@ class Power_Bi_Oauth {
  
         $token = json_decode($response, true);
 
-	if ( $token['error'] ) {
-		return $token;
-	}
+        if ( isset($token['error']) ) {
+            return $token;
+        }
 
         set_transient( 't_token', $token, HOUR_IN_SECONDS );
         return $token;
