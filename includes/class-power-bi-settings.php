@@ -145,6 +145,13 @@ class Power_Bi_Settings {
         );
 
     	add_settings_field(
+    		'power_bi_schedule_time',
+    		__( 'Server Time', 'power-bi' ),
+    		array($this, 'power_bi_time_render'),
+    		'power_bi',
+    		'power_bi_schedule_section'
+    	);
+    	add_settings_field(
     		'power_bi_schedule_sunday_time',
     		__( 'Sunday', 'power-bi' ),
     		'power_bi_schedule_sunday_render',
@@ -222,6 +229,11 @@ class Power_Bi_Settings {
                 wp_clear_scheduled_hook( 'power_bi_schedule_resource_'.$day_name.'_start_cron' );
                 // PAUSE //
                 wp_clear_scheduled_hook( 'power_bi_schedule_resource_'.$day_name.'_pause_cron' );
+                // CAPACITY //
+                $capacity_skus = Power_Bi_Schedule_Resources::get_instance()->list_skus();
+                foreach($capacity_skus as $sku){
+                    wp_clear_scheduled_hook( 'power_bi_schedule_resource_'.$day_name.'_capacity_cron', array($sku['name']) );
+                }
             }
 		}
 		
@@ -243,6 +255,11 @@ class Power_Bi_Settings {
 		<?php
 
 	}
+
+    public function power_bi_time_render() {
+            $current_time = date("l, F j, Y, G:i", time());
+			echo esc_html( $current_time ); 
+    }
 }
 
 Power_Bi_Settings::get_instance();

@@ -107,6 +107,10 @@ function power_bi_schedule_sunday_render() {
 		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
 		<?php display_time_dropdown($options['power_bi_schedule_sunday_pause_time']); ?>
 	</select>
+	<select name="power_bi_settings[power_bi_schedule_sunday_capacity]">
+		<option value=""><?php echo __( 'CAPACITY', 'power-bi' ); ?></option>
+     	<?php display_capacity_dropdown($options['power_bi_schedule_sunday_capacity']); ?>
+	</select>
 	<?php
 
 }
@@ -120,6 +124,10 @@ function power_bi_schedule_monday_render() {
 		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
 		<?php display_time_dropdown($options['power_bi_schedule_monday_pause_time']); ?>
 	</select>
+	<select name="power_bi_settings[power_bi_schedule_monday_capacity]">
+		<option value=""><?php echo __( 'CAPACITY', 'power-bi' ); ?></option>
+     	<?php display_capacity_dropdown($options['power_bi_schedule_monday_capacity']); ?>
+	</select>
 	<?php
 }
 function power_bi_schedule_tuesday_render() {
@@ -131,6 +139,10 @@ function power_bi_schedule_tuesday_render() {
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_tuesday_pause_time]">
 		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
 		<?php display_time_dropdown($options['power_bi_schedule_tuesday_pause_time']); ?>
+	</select>
+	<select name="power_bi_settings[power_bi_schedule_tuesday_capacity]">
+		<option value=""><?php echo __( 'CAPACITY', 'power-bi' ); ?></option>
+     	<?php display_capacity_dropdown($options['power_bi_schedule_tuesday_capacity']); ?>
 	</select>
 	<?php
 }
@@ -144,6 +156,10 @@ function power_bi_schedule_wednesday_render() {
 		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
 		<?php display_time_dropdown($options['power_bi_schedule_wednesday_pause_time']); ?>
 	</select>
+	<select name="power_bi_settings[power_bi_schedule_wednesday_capacity]">
+		<option value=""><?php echo __( 'CAPACITY', 'power-bi' ); ?></option>
+     	<?php display_capacity_dropdown($options['power_bi_schedule_wednesday_capacity']); ?>
+	</select>
 	<?php
 }
 function power_bi_schedule_thursday_render() {
@@ -156,6 +172,10 @@ function power_bi_schedule_thursday_render() {
 		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
 		<?php display_time_dropdown($options['power_bi_schedule_thursday_pause_time']); ?>
 	</select>
+	<select name="power_bi_settings[power_bi_schedule_thursday_capacity]">
+		<option value=""><?php echo __( 'CAPACITY', 'power-bi' ); ?></option>
+     	<?php display_capacity_dropdown($options['power_bi_schedule_thursday_capacity']); ?>
+	</select>
 	<?php
 }
 function power_bi_schedule_friday_render() {
@@ -164,9 +184,14 @@ function power_bi_schedule_friday_render() {
 	<select name="power_bi_settings[power_bi_schedule_friday_start_time]">
 		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
 		<?php display_time_dropdown($options['power_bi_schedule_friday_start_time']); ?>
-	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_friday_pause_time]">
+	</select>&nbsp;
+    <select name="power_bi_settings[power_bi_schedule_friday_pause_time]">
 		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
 		<?php display_time_dropdown($options['power_bi_schedule_friday_pause_time']); ?>
+	</select>
+	<select name="power_bi_settings[power_bi_schedule_friday_capacity]">
+		<option value=""><?php echo __( 'CAPACITY', 'power-bi' ); ?></option>
+     	<?php display_capacity_dropdown($options['power_bi_schedule_friday_capacity']); ?>
 	</select>
 	<?php
 }
@@ -179,6 +204,10 @@ function power_bi_schedule_saturday_render() {
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_saturday_pause_time]">
 		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
 		<?php display_time_dropdown($options['power_bi_schedule_saturday_pause_time']); ?>
+	</select>
+	<select name="power_bi_settings[power_bi_schedule_saturday_capacity]">
+		<option value=""><?php echo __( 'CAPACITY', 'power-bi' ); ?></option>
+     	<?php display_capacity_dropdown($options['power_bi_schedule_saturday_capacity']); ?>
 	</select>
 	<?php
 }
@@ -196,6 +225,20 @@ function display_time_dropdown($sel =  "") {
 
 	    }
 	}
+}
+function display_capacity_dropdown($sel =  "") {
+
+    $capacity_skus = Power_Bi_Schedule_Resources::get_instance()->list_skus();
+
+    if(isset($capacity_skus['error'])){
+        return;
+    }
+
+    foreach($capacity_skus as $sku){
+        $selected = selected($sel, $sku['name'], true);
+        echo "<option value='{$sku['name']}' {$selected}>Set to {$sku['name']}</option>";
+    }
+
 }
 // To add new cron custom schedule
 add_filter( 'cron_schedules', 'power_bi_add_weekly_schedule' );
