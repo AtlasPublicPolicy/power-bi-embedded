@@ -5,6 +5,9 @@
  * @package Power_Bi
  */
 class Power_Bi_Schedule_Resources {
+
+    const RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME = 'power_bi_reschedule_resource_capacity_cron';
+
 	/**
 	 * Returns the instance.
 	 */
@@ -25,23 +28,26 @@ class Power_Bi_Schedule_Resources {
                 $capacity_name = "power_bi_schedule_resource_{$day_name}_capacity_cron";
 
                 $start_cron = wp_next_scheduled ( $start_name );
-                $start_cron = date("F j, Y, g:i a", $start_cron);
-                error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$start_name}: " . var_export($start_cron, true));
+                if($start_cron){
+                    $start_cron = date("F j, Y, g:i a", $start_cron);
+                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$start_name}: " . var_export($start_cron, true));
+                }
 
                 $pause_cron = wp_next_scheduled ( $pause_name );
-                $pause_cron = date("F j, Y, g:i a", $pause_cron);
-                error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$pause_name}: " . var_export($pause_cron, true));
+                if($pause_cron){
+                    $pause_cron = date("F j, Y, g:i a", $pause_cron);
+                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$pause_name}: " . var_export($pause_cron, true));
+                }
 
 		        $power_bi_scheduler_settings 	= get_option( 'power_bi_settings' );
                 $setting_name = 'power_bi_schedule_' . $day_name . '_capacity';
                 $sku_name = $power_bi_scheduler_settings[$setting_name];
                 $capacity_cron = wp_next_scheduled ( $capacity_name, array($sku_name) );
-                $capacity_cron = date("F j, Y, g:i a", $capacity_cron);
-                error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$capacity_name}:" . var_export($capacity_cron, true));
+                if($capacity_cron){
+                    $capacity_cron = date("F j, Y, g:i a", $capacity_cron);
+                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$capacity_name}:" . var_export($capacity_cron, true));
+                }
             }
-
-            $current_time = date("F j, Y, g:i a", time());
-            error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':current_time: ' . var_export($current_time, true));
 
         }
 
@@ -88,6 +94,7 @@ class Power_Bi_Schedule_Resources {
 			add_action( 'power_bi_schedule_resource_'.$day_name.'_pause_cron', array( $this, 'power_bi_schedule_resource_pause_fn') );
 			add_action( 'power_bi_schedule_resource_'.$day_name.'_capacity_cron', array( $this, 'power_bi_schedule_resource_update_capacity_fn'), 10, 2);
 		}
+        add_action( self::RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME, array( $this, 'power_bi_schedule_resource_update_capacity_fn'), 10, 2);
 		
 	}
 
@@ -118,12 +125,57 @@ class Power_Bi_Schedule_Resources {
         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':sku_name: ' . var_export($sku_name, true));
 
 		//excute the code to update capacity sku for power bi
+
 		$resource_state = $this->check_resource_capacity_state();
+
 		$process_response = $this->handle_azure_capacity_update($sku_name);
+
         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':process_response: ' . var_export($process_response, true));
+
 		if($process_response) {
 			_custlog("service capacity updated to {$sku_name} @ ".Date('Y-m-d : h:i:s'));
 		}
+
+        $trans_log = array(
+            'time' => date("l, F j, Y, G:i", time()), 
+            'date_i18n' => date_i18n("l, F j, Y, G:i"),
+            'resource_state' => $resource_state,
+            'process_response' => $process_response
+        );
+        set_transient('power_bi_schedule_resource_update_capacity_fn', $trans_log, WEEK_IN_SECONDS);
+        
+        // if unsuccessful at updating the resource sku then reschedule  else clear any rescheduled updates
+
+        if(isset($process_response['error']) && wp_next_scheduled ( self::RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME, array($sku_name) ) === false) {
+
+            $retry_count = get_transient(self::RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME);
+            $retry_count = $retry_count === false ? 1 : ++$retry_count;
+            set_transient(self::RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME,  $retry_count, HOUR_IN_SECONDS);
+            error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":retry_count: " . var_export($retry_count, true));
+
+            if($retry_count > 9){
+                error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":retry_count: " . var_export($retry_count, true));
+                return;
+            }
+
+            $result = wp_schedule_single_event(time() + 60, self::RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME, array($sku_name));
+
+            error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":result: " . var_export($result, true));
+
+            $cron_name = self::RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME; 
+            $capacity_cron = wp_next_scheduled ( self::RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME, array($sku_name) );
+            $capacity_cron = date("F j, Y, g:i a", $capacity_cron);
+            error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$cron_name}:" . var_export($capacity_cron, true));
+
+        }else{
+
+            delete_transient(self::RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME);
+
+            $capacity_skus = Power_Bi_Schedule_Resources::get_instance()->list_skus();
+            foreach($capacity_skus as $sku){
+                wp_clear_scheduled_hook( self::RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME, array($sku['name']) );
+            }
+        }
 	}
 
 	protected function handle_azure_resource_service($action = "") {
@@ -189,7 +241,7 @@ class Power_Bi_Schedule_Resources {
 
 			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_sunday_capacity_cron', array($sku_name) ) === false) {
 
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_sunday_start_time']) + 60;
+				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_sunday_start_time']);
                         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
 
 				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_sunday_capacity_cron', array($sku_name));
@@ -212,7 +264,7 @@ class Power_Bi_Schedule_Resources {
 
 			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_monday_capacity_cron', array($sku_name) ) === false) {
 
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_monday_start_time']) + 60;
+				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_monday_start_time']);
                         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
 
 				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_monday_capacity_cron', array($sku_name));
@@ -235,7 +287,7 @@ class Power_Bi_Schedule_Resources {
 
 			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_tuesday_capacity_cron', array($sku_name) ) === false) {
 
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_tuesday_start_time']) + 60;
+				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_tuesday_start_time']);
                         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
 
 				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_tuesday_capacity_cron', array($sku_name));
@@ -258,7 +310,7 @@ class Power_Bi_Schedule_Resources {
 
 			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_wednesday_capacity_cron', array($sku_name) ) === false) {
 
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_wednesday_start_time']) + 60;
+				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_wednesday_start_time']);
                         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
 
 				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_wednesday_capacity_cron', array($sku_name));
@@ -274,6 +326,21 @@ class Power_Bi_Schedule_Resources {
 				    }
 			    }
                 // update capacity sku
+			    if($start_pause == 'start' && $power_bi_scheduler_settings['power_bi_schedule_thursday_capacity'] != "" && $power_bi_scheduler_settings['power_bi_schedule_thursday_start_time'] != "") {
+
+                    $sku_name = $power_bi_scheduler_settings['power_bi_schedule_thursday_capacity'];
+                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':sku_name:' . var_export($sku_name, true));
+
+			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_thursday_capacity_cron', array($sku_name) ) === false) {
+
+				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_thursday_start_time']);
+                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
+
+				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_thursday_capacity_cron', array($sku_name));
+                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':wp_schedule_event capacity_cron thursday:' . var_export($result, true));
+
+				    }
+			    }
 		        break;
 		    case "friday":
 			    if($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time'] != "") {
@@ -289,7 +356,7 @@ class Power_Bi_Schedule_Resources {
 
 			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_friday_capacity_cron', array($sku_name) ) === false) {
 
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_friday_start_time']) + 60;
+				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_friday_start_time']);
                         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
 
 				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_friday_capacity_cron', array($sku_name));
@@ -312,7 +379,7 @@ class Power_Bi_Schedule_Resources {
 
 			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_saturday_capacity_cron', array($sku_name) ) === false) {
 
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_saturday_start_time']) + 60;
+				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_saturday_start_time']);
                         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
 
 				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_saturday_capacity_cron', array($sku_name));
@@ -323,7 +390,7 @@ class Power_Bi_Schedule_Resources {
 		        break;
 		}
 	}
-	function check_resource_capacity_state() {
+	function check_resource_capacity_state($return_full_response = false) {
 		// get saved power bi settings
 		$power_bi_settings 	= get_option( 'power_bi_settings' );
 		$subscription_id 	= $power_bi_settings['power_bi_azure_subscription_id'];
@@ -366,56 +433,59 @@ class Power_Bi_Schedule_Resources {
 		  return $err;
 		} else {
 		  $response = json_decode($response, true);
+          if($return_full_response){
+            return $response;
+          }
 		  $resource_state = $response['properties']['state'];
 		  return $resource_state;
 		}
 	}
-	public function list_skus($action = "") {
+    public function list_skus($action = "") {
 
         $skus = get_transient('power_bi_ms_capacity_skus');
-        if($skus !== false){
+        if($skus !== false && count($skus) > 0){
             return $skus;
         }
         
-		// get saved power bi settings
-		$power_bi_settings 	= get_option( 'power_bi_settings' );
-		$subscription_id 	= $power_bi_settings['power_bi_azure_subscription_id'];
-		$resource_group 	= $power_bi_settings['power_bi_azure_resource_group'];
-		$capacity 			= $power_bi_settings['power_bi_azure_capacity'];
-		// get saved management azure credential for access token
-		$powerbi_azure_credentials = get_option('power_bi_management_azure_credentials');
+        // get saved power bi settings
+        $power_bi_settings  = get_option( 'power_bi_settings' );
+        $subscription_id    = $power_bi_settings['power_bi_azure_subscription_id'];
+        $resource_group     = $power_bi_settings['power_bi_azure_resource_group'];
+        $capacity           = $power_bi_settings['power_bi_azure_capacity'];
+        // get saved management azure credential for access token
+        $powerbi_azure_credentials = get_option('power_bi_management_azure_credentials');
 
         $request_url = "https://management.azure.com/subscriptions/{$subscription_id}/resourceGroups/{$resource_group}/providers/Microsoft.PowerBIDedicated/capacities/{$capacity}/skus?api-version=2017-10-01";
 
-		$authorization = "Authorization: Bearer " . $powerbi_azure_credentials['access_token'];
-		$curl = curl_init();
+        $authorization = "Authorization: Bearer " . $powerbi_azure_credentials['access_token'];
+        $curl = curl_init();
 
-		curl_setopt_array($curl, array(
-		  CURLOPT_URL => $request_url,
-		  CURLOPT_RETURNTRANSFER => true,
-		  CURLOPT_ENCODING => "",
-		  CURLOPT_MAXREDIRS => 10,
-		  CURLOPT_TIMEOUT => 30,
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		  CURLOPT_CUSTOMREQUEST => "GET",
-		  CURLOPT_SSL_VERIFYPEER => false,
-		  CURLOPT_HTTPHEADER => array(
-		    "Cache-Control: no-cache",
-		    "Content-Type: application/json",
-		    $authorization,
-		    "Content-length: 0"
-		  ),
-		));
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $request_url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+          CURLOPT_SSL_VERIFYPEER => false,
+          CURLOPT_HTTPHEADER => array(
+            "Cache-Control: no-cache",
+            "Content-Type: application/json",
+            $authorization,
+            "Content-length: 0"
+          ),
+        ));
 
-		$response = curl_exec($curl);
-		$err = curl_error($curl);
+        $response = curl_exec($curl);
+        $err = curl_error($curl);
 
-		curl_close($curl);
+        curl_close($curl);
 
         if ($err) {
             $err = json_decode($err, true);
             return array('error' => $err);
-		} 
+        } 
 
         $response = json_decode($response, true);
 
@@ -432,25 +502,25 @@ class Power_Bi_Schedule_Resources {
         
         return $skus;
 
-	}
-	protected function handle_azure_capacity_update($sku_name = "") {
+    }
+    protected function handle_azure_capacity_update($sku_name = "") {
 
         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':sku_name: ' . var_export($sku_name, true));
 
-		// get saved power bi settings
-		$power_bi_settings 	= get_option( 'power_bi_settings' );
-		$subscription_id 	= $power_bi_settings['power_bi_azure_subscription_id'];
-		$resource_group 	= $power_bi_settings['power_bi_azure_resource_group'];
-		$capacity 			= $power_bi_settings['power_bi_azure_capacity'];
-		// get saved management azure credential for access token
-		$powerbi_azure_credentials = get_option('power_bi_management_azure_credentials');
-		// call url for start / resume resource capacity
-		$request_url = "https://management.azure.com/subscriptions/".$subscription_id."/resourceGroups/".$resource_group."/providers/Microsoft.PowerBIDedicated/capacities/".$capacity."?api-version=2017-10-01";
+        // get saved power bi settings
+        $power_bi_settings  = get_option( 'power_bi_settings' );
+        $subscription_id    = $power_bi_settings['power_bi_azure_subscription_id'];
+        $resource_group     = $power_bi_settings['power_bi_azure_resource_group'];
+        $capacity           = $power_bi_settings['power_bi_azure_capacity'];
+        // get saved management azure credential for access token
+        $powerbi_azure_credentials = get_option('power_bi_management_azure_credentials');
+        // call url for start / resume resource capacity
+        $request_url = "https://management.azure.com/subscriptions/".$subscription_id."/resourceGroups/".$resource_group."/providers/Microsoft.PowerBIDedicated/capacities/".$capacity."?api-version=2017-10-01";
 
         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':request_url: ' . var_export($request_url, true));
 
-		$authorization = "Authorization: Bearer " . $powerbi_azure_credentials['access_token'];
-		$curl = curl_init();
+        $authorization = "Authorization: Bearer " . $powerbi_azure_credentials['access_token'];
+        $curl = curl_init();
     
         $data = array(
             "sku" => array(
@@ -465,39 +535,39 @@ class Power_Bi_Schedule_Resources {
 
         error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':payload: ' . var_export($payload, true));
 
-		curl_setopt_array($curl, array(
-		  CURLOPT_URL => $request_url,
-		  CURLOPT_RETURNTRANSFER => true,
-		  CURLOPT_ENCODING => "",
-		  CURLOPT_MAXREDIRS => 10,
-		  CURLOPT_TIMEOUT => 30,
-		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-		  CURLOPT_CUSTOMREQUEST => "PATCH",
-		  CURLOPT_SSL_VERIFYPEER => false,
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => $request_url,
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "PATCH",
+          CURLOPT_SSL_VERIFYPEER => false,
           CURLOPT_POSTFIELDS => $payload,
-		  CURLOPT_HTTPHEADER => array(
-		    "Cache-Control: no-cache",
-		    "Content-Type: application/json",
-		    $authorization,
+          CURLOPT_HTTPHEADER => array(
+            "Cache-Control: no-cache",
+            "Content-Type: application/json",
+            $authorization,
             'Content-Length: ' . strlen($payload)
             ),
-		  )
-		);
+          )
+        );
 
-		$response = curl_exec($curl);
+        $response = curl_exec($curl);
 
-		$err = curl_error($curl);
+        $err = curl_error($curl);
 
-		curl_close($curl);
+        curl_close($curl);
 
-		if ($err) {
+        if ($err) {
           $err = json_decode($err, true);
-		  return $err;
-		} else {
-		  $response = json_decode($response, true);
-		  return $response;
-		}
-	}
+          return $err;
+        } else {
+          $response = json_decode($response, true);
+          return $response;
+        }
+    }
 }
 
 
