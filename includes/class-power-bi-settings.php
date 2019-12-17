@@ -146,8 +146,8 @@ class Power_Bi_Settings {
 
     	add_settings_field(
     		'power_bi_schedule_time',
-    		__( 'Server Time', 'power-bi' ),
-    		array($this, 'power_bi_time_render'),
+    		__( 'Info:', 'power-bi' ),
+    		array($this, 'power_bi_info_render'),
     		'power_bi',
     		'power_bi_schedule_section'
     	);
@@ -256,9 +256,26 @@ class Power_Bi_Settings {
 
 	}
 
-    public function power_bi_time_render() {
-            $current_time = date("l, F j, Y, G:i", time());
-			echo esc_html( $current_time ); 
+    public function power_bi_info_render() {
+			echo esc_html( date("l, F j, Y, G:i", time()) ); 
+			echo '<br />';
+			echo esc_html( date_i18n("l, F j, Y, G:i") ) . ' (WordPress)'; 
+			echo '<br />';
+			$capacity_state = Power_Bi_Schedule_Resources::get_instance()->check_resource_capacity_state(true);
+			echo 'resource state: ' . $capacity_state['properties']['state'] ?? '';
+			echo '<br />';
+			echo 'sku name: ' . $capacity_state['sku']['name'] ?? '';
+			echo '<br />';
+			echo 'sku tier: ' . $capacity_state['sku']['tier'] ?? '';
+			echo '<br />';
+			echo 'sku capacity: ' . $capacity_state['sku']['capacity'] ?? '';
+			echo '<br />';
+			echo 'location: ' . $capacity_state['location'] ?? '';
+			echo '<br />------------------------------------------------------<br />';
+            $capacity_fun_result = get_transient('power_bi_schedule_resource_update_capacity_fn');
+			echo 'result from last capacity update: <br /><pre>';
+			var_export($capacity_fun_result, false);
+			echo '</pre>';
     }
 }
 
