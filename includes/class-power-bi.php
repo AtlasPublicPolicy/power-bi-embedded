@@ -50,13 +50,14 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			include_once POWER_BI_PLUGIN_DIR . '/lib/cmb2-conditionals/cmb2-conditionals.php';
 
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-post-types.php';
-			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-settings.php';
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-oauth.php';
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-shortcodes.php';
-
 			include_once POWER_BI_PLUGIN_DIR . '/includes/functions-power-bi-settings.php';
+
 			// Added Schedule Resource Option
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-schedule-resources.php';
+
+			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-settings.php';
 		}
 
 		/**

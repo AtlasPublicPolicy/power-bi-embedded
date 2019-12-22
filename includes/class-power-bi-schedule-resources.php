@@ -17,38 +17,18 @@ class Power_Bi_Schedule_Resources {
 
         if ( is_null( $instance ) ) {
             $instance = new self();
-            $instance->setup_scheduler_resources_events();
-            
-		    $days_arry = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
 
-    		foreach ($days_arry as $day_name) {
-
-                $start_name = "power_bi_schedule_resource_{$day_name}_start_cron";
-                $pause_name = "power_bi_schedule_resource_{$day_name}_pause_cron";
-                $capacity_name = "power_bi_schedule_resource_{$day_name}_capacity_cron";
-
-                $start_cron = wp_next_scheduled ( $start_name );
-                if($start_cron){
-                    $start_cron = date("F j, Y, g:i a", $start_cron);
-                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$start_name}: " . var_export($start_cron, true));
-                }
-
-                $pause_cron = wp_next_scheduled ( $pause_name );
-                if($pause_cron){
-                    $pause_cron = date("F j, Y, g:i a", $pause_cron);
-                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$pause_name}: " . var_export($pause_cron, true));
-                }
-
-		        $power_bi_scheduler_settings 	= get_option( 'power_bi_settings' );
-                $setting_name = 'power_bi_schedule_' . $day_name . '_capacity';
-                $sku_name = $power_bi_scheduler_settings[$setting_name];
-                $capacity_cron = wp_next_scheduled ( $capacity_name, array($sku_name) );
-                if($capacity_cron){
-                    $capacity_cron = date("F j, Y, g:i a", $capacity_cron);
-                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$capacity_name}:" . var_export($capacity_cron, true));
-                }
+            $all_actions = array('resume', 'suspend');
+            $capacity_skus = $instance->list_skus();
+            foreach($capacity_skus as $sku){
+                $all_actions[] = $sku['name'];
             }
-
+            foreach($all_actions as $action){
+                $next = wp_next_scheduled( 'power_bi_action_cron', array($action) );
+                if($next == false) continue;
+                $next = date('l, F j, Y, G:i', $next);
+                error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':next scheduled ' . $action . ': ' . $next);
+            }
         }
 
 		return $instance;
@@ -59,44 +39,22 @@ class Power_Bi_Schedule_Resources {
 	 */
 	private function __construct() {}
 
-	/**
-	 * Sets up setup_scheduler_resources_events.
-	 *
-	 * @since  1.0.0
-	 * @access private
-	 * @return void
-	 */
-	protected function setup_scheduler_resources_events() {
-		$power_bi_scheduler_settings 	= get_option( 'power_bi_settings' );
-		$sunday_start_time 				= $power_bi_scheduler_settings['power_bi_schedule_sunday_start_time'];
-		$sunday_pause_time 				= $power_bi_scheduler_settings['power_bi_schedule_sunday_pause_time'];
-		$monday_start_time 				= $power_bi_scheduler_settings['power_bi_schedule_monday_start_time'];
-		$monday_pause_time 				= $power_bi_scheduler_settings['power_bi_schedule_monday_pause_time'];
-		$tuesday_start_time 			= $power_bi_scheduler_settings['power_bi_schedule_tuesday_start_time'];
-		$tuesday_pause_time 			= $power_bi_scheduler_settings['power_bi_schedule_tuesday_pause_time'];
-		$wednesday_start_time 			= $power_bi_scheduler_settings['power_bi_schedule_wednesday_start_time'];
-		$wednesday_pause_time 			= $power_bi_scheduler_settings['power_bi_schedule_wednesday_pause_time'];
-		$thursday_start_time 			= $power_bi_scheduler_settings['power_bi_schedule_thursday_start_time'];
-		$thursday_pause_time 			= $power_bi_scheduler_settings['power_bi_schedule_thursday_pause_time'];
-		$friday_start_time 				= $power_bi_scheduler_settings['power_bi_schedule_friday_start_time'];
-		$friday_pause_time 				= $power_bi_scheduler_settings['power_bi_schedule_friday_pause_time'];
-		$saturday_start_time 			= $power_bi_scheduler_settings['power_bi_schedule_saturday_start_time'];
-		$saturday_pause_time 			= $power_bi_scheduler_settings['power_bi_schedule_saturday_pause_time'];
-		
-		// Resource Start Event
-		$this->handle_start_pause_cron_power_bi_sch("start");
-		// Resource Pause Event
-		$this->handle_start_pause_cron_power_bi_sch("pause");
-		// prepare array and run per day cron
-		$days_arry = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
-		foreach ($days_arry as $day_name) {
-			add_action( 'power_bi_schedule_resource_'.$day_name.'_start_cron', array( $this, 'power_bi_schedule_resource_start_fn') );
-			add_action( 'power_bi_schedule_resource_'.$day_name.'_pause_cron', array( $this, 'power_bi_schedule_resource_pause_fn') );
-			add_action( 'power_bi_schedule_resource_'.$day_name.'_capacity_cron', array( $this, 'power_bi_schedule_resource_update_capacity_fn'), 10, 2);
-		}
-        add_action( self::RESCHEDULE_RESOURCE_CAPACITY_UPDATE_NAME, array( $this, 'power_bi_schedule_resource_update_capacity_fn'), 10, 2);
-		
-	}
+    public function action_cron_fun($action){
+
+        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':action: ' . var_export($action, true));
+
+        switch($action){
+            case 'suspend':
+                $this->power_bi_schedule_resource_pause_fn();
+                break;
+            case 'resume':
+                $this->power_bi_schedule_resource_start_fn();
+                break;
+            default:
+                $this->power_bi_schedule_resource_update_capacity_fn($action);
+        }
+
+    }
 
 	function power_bi_schedule_resource_start_fn() {
 		// execute the code for running event starting
@@ -223,173 +181,6 @@ class Power_Bi_Schedule_Resources {
 		}
 	}
 
-	function handle_start_pause_cron_power_bi_sch($start_pause = "") {
-		$power_bi_scheduler_settings = get_option( 'power_bi_settings' );
-		$weekdayname = strtolower(date("l"));
-		switch ($weekdayname) {
-		    case "sunday":
-			    if($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time'] != "") {
-			    	if (! wp_next_scheduled ( 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron' )) {
-				    	wp_schedule_event(custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-				    }
-			    }
-                // update capacity sku
-			    if($start_pause == 'start' && $power_bi_scheduler_settings['power_bi_schedule_sunday_capacity'] != "" && $power_bi_scheduler_settings['power_bi_schedule_sunday_start_time'] != "") {
-
-                    $sku_name = $power_bi_scheduler_settings['power_bi_schedule_sunday_capacity'];
-                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':sku_name:' . var_export($sku_name, true));
-
-			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_sunday_capacity_cron', array($sku_name) ) === false) {
-
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_sunday_start_time']);
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
-
-				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_sunday_capacity_cron', array($sku_name));
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':wp_schedule_event capacity_cron sunday:' . var_export($result, true));
-
-				    }
-			    }
-			    break;
-		    case "monday":
-		        if($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time'] != "") {
-		        	if (! wp_next_scheduled ( 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron' )) {
-				    	wp_schedule_event(custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-				    }
-			    }
-                // update capacity sku
-			    if($start_pause == 'start' && $power_bi_scheduler_settings['power_bi_schedule_monday_capacity'] != "" && $power_bi_scheduler_settings['power_bi_schedule_monday_start_time'] != "") {
-
-                    $sku_name = $power_bi_scheduler_settings['power_bi_schedule_monday_capacity'];
-                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':sku_name:' . var_export($sku_name, true));
-
-			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_monday_capacity_cron', array($sku_name) ) === false) {
-
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_monday_start_time']);
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
-
-				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_monday_capacity_cron', array($sku_name));
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':wp_schedule_event capacity_cron monday:' . var_export($result, true));
-
-				    }
-			    }
-		        break;
-		    case "tuesday":
-			    if($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time'] != "") {
-			    	if (! wp_next_scheduled ( 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron' )) {
-				    	wp_schedule_event(custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-				    }
-			    }
-                // update capacity sku
-			    if($start_pause == 'start' && $power_bi_scheduler_settings['power_bi_schedule_tuesday_capacity'] != "" && $power_bi_scheduler_settings['power_bi_schedule_tuesday_start_time'] != "") {
-
-                    $sku_name = $power_bi_scheduler_settings['power_bi_schedule_tuesday_capacity'];
-                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':sku_name:' . var_export($sku_name, true));
-
-			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_tuesday_capacity_cron', array($sku_name) ) === false) {
-
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_tuesday_start_time']);
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
-
-				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_tuesday_capacity_cron', array($sku_name));
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':wp_schedule_event capacity_cron tuesday:' . var_export($result, true));
-
-				    }
-			    }
-		        break;
-		   	case "wednesday":
-			   	if($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time'] != "") {
-			   		if (! wp_next_scheduled ( 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron' )) {
-				   		wp_schedule_event(custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-				   	}
-			   	}
-                // update capacity sku
-			    if($start_pause == 'start' && $power_bi_scheduler_settings['power_bi_schedule_wednesday_capacity'] != "" && $power_bi_scheduler_settings['power_bi_schedule_wednesday_start_time'] != "") {
-
-                    $sku_name = $power_bi_scheduler_settings['power_bi_schedule_wednesday_capacity'];
-                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':sku_name:' . var_export($sku_name, true));
-
-			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_wednesday_capacity_cron', array($sku_name) ) === false) {
-
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_wednesday_start_time']);
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
-
-				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_wednesday_capacity_cron', array($sku_name));
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':wp_schedule_event capacity_cron wednesday:' . var_export($result, true));
-
-				    }
-			    }
-		        break;
-		    case "thursday":
-			    if($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time'] != "") {
-			    	if (! wp_next_scheduled ( 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron' )) {
-				    	wp_schedule_event(custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-				    }
-			    }
-                // update capacity sku
-			    if($start_pause == 'start' && $power_bi_scheduler_settings['power_bi_schedule_thursday_capacity'] != "" && $power_bi_scheduler_settings['power_bi_schedule_thursday_start_time'] != "") {
-
-                    $sku_name = $power_bi_scheduler_settings['power_bi_schedule_thursday_capacity'];
-                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':sku_name:' . var_export($sku_name, true));
-
-			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_thursday_capacity_cron', array($sku_name) ) === false) {
-
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_thursday_start_time']);
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
-
-				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_thursday_capacity_cron', array($sku_name));
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':wp_schedule_event capacity_cron thursday:' . var_export($result, true));
-
-				    }
-			    }
-		        break;
-		    case "friday":
-			    if($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time'] != "") {
-			    	if (! wp_next_scheduled ( 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron' )) {
-				        wp_schedule_event(custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-				    }
-			    }
-                // update capacity sku
-			    if($start_pause == 'start' && $power_bi_scheduler_settings['power_bi_schedule_friday_capacity'] != "" && $power_bi_scheduler_settings['power_bi_schedule_friday_start_time'] != "") {
-
-                    $sku_name = $power_bi_scheduler_settings['power_bi_schedule_friday_capacity'];
-                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':sku_name:' . var_export($sku_name, true));
-
-			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_friday_capacity_cron', array($sku_name) ) === false) {
-
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_friday_start_time']);
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
-
-				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_friday_capacity_cron', array($sku_name));
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':wp_schedule_event capacity_cron friday:' . var_export($result, true));
-
-				    }
-			    }
-		        break;
-		    case "saturday":
-			    if($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time'] != "") {
-			    	if (! wp_next_scheduled ( 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron' )) {
-			        	wp_schedule_event(custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_'.$weekdayname.'_'.$start_pause.'_time']), 'weekly', 'power_bi_schedule_resource_'.$weekdayname.'_'.$start_pause.'_cron');
-			        }
-		        }
-                // update capacity sku
-			    if($start_pause == 'start' && $power_bi_scheduler_settings['power_bi_schedule_saturday_capacity'] != "" && $power_bi_scheduler_settings['power_bi_schedule_saturday_start_time'] != "") {
-
-                    $sku_name = $power_bi_scheduler_settings['power_bi_schedule_saturday_capacity'];
-                    error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':sku_name:' . var_export($sku_name, true));
-
-			    	if ( wp_next_scheduled ( 'power_bi_schedule_resource_saturday_capacity_cron', array($sku_name) ) === false) {
-
-				        $time = custom_power_bi_strtotime($power_bi_scheduler_settings['power_bi_schedule_saturday_start_time']);
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':time: ' . date("F j, Y, g:i a", $time));
-
-				        $result = wp_schedule_event($time, 'weekly', 'power_bi_schedule_resource_saturday_capacity_cron', array($sku_name));
-                        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':wp_schedule_event capacity_cron saturday:' . var_export($result, true));
-
-				    }
-			    }
-		        break;
-		}
-	}
 	function check_resource_capacity_state($return_full_response = false) {
 		// get saved power bi settings
 		$power_bi_settings 	= get_option( 'power_bi_settings' );
@@ -436,10 +227,11 @@ class Power_Bi_Schedule_Resources {
           if($return_full_response){
             return $response;
           }
-		  $resource_state = $response['properties']['state'];
+		  $resource_state = isset($response['properties']['state']) ? $response['properties']['state'] : '';
 		  return $resource_state;
 		}
 	}
+
     public function list_skus($action = "") {
 
         $skus = get_transient('power_bi_ms_capacity_skus');
