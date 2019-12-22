@@ -315,6 +315,10 @@ class Power_Bi_Settings {
 
                 $time = custom_power_bi_strtotime(date('Y-m-d H:i:s', $day_time));
 
+		if($time < custom_power_bi_strtotime(date('Y-m-d H:i:s', time()))){
+			$time += 7*24*60*60;
+		}
+
                 $result = wp_schedule_event($time, 'weekly', 'power_bi_action_cron', array($action));
                 error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':wp_schedule_event @ ' . date('Y-m-d H:i:s', $time) . ' : power_bi_action_cron:' . var_export($result, true));
 
@@ -392,7 +396,7 @@ class Power_Bi_Settings {
         $capacity_skus = Power_Bi_Schedule_Resources::get_instance()->list_skus();
     
         if(isset($capacity_skus['error'])){
-            error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':capacity_skus: ' . var_export($capacity_skus, true));
+            //error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':capacity_skus: ' . var_export($capacity_skus, true));
             return $ob; 
         }
 

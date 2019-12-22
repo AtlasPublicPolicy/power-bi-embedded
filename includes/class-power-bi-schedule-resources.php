@@ -20,6 +20,8 @@ class Power_Bi_Schedule_Resources {
 
             $all_actions = array('resume', 'suspend');
             $capacity_skus = $instance->list_skus();
+
+            if(!isset($capacity_skus['error']))
             foreach($capacity_skus as $sku){
                 $all_actions[] = $sku['name'];
             }
