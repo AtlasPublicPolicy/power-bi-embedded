@@ -97,106 +97,7 @@ function power_bi_azure_capacity_render() {
 	<input type="text" name="power_bi_settings[power_bi_azure_capacity]" value="<?php echo $options['power_bi_azure_capacity']; ?>" />
 	<?php
 }
-function power_bi_schedule_sunday_render() {
-	$options = get_power_bi_plugin_settings();
-	?>
-	<select name="power_bi_settings[power_bi_schedule_sunday_start_time]">
-		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_sunday_start_time']); ?>
-	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_sunday_pause_time]">
-		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_sunday_pause_time']); ?>
-	</select>
-	<?php
 
-}
-function power_bi_schedule_monday_render() {
-	$options = get_power_bi_plugin_settings();
-	?>
-	<select name="power_bi_settings[power_bi_schedule_monday_start_time]">
-		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_monday_start_time']); ?>
-	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_monday_pause_time]">
-		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_monday_pause_time']); ?>
-	</select>
-	<?php
-}
-function power_bi_schedule_tuesday_render() {
-	$options = get_power_bi_plugin_settings();
-	?>
-	<select name="power_bi_settings[power_bi_schedule_tuesday_start_time]">
-		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_tuesday_start_time']); ?>
-	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_tuesday_pause_time]">
-		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_tuesday_pause_time']); ?>
-	</select>
-	<?php
-}
-function power_bi_schedule_wednesday_render() {
-	$options = get_power_bi_plugin_settings();
-	?>
-	<select name="power_bi_settings[power_bi_schedule_wednesday_start_time]">
-		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_wednesday_start_time']); ?>
-	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_wednesday_pause_time]">
-		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_wednesday_pause_time']); ?>
-	</select>
-	<?php
-}
-function power_bi_schedule_thursday_render() {
-	$options = get_power_bi_plugin_settings();
-	?>
-	<select name="power_bi_settings[power_bi_schedule_thursday_start_time]">
-		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_thursday_start_time']); ?>
-	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_thursday_pause_time]">
-		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_thursday_pause_time']); ?>
-	</select>
-	<?php
-}
-function power_bi_schedule_friday_render() {
-	$options = get_power_bi_plugin_settings();
-	?>
-	<select name="power_bi_settings[power_bi_schedule_friday_start_time]">
-		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_friday_start_time']); ?>
-	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_friday_pause_time]">
-		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_friday_pause_time']); ?>
-	</select>
-	<?php
-}
-function power_bi_schedule_saturday_render() {
-	$options = get_power_bi_plugin_settings();
-	?>
-	<select name="power_bi_settings[power_bi_schedule_saturday_start_time]">
-		<option value=""><?php echo __( 'START', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_saturday_start_time']); ?>
-	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_saturday_pause_time]">
-		<option value=""><?php echo __( 'PAUSE', 'power-bi' ); ?></option>
-		<?php display_time_dropdown($options['power_bi_schedule_saturday_pause_time']); ?>
-	</select>
-	<?php
-}
-function display_time_dropdown($sel =  "") {
-	for($hours=0; $hours<24; $hours++)
-	{
-	    for($mins=0; $mins<60; $mins+=30)
-	    {
-	        $time = str_pad($hours,2,'0',STR_PAD_LEFT).':'.str_pad($mins,2,'0',STR_PAD_LEFT);
-	        if($sel != "" && $sel == $time) {
-	        	echo '<option selected="selected" value= "'.$time.'">'.$time.'</option>';
-	        } else {
-	        	echo '<option value= "'.$time.'">'.$time.'</option>';
-	        }
-
-	    }
-	}
-}
 // To add new cron custom schedule
 add_filter( 'cron_schedules', 'power_bi_add_weekly_schedule' );
 function power_bi_add_weekly_schedule( $schedules ) {
@@ -239,7 +140,7 @@ function custom_power_bi_strtotime($strtotime) {
 	// Server Time Zone
 	$server_time_zone = date_default_timezone_get();
 	if(get_option( 'timezone_string' ) != "") {
-		define( 'POWER_BI_TIMEZONE', (get_option( 'timezone_string' ) ? get_option( 'timezone_string' ) : date_default_timezone_get() ) );
+        if ( ! defined( 'POWER_BI_TIMEZONE' ) ) define( 'POWER_BI_TIMEZONE', (get_option( 'timezone_string' ) ? get_option( 'timezone_string' ) : date_default_timezone_get() ) );
 		date_default_timezone_set( POWER_BI_TIMEZONE );
 	} else {
 		if(get_option('gmt_offset') != "") {

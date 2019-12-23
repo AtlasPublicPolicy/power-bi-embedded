@@ -6,106 +6,111 @@
  */
 class Power_Bi_Settings {
 
-	/**
-	 * Returns the instance.
-	 */
-	public static function get_instance() {
+    private $day_variations = array('_1', '_2', '_3', '_4');
+    private $days_of_week = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
 
-		static $instance = null;
+    /**
+     * Returns the instance.
+     */
+    public static function get_instance() {
 
-		if ( is_null( $instance ) ) {
-			$instance = new self();
-			$instance->setup_actions();
-		}
+        static $instance = null;
 
-		return $instance;
-	}
+        if ( is_null( $instance ) ) {
+            $instance = new self();
+            $instance->setup_actions();
+        }
 
-	/**
-	 * Constructor method.
-	 */
-	private function __construct() {}
+        return $instance;
+    }
 
-	/**
-	 * Sets up initial actions.
-	 *
-	 * @since  1.0.0
-	 * @access private
-	 * @return void
-	 */
-	private function setup_actions() {
-		add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
-		add_action( 'admin_init', array( $this, 'settings_init' ) );
-	}
+    /**
+     * Constructor method.
+     */
+    private function __construct() {}
 
-	/**
-	 * [add_admin_menu description]
-	 */
-	public function add_admin_menu() {
-		add_submenu_page( 'edit.php?post_type=powerbi', __( 'Power BI Settings', 'power-bi' ), __( 'Settings', 'power-bi' ), 'manage_options', 'powerbi', array( $this, 'power_bi__options_page' ) );
-	}
+    /**
+     * Sets up initial actions.
+     *
+     * @since  1.0.0
+     * @access private
+     * @return void
+     */
+    private function setup_actions() {
+        add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+        add_action( 'admin_init', array( $this, 'settings_init' ) );
+        add_action( 'update_option_power_bi_settings', array( $this, 'update_schedule' ) , 10, 3);
+        add_action( 'power_bi_action_cron', array( Power_Bi_Schedule_Resources::get_instance(), 'action_cron_fun'), 10, 2);
+    }
 
-	/**
-	 * [settings_init description]
-	 * @return [type] [description]
-	 */
-	public function settings_init(  ) {
+    /**
+     * [add_admin_menu description]
+     */
+    public function add_admin_menu() {
+        add_submenu_page( 'edit.php?post_type=powerbi', __( 'Power BI Settings', 'power-bi' ), __( 'Settings', 'power-bi' ), 'manage_options', 'powerbi', array( $this, 'power_bi__options_page' ) );
+    }
 
-    	register_setting( 'power_bi', 'power_bi_settings' );
+    /**
+     * [settings_init description]
+     * @return [type] [description]
+     */
+    public function settings_init(  ) {
 
-    	add_settings_section(
-    		'power_bi_section',
-    		__( 'Azure Authorization', 'power-bi' ),
-    		'power_bi_section_callback',
-    		'power_bi'
-    	);
+        register_setting( 'power_bi', 'power_bi_settings' );
 
-    	add_settings_field(
-    		'power_bi_username',
-    		__( 'User Name', 'power-bi' ),
-    		'power_bi_username_render',
-    		'power_bi',
-    		'power_bi_section'
-    	);
+        add_settings_section(
+            'power_bi_section',
+            __( 'Azure Authorization', 'power-bi' ),
+            'power_bi_section_callback',
+            'power_bi'
+        );
 
-    	add_settings_field(
-    		'power_bi_password',
-    		__( 'Password', 'power-bi' ),
-    		'power_bi_password_render',
-    		'power_bi',
-    		'power_bi_section'
-    	);
+        add_settings_field(
+            'power_bi_username',
+            __( 'User Name', 'power-bi' ),
+            'power_bi_username_render',
+            'power_bi',
+            'power_bi_section'
+        );
 
-    	add_settings_field(
-    		'power_bi_client_id',
-    		__( 'Client ID', 'power-bi' ),
-    		'power_bi_client_id_render',
-    		'power_bi',
-    		'power_bi_section'
-    	);
+        add_settings_field(
+            'power_bi_password',
+            __( 'Password', 'power-bi' ),
+            'power_bi_password_render',
+            'power_bi',
+            'power_bi_section'
+        );
 
-    	add_settings_field(
-    		'power_bi_client_secret',
-    		__( 'Client Secret', 'power-bi' ),
-    		'power_bi_client_secret_render',
-    		'power_bi',
-    		'power_bi_section'
-    	);
+        add_settings_field(
+            'power_bi_client_id',
+            __( 'Client ID', 'power-bi' ),
+            'power_bi_client_id_render',
+            'power_bi',
+            'power_bi_section'
+        );
 
-		add_settings_field(
-    		'power_bi_oauth_success',
-    		__( 'Oauth Status', 'power-bi' ),
-    		'power_bi_oauth_success_render',
-    		'power_bi',
-    		'power_bi_section'
-    	);
-		// Schedule Power BI Resource
-		add_settings_section(
-    		'power_bi_schedule_section',
-    		__( 'Power BI Resource On/Off Schedule', 'power-bi' ),
-    		'power_bi_schedule_section_callback',
-    		'power_bi'
-    	);
+        add_settings_field(
+            'power_bi_client_secret',
+            __( 'Client Secret', 'power-bi' ),
+            'power_bi_client_secret_render',
+            'power_bi',
+            'power_bi_section'
+        );
+
+        add_settings_field(
+            'power_bi_oauth_success',
+            __( 'Oauth Status', 'power-bi' ),
+            'power_bi_oauth_success_render',
+            'power_bi',
+            'power_bi_section'
+        );
+        // Schedule Power BI Resource
+        add_settings_section(
+            'power_bi_schedule_section',
+            __( 'Power BI Resource On/Off Schedule', 'power-bi' ),
+            'power_bi_schedule_section_callback',
+            'power_bi'
+        );
         // Added Option to view resource status
         add_settings_field(
             'power_bi_azure_resource_state',
@@ -144,55 +149,69 @@ class Power_Bi_Settings {
             'power_bi_schedule_section'
         );
 
-    	add_settings_field(
-    		'power_bi_schedule_sunday_time',
-    		__( 'Sunday', 'power-bi' ),
-    		'power_bi_schedule_sunday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_monday_time',
-    		__( 'Monday', 'power-bi' ),
-    		'power_bi_schedule_monday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_tuesday_time',
-    		__( 'Tuesday', 'power-bi' ),
-    		'power_bi_schedule_tuesday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_wednesday_time',
-    		__( 'Wednesday', 'power-bi' ),
-    		'power_bi_schedule_wednesday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_thursday_time',
-    		__( 'Thursday', 'power-bi' ),
-    		'power_bi_schedule_thursday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_friday_time',
-    		__( 'Friday', 'power-bi' ),
-    		'power_bi_schedule_friday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
-    	add_settings_field(
-    		'power_bi_schedule_saturday_time',
-    		__( 'Saturday', 'power-bi' ),
-    		'power_bi_schedule_saturday_render',
-    		'power_bi',
-    		'power_bi_schedule_section'
-    	);
+        add_settings_field(
+            'power_bi_schedule_time',
+            __( 'Info:', 'power-bi' ),
+            array($this, 'power_bi_info_render'),
+            'power_bi',
+            'power_bi_schedule_section'
+        );
+        add_settings_field(
+            'power_bi_schedule_sunday_time',
+            __( 'Sunday', 'power-bi' ),
+            array($this, 'power_bi_schedule_day_render'),
+            'power_bi',
+            'power_bi_schedule_section',
+            array('sunday')
+        );
+        add_settings_field(
+            'power_bi_schedule_monday_time',
+            __( 'Monday', 'power-bi' ),
+            array($this, 'power_bi_schedule_day_render'),
+            'power_bi',
+            'power_bi_schedule_section',
+            array('monday')
+        );
+        add_settings_field(
+            'power_bi_schedule_tuesday_time',
+            __( 'Tuesday', 'power-bi' ),
+            array($this, 'power_bi_schedule_day_render'),
+            'power_bi',
+            'power_bi_schedule_section',
+            array('tuesday')
+        );
+        add_settings_field(
+            'power_bi_schedule_wednesday_time',
+            __( 'Wednesday', 'power-bi' ),
+            array($this, 'power_bi_schedule_day_render'),
+            'power_bi',
+            'power_bi_schedule_section',
+            array('wednesday')
+        );
+        add_settings_field(
+            'power_bi_schedule_thursday_time',
+            __( 'Thursday', 'power-bi' ),
+            array($this, 'power_bi_schedule_day_render'),
+            'power_bi',
+            'power_bi_schedule_section',
+            array('thursday')
+        );
+        add_settings_field(
+            'power_bi_schedule_friday_time',
+            __( 'Friday', 'power-bi' ),
+            array($this, 'power_bi_schedule_day_render'),
+            'power_bi',
+            'power_bi_schedule_section',
+            array('friday')
+        );
+        add_settings_field(
+            'power_bi_schedule_saturday_time',
+            __( 'Saturday', 'power-bi' ),
+            array($this, 'power_bi_schedule_day_render'),
+            'power_bi',
+            'power_bi_schedule_section',
+            array('saturday')
+        );
 
     }
 
@@ -206,43 +225,208 @@ class Power_Bi_Settings {
     }
     
 
-	/**
-	 * [power_bi__options_page description]
-	 *
-	 * @return [type] [description]
-	 */
-	public function power_bi__options_page() {
+    /**
+     * [power_bi__options_page description]
+     *
+     * @return [type] [description]
+     */
+    public function power_bi__options_page() {
 
-		if ( isset( $_GET['settings-updated'] ) ) {
-			add_settings_error( 'wporg_messages', 'wporg_message', __( 'Settings Saved', 'wporg' ), 'updated' );
-            // clear all cron setup previously //
-            $days_arry = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
-            foreach ($days_arry as $day_name) {
-                // START //
-                wp_clear_scheduled_hook( 'power_bi_schedule_resource_'.$day_name.'_start_cron' );
-                // PAUSE //
-                wp_clear_scheduled_hook( 'power_bi_schedule_resource_'.$day_name.'_pause_cron' );
+        if ( isset( $_GET['settings-updated'] ) ) {
+            add_settings_error( 'wporg_messages', 'wporg_message', __( 'Settings Saved', 'wporg' ), 'updated' );
+        }
+        
+        ?>
+
+        <div class="wrap">
+            <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
+            <?php settings_errors( 'wporg_messages' ); ?>
+            <form action='options.php' method='post'>
+
+                <?php
+                settings_fields( 'power_bi' );
+                do_settings_sections( 'power_bi' );
+                submit_button();
+                ?>
+
+            </form>
+        </div>
+        <?php
+
+    }
+
+    public function power_bi_info_render() {
+            echo esc_html( date("l, F j, Y, G:i", time()) ); 
+            echo '<br />';
+            echo esc_html( date_i18n("l, F j, Y, G:i") ) . ' (WordPress)'; 
+            echo '<br />';
+
+            echo '<br />------------------------------------------------------<br />';
+            $all_actions = array('resume', 'suspend');
+            $capacity_skus = Power_Bi_Schedule_Resources::get_instance()->list_skus();
+
+            if(!isset($capacity_skus['error']))
+            foreach($capacity_skus as $sku){
+                $all_actions[] = $sku['name'];
             }
-		}
-		
-		?>
+            foreach($all_actions as $action){
+                $next = wp_next_scheduled( 'power_bi_action_cron', array($action) );
+                if($next == false) continue;
+                $next = date('l, F j, Y, G:i', $next);
+                echo "Next scheduled {$action} @ {$next}";
+                echo '<br />';
+            }
 
-		<div class="wrap">
-			<h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
-			<?php settings_errors( 'wporg_messages' ); ?>
-			<form action='options.php' method='post'>
+            echo '<br />------------------------------------------------------<br />';
+            $capacity_state = Power_Bi_Schedule_Resources::get_instance()->check_resource_capacity_state(true);
+            echo 'capacity state: <br /><pre>';
+            var_export($capacity_state, false);
+            echo '</pre>';
+            if(!isset($capacity_state['error'])){
+                echo 'resource state: ' . isset($capacity_state['properties']['state']) ? sanitize_text_field($capacity_state['properties']['statie']) : '';
+                echo '<br />';
+                echo 'sku name: ' . isset($capacity_state['sku']['name']) ? sanitize_text_field($capacity_state['sku']['name']) : '';
+                echo '<br />';
+                echo 'sku tier: ' . isset($capacity_state['sku']['tier']) ?  sanitize_text_field($capacity_state['sku']['tier']) : '';
+                echo '<br />';
+                echo 'sku capacity: ' . isset($capacity_state['sku']['capacity']) ? sanitize_text_field($capacity_state['sku']['capacity']) : '';
+                echo '<br />';
+                echo 'location: ' . isset($capacity_state['location'])  ? sanitize_text_field($capacity_state['location']) : '';
+            }
+            echo '<br />------------------------------------------------------<br />';
+            $capacity_fun_result = get_transient('power_bi_schedule_resource_update_capacity_fn');
+            echo 'result from last capacity update: <br /><pre>';
+            var_export($capacity_fun_result, false);
+            echo '</pre>';
+    }
 
-				<?php
-				settings_fields( 'power_bi' );
-				do_settings_sections( 'power_bi' );
-				submit_button();
-				?>
+    public function update_schedule($old_value, $value, $option){
 
-			</form>
-		</div>
-		<?php
+        $all_actions = array('resume', 'suspend');
+        $capacity_skus = Power_Bi_Schedule_Resources::get_instance()->list_skus();
+        if(!isset($capacity_skus['error']))
+        foreach($capacity_skus as $sku){
+            $all_actions[] = isset($sku['name']) ? sanitize_text_field($sku['name']) : '';
+        }
 
-	}
+        foreach($all_actions as $action){
+            wp_clear_scheduled_hook( 'power_bi_action_cron', array($action) );
+        }
+
+        foreach($this->days_of_week as $day){
+            foreach($this->day_variations as $variation){
+
+                $time_name = $day . $variation . '_time';
+
+                $time = $value[$time_name];
+
+                if(strlen($time) < 1){
+                    continue;
+                }
+
+                $action_name = $day . $variation . '_action';
+                $action = $value[$action_name];
+
+                if(strlen($action) < 1){
+                    continue;
+                }
+
+                $day_time = strtotime($day);
+                $day_time += intval(substr($time, 0, 2)) * 3600 +  intval(substr($time, 3, 2)) * 60;
+
+                $time = custom_power_bi_strtotime(date('Y-m-d H:i:s', $day_time));
+
+        if($time < custom_power_bi_strtotime(date('Y-m-d H:i:s', time()))){
+            $time += 7*24*60*60;
+        }
+
+                $result = wp_schedule_event($time, 'weekly', 'power_bi_action_cron', array($action));
+
+            }
+
+        }
+    }
+
+    public function power_bi_schedule_day_render($param) {
+
+        $day = $param[0];
+
+        $ob = '';
+
+        foreach($this->day_variations as $variation){
+            $day_variation = $day . $variation;
+            $select_time_name = "power_bi_settings[{$day_variation}_time]";
+            $select_action_name = "power_bi_settings[{$day_variation}_action]";
+            $options = get_option('power_bi_settings');
+            $time_name = $day_variation . '_time';
+            $time = $options[$time_name] ? $options[$time_name] : '';
+            $action_name = $day_variation . '_action';
+            $action = $options[$action_name] ? $options[$action_name] : '';
+    
+            $ob .= "<select name='{$select_time_name}'>";
+            $ob .= "<option value=''>";
+            $ob .= __( 'TIME', 'power-bi' ); 
+            $ob .= "</option>";
+            $ob .= $this->time_options($time);
+            $ob .= "</select>";
+            $ob .= "<select name='{$select_action_name}'>";
+            $ob .= "<option value=''>";
+            $ob .= __( 'ACTION', 'power-bi' );
+            $ob .= "</option>";
+            $ob .= $this->action_options($action);
+            $ob .= '</select>';
+            $ob .= '<br />';
+        }
+        echo $ob;
+
+    }
+
+    public function time_options($sel =  "") {
+        $ob = '';
+
+        for($hours=0; $hours<24; $hours++) {
+
+            for($mins=0; $mins<60; $mins+=10) {
+
+                $time = str_pad($hours,2,'0',STR_PAD_LEFT).':'.str_pad($mins,2,'0',STR_PAD_LEFT);
+
+                $selected = selected($sel, $time, false);
+
+                $ob .= "<option value='{$time}' {$selected}>{$time}</option>";
+
+            }
+
+        }
+
+        return $ob;
+
+    }
+
+    public function action_options($sel =  "") {
+
+    
+        $selected = selected($sel, 'suspend', false);
+
+        $ob = "<option value='suspend' {$selected}>Suspend</option>";
+
+        $selected = selected($sel, 'resume', false);
+
+        $ob .= "<option value='resume' {$selected}>Resume</option>";
+
+        $capacity_skus = Power_Bi_Schedule_Resources::get_instance()->list_skus();
+    
+        if(isset($capacity_skus['error'])){
+            return $ob; 
+        }
+
+        foreach($capacity_skus as $sku){
+            $name = $sku['name'];
+            $selected = selected($sel, $name, false);
+            $ob .= "<option value='{$name}' {$selected} >Set to {$sku['name']}</option>";
+        }
+    
+        return $ob;
+    }
 }
 
 Power_Bi_Settings::get_instance();
