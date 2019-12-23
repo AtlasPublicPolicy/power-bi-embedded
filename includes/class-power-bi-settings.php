@@ -6,7 +6,7 @@
  */
 class Power_Bi_Settings {
 
-    private $day_variations = array('_1', '_2');
+    private $day_variations = array('_1', '_2', '_3', '_4');
     private $days_of_week = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
 
     /**
@@ -260,16 +260,39 @@ class Power_Bi_Settings {
             echo '<br />';
             echo esc_html( date_i18n("l, F j, Y, G:i") ) . ' (WordPress)'; 
             echo '<br />';
+
+            echo '<br />------------------------------------------------------<br />';
+            $all_actions = array('resume', 'suspend');
+            $capacity_skus = Power_Bi_Schedule_Resources::get_instance()->list_skus();
+
+            if(!isset($capacity_skus['error']))
+            foreach($capacity_skus as $sku){
+                $all_actions[] = $sku['name'];
+            }
+            foreach($all_actions as $action){
+                $next = wp_next_scheduled( 'power_bi_action_cron', array($action) );
+                if($next == false) continue;
+                $next = date('l, F j, Y, G:i', $next);
+                echo "Next scheduled {$action} @ {$next}";
+                echo '<br />';
+            }
+
+            echo '<br />------------------------------------------------------<br />';
             $capacity_state = Power_Bi_Schedule_Resources::get_instance()->check_resource_capacity_state(true);
-            echo 'resource state: ' . $capacity_state['properties']['state'] ?? '';
-            echo '<br />';
-            echo 'sku name: ' . $capacity_state['sku']['name'] ?? '';
-            echo '<br />';
-            echo 'sku tier: ' . $capacity_state['sku']['tier'] ?? '';
-            echo '<br />';
-            echo 'sku capacity: ' . $capacity_state['sku']['capacity'] ?? '';
-            echo '<br />';
-            echo 'location: ' . $capacity_state['location'] ?? '';
+            echo 'capacity state: <br /><pre>';
+            var_export($capacity_state, false);
+            echo '</pre>';
+            if(!isset($capacity_state['error'])){
+                echo 'resource state: ' . isset($capacity_state['properties']['state']) ? sanitize_text_field($capacity_state['properties']['statie']) : '';
+                echo '<br />';
+                echo 'sku name: ' . isset($capacity_state['sku']['name']) ? sanitize_text_field($capacity_state['sku']['name']) : '';
+                echo '<br />';
+                echo 'sku tier: ' . isset($capacity_state['sku']['tier']) ?  sanitize_text_field($capacity_state['sku']['tier']) : '';
+                echo '<br />';
+                echo 'sku capacity: ' . isset($capacity_state['sku']['capacity']) ? sanitize_text_field($capacity_state['sku']['capacity']) : '';
+                echo '<br />';
+                echo 'location: ' . isset($capacity_state['location'])  ? sanitize_text_field($capacity_state['location']) : '';
+            }
             echo '<br />------------------------------------------------------<br />';
             $capacity_fun_result = get_transient('power_bi_schedule_resource_update_capacity_fn');
             echo 'result from last capacity update: <br /><pre>';
@@ -278,14 +301,12 @@ class Power_Bi_Settings {
     }
 
     public function update_schedule($old_value, $value, $option){
-        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":old_value: " . var_export($old_value, true));
-        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":value: " . var_export($value, true));
-        error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ":{$option}: " . var_export($option, true));
 
         $all_actions = array('resume', 'suspend');
         $capacity_skus = Power_Bi_Schedule_Resources::get_instance()->list_skus();
+        if(!isset($capacity_skus['error']))
         foreach($capacity_skus as $sku){
-            $all_actions[] = $sku['name'];
+            $all_actions[] = isset($sku['name']) ? sanitize_text_field($sku['name']) : '';
         }
 
         foreach($all_actions as $action){
@@ -315,12 +336,11 @@ class Power_Bi_Settings {
 
                 $time = custom_power_bi_strtotime(date('Y-m-d H:i:s', $day_time));
 
-		if($time < custom_power_bi_strtotime(date('Y-m-d H:i:s', time()))){
-			$time += 7*24*60*60;
-		}
+        if($time < custom_power_bi_strtotime(date('Y-m-d H:i:s', time()))){
+            $time += 7*24*60*60;
+        }
 
                 $result = wp_schedule_event($time, 'weekly', 'power_bi_action_cron', array($action));
-                error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':wp_schedule_event @ ' . date('Y-m-d H:i:s', $time) . ' : power_bi_action_cron:' . var_export($result, true));
 
             }
 
@@ -396,7 +416,6 @@ class Power_Bi_Settings {
         $capacity_skus = Power_Bi_Schedule_Resources::get_instance()->list_skus();
     
         if(isset($capacity_skus['error'])){
-            //error_log(basename(__FILE__) . ':' . __FUNCTION__ . ':' . __LINE__ . ':capacity_skus: ' . var_export($capacity_skus, true));
             return $ob; 
         }
 
