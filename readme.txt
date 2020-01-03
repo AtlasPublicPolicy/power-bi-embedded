@@ -3,7 +3,7 @@ Contributors: atlaspolicy, upnrunn, stegel
 Tags: powerbi-embedded, wordpress-plugin, powerbi, wordpress
 Requires at least: 4.4.0
 Requires PHP: 5.2.4
-Tested up to: 5.2.4
+Tested up to: 5.3.2
 Stable tag: 1.1.2
 License: GNU General Public License v3.0
 License URI: https://www.gnu.org/licenses/lgpl.html
@@ -199,6 +199,10 @@ N/A
 = 1.1.2 = 
 * More fixes for WP Bakery theme (upgrade cmb2 library)
 
+= 1.1.3 = 
+* Fix for initial setup that was causing occassional authentication errors. 
+* Update Power BI library.
+
 == Upgrade Notice ==
 
 = 1.0.1 =
@@ -214,4 +218,7 @@ This release contains feature enhancements and bug fixes.
 This release contains important bug fixes. 
 
 = 1.1.2 = 
+This release contains important bug fixes. 
+
+= 1.1.3 = 
 This release contains important bug fixes. 

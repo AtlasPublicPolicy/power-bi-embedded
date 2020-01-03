@@ -4,13 +4,13 @@
 
  **Title:** Power BI Embedded for WordPress
 
- **Contributors:** Nick Nigro [nick.nigro@atlaspolicy.com], aswingiri [aswingiri@upnrunn.com], bankerrajendra [bankerrajendra@upnrunn.com], bhoot[mithunbiswas@upnrunn.com]
+ **Contributors:** Nick Nigro [nick.nigro@atlaspolicy.com], aswingiri [aswingiri@upnrunn.com], bankerrajendra [bankerrajendra@upnrunn.com], bhoot[mithunbiswas@upnrunn.com], stegel
 
  **Homepage:** [http://www.atlaspolicy.com](http://www.atlaspolicy.com)
 
  **Tags:** powerbi-embedded, wordpress-plugin, powerbi, wordpress
 
- **Tested up to:** 5.2.4
+ **Tested up to:** 5.3.2
 
  **Stable tag:** 1.1.2
 
