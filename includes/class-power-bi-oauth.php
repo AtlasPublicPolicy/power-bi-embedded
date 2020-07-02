@@ -77,7 +77,7 @@ class Power_Bi_Oauth {
         }
     }
 
-    public static function get_token() {
+    public function get_token() {
 
         $token_transient = get_transient( 't_token' );
 
