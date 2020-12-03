@@ -55,26 +55,18 @@ class Power_Bi_Settings {
 
     	add_settings_section(
     		'power_bi_section',
-    		__( 'Azure Authorization', 'power-bi' ),
+    		__( 'Azure Information', 'power-bi' ),
     		'power_bi_section_callback',
     		'power_bi'
-    	);
-
-    	add_settings_field(
-    		'power_bi_username',
-    		__( 'User Name', 'power-bi' ),
-    		'power_bi_username_render',
+		);
+		
+		add_settings_field(
+    		'power_bi_oauth_success',
+    		__( 'Oauth Status', 'power-bi' ),
+    		'power_bi_oauth_success_render',
     		'power_bi',
     		'power_bi_section'
-    	);
-
-    	add_settings_field(
-    		'power_bi_password',
-    		__( 'Password', 'power-bi' ),
-    		'power_bi_password_render',
-    		'power_bi',
-    		'power_bi_section'
-    	);
+		);
 
     	add_settings_field(
     		'power_bi_client_id',
@@ -90,15 +82,58 @@ class Power_Bi_Settings {
     		'power_bi_client_secret_render',
     		'power_bi',
     		'power_bi_section'
+		);
+
+		add_settings_field(
+            'power_bi_azure_tenant_id',
+            __( 'Tenant ID or Directory ID under Azure Active Directory for Office 365', 'power-bi' ),
+            'power_bi_azure_tenant_id_render',
+            'power_bi',
+            'power_bi_section'
+        );
+
+
+    	add_settings_section(
+    		'power_bi_login_section',
+    		__( 'Login Authorization', 'power-bi' ),
+    		'power_bi_login_section_callback',
+    		'power_bi_login'
+    	);
+
+		//Need to add a selector and show/hide boolean for Auth type here, then uncomment this 
+
+    	// add_settings_field(
+    	// 	'power_bi_username',
+    	// 	__( 'User Name', 'power-bi' ),
+    	// 	'power_bi_username_render',
+    	// 	'power_bi',
+    	// 	'power_bi_section'
+    	// );
+
+    	// add_settings_field(
+    	// 	'power_bi_password',
+    	// 	__( 'Password', 'power-bi' ),
+    	// 	'power_bi_password_render',
+    	// 	'power_bi',
+    	// 	'power_bi_section'
+    	// );
+
+		add_settings_section(
+    		'power_bi_azure_section',
+    		__( 'Azure Tenant Authorization', 'power-bi' ),
+    		'power_bi_azure_section_callback',
+    		'power_bi_azure_section'
     	);
 
 		add_settings_field(
-    		'power_bi_oauth_success',
-    		__( 'Oauth Status', 'power-bi' ),
-    		'power_bi_oauth_success_render',
-    		'power_bi',
-    		'power_bi_section'
-    	);
+            'power_bi_azure_tenant_id',
+            __( 'Tenant ID or Directory ID under Azure Active Directory for Office 365', 'power-bi' ),
+            'power_bi_azure_tenant_id_render',
+            'power_bi_azure',
+            'power_bi_azure_section'
+        );
+
+
 		// Schedule Power BI Resource
 		add_settings_section(
     		'power_bi_schedule_section',

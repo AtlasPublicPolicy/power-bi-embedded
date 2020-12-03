@@ -132,25 +132,31 @@ class Power_Bi_Shortcodes {
 				"use strict";
 				$(document).ready(function() {
 					var models = window['powerbi-client'].models;	
+					//This is where we get the auth token
 					var restURL = "<?php echo get_rest_url('','wp/v2/powerbi/getToken'); ?>";
 					var tmpdata = jQuery.get({
 						url: restURL,
-						async: false,
+						type: 'post',
+						//Needs to be parameterized and corrected, if
+						data: "grant_type=client_credentials&client_id=<CLIENT_ID>&client_secret=<CLIENT_SECRET>&resource=https://analysis.windows.net/powerbi/api",
+						dataType:'jso application/x-www-form-urlencodedn',
+						async:false,
 						success: function(data) {
-							var access_token = data.responseText;
+							var access_token = data.token
 						}
 					});
 
-					var access_token = tmpdata.responseText;
+					var access_token = tmpdata.responseJSON.token;
 					access_token = access_token.replace(/"/g,"");
 					
 					
-					// console.log('New Access Token:  ' + access_token );
+					 //console.log('New Access Token:  ' + access_token );
 					// sessionStorage.setItem('access_token', 'access_token' );
 					sessionStorage.setItem('access_token', access_token );
 					// console.log(sessionStorage.getItem('access_token'));
 				
 					var embedConfiguration = {
+						//these may need to change, I used type=Report / tokenType= EMBED
 						type: '<?php echo $embed_type; ?>',
 						embedUrl: '<?php echo $embed_url; ?>',
 						tokenType: models.TokenType.<?php echo $token_type; ?>,

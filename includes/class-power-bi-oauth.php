@@ -87,10 +87,14 @@ class Power_Bi_Oauth {
 
         $user_credentials = get_option( 'power_bi_settings' );
 
-        $user_name         = $user_credentials['power_bi_username'];
-        $password          = $user_credentials['power_bi_password'];
+        //these should be restored and nested in an if/else loop once settings are set up
+        // $user_name         = $user_credentials['power_bi_username'];
+        // $password          = $user_credentials['power_bi_password'];
+
         $client_id         = $user_credentials['power_bi_client_id'];
         $client_secret     = $user_credentials['power_bi_client_secret'];
+        $azure_tenant_id    = $user_credentials['power_bi_azure_tenant_id'];
+
  
         $curl = curl_init();
         if(!$curl) {
@@ -98,7 +102,9 @@ class Power_Bi_Oauth {
         }
 
         curl_setopt_array($curl, array(
+            //Trying to determine the correct login URL, I think this is the correct one
             CURLOPT_URL => "https://login.windows.net/common/oauth2/token",
+            //CURLOPT_URL => "https://login.microsoftonline.com/".$azure_tenant_id."/oauth2/token",
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => "",
             CURLOPT_MAXREDIRS => 10,
@@ -106,8 +112,10 @@ class Power_Bi_Oauth {
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => "POST",
             CURLOPT_SSL_VERIFYPEER => false,
-            CURLOPT_POSTFIELDS => "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"grant_type\"\r\n\r\npassword\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"username\"\r\n\r\n" . $user_name . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n" . $password . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_id\"\r\n\r\n" . $client_id . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"resource\"\r\n\r\nhttps://analysis.windows.net/powerbi/api\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_secret\"\r\n\r\n" . $client_secret . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--",
-            CURLOPT_HTTPHEADER => array(
+            //This should be modified to support both types of credentials 
+                        //CURLOPT_POSTFIELDS => "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"grant_type\"\r\n\r\npassword\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"username\"\r\n\r\n" . $user_name . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n" . $password . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_id\"\r\n\r\n" . $client_id . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"resource\"\r\n\r\nhttps://analysis.windows.net/powerbi/api\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_secret\"\r\n\r\n" . $client_secret . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--",
+            CURLOPT_POSTFIELDS => "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"grant_type\"\r\n\r\nclient_credentials\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_id\"\r\n\r\n" . $client_id . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"resource\"\r\n\r\nhttps://management.azure.com/\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_secret\"\r\n\r\n" . $client_secret . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--",
+                CURLOPT_HTTPHEADER => array(
                 "Cache-Control: no-cache",
                 "Postman-Token: b45c007e-0ab8-28d8-0960-6a2c37bf318e",
                 "content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"

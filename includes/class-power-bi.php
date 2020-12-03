@@ -89,7 +89,8 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 		}
 
 		function get_powerbi_access_token() {
-			$returnObject = Power_Bi_Oauth::get_token();
+			//This changes fixes an error some users get warning about calling a a static method 
+			$returnObject = Power_Bi_Oauth::get_instance()->get_token();
 			return $returnObject['access_token'];
 		}
 
