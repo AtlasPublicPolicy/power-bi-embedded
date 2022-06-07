@@ -35,10 +35,26 @@ class Power_Bi_Post_Types {
 	 */
 	private function setup_actions() {
 		add_action( 'init', array( $this, 'register_post_types' ) );
-		add_action( 'cmb2_init', array( $this, 'power_bi_metaboxs' ) );
+		add_action( 'cmb2_init', array( $this, 'power_bi_metaboxes' ) );
 		add_filter( 'manage_powerbi_posts_columns', array( $this, 'set_custom_edit_powerbi_columns' ) );
 		add_action( 'manage_powerbi_posts_custom_column', array( $this, 'custom_powerbi_column' ), 10, 2 );
+        add_filter( 'single_template', [$this, 'power_bi_single_template']);
 	}
+
+    /**
+	 * load "power_bi" single post template.
+	 */
+    public function power_bi_single_template($single){
+        global $post;
+        /* Checks for single template by post type */
+        if ( $post->post_type == 'powerbi' ) {
+            error_log( plugin_dir_path( __DIR__ ) . 'templates/single-power_bi.php');
+            if ( file_exists( plugin_dir_path( __DIR__ ) . 'templates/single-power_bi.php' ) ) {
+                return plugin_dir_path( __DIR__ ) . 'templates/single-power_bi.php';
+            }
+        }
+        return $single;
+    }
 
 	/**
 	 * Register a custom post type called "power_bi".
@@ -92,12 +108,19 @@ class Power_Bi_Post_Types {
 		);
 
 		register_post_type( 'powerbi', $args );
+
+        //flush rewrite rules the first time post type is registered
+        $rewrite_rules_flushed = get_option('_powerbi_embed_flushed', false);
+        if(!$rewrite_rules_flushed || $rewrite_rules_flushed !== 'flushed'){
+            flush_rewrite_rules();
+            update_option('_powerbi_embed_flushed', 'flushed');
+        }
 	}
 
 	/**
 	 * Register metabox
 	 */
-	public function power_bi_metaboxs() {
+	public function power_bi_metaboxes() {
 		// Start with an underscore to hide fields from custom fields list.
 		$prefix = '_power_bi_';
 		$languages = $this->get_languages();

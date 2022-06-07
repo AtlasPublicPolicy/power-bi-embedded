@@ -191,9 +191,9 @@ class Power_Bi_Schedule_Resources {
 		$capacity 			= $power_bi_settings['power_bi_azure_capacity'];
 		// get saved management azure credential for access token
 		$powerbi_azure_credentials = get_option('power_bi_management_azure_credentials');
+        if(!isset($powerbi_azure_credentials['access_token'])) return 'Azure Credetials Not Found!';
 		// call url for start / resume resource capacity
 		$request_url = "https://management.azure.com/subscriptions/".$subscription_id."/resourceGroups/".$resource_group."/providers/Microsoft.PowerBIDedicated/capacities/".$capacity."?api-version=2017-10-01";
-
 
 		$authorization = "Authorization: Bearer " . $powerbi_azure_credentials['access_token'];
 
