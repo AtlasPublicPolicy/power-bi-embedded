@@ -23,30 +23,20 @@ class CMB2_Type_Wysiwyg extends CMB2_Type_Textarea {
 	public function render( $args = array() ) {
 		$field = $this->field;
 		$a = $this->parse_args( 'wysiwyg', array(
-			'id'      => $this->_id( '', false ),
+			'id'      => $this->_id(),
 			'value'   => $field->escaped_value( 'stripslashes' ),
 			'desc'    => $this->_desc( true ),
 			'options' => $field->options(),
 		) );
 
 		if ( ! $field->group ) {
-
-			$a = $this->maybe_update_attributes_for_char_counter( $a );
-
-			if ( $this->has_counter ) {
-				$a['options']['editor_class'] = ! empty( $a['options']['editor_class'] )
-					? $a['options']['editor_class'] . ' cmb2-count-chars'
-					: 'cmb2-count-chars';
-			}
-
 			return $this->rendered( $this->get_wp_editor( $a ) . $a['desc'] );
 		}
 
-		// Character counter not currently working for grouped WYSIWYG
-		$this->field->args['char_counter'] = false;
-
 		// wysiwyg fields in a group need some special handling.
-		$field->add_js_dependencies( array( 'wp-util', 'cmb2-wysiwyg' ) );
+
+		$field->add_js_dependencies( 'wp-util' );
+		$field->add_js_dependencies( 'cmb2-wysiwyg' );
 
 		// Hook in our template-output to the footer.
 		add_action( is_admin() ? 'admin_footer' : 'wp_footer', array( $this, 'add_wysiwyg_template_for_group' ) );

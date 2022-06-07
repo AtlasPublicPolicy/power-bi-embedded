@@ -1,8 +1,8 @@
 <?php
 /**
- * CMB taxonomy_radio_hierarchical field type
+ * CMB taxonomy_multicheck field type
  *
- * @since  2.2.5
+ * @since  2.2.2
  *
  * @category  WordPress_Plugin
  * @package   CMB2

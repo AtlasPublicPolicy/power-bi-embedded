@@ -4,7 +4,7 @@ Tags: powerbi-embedded, wordpress-plugin, powerbi, wordpress
 Requires at least: 4.4.0
 Requires PHP: 5.2.4
 Tested up to: 5.3.2
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GNU General Public License v3.0
 License URI: https://www.gnu.org/licenses/lgpl.html
 
@@ -203,6 +203,18 @@ N/A
 * Fix for initial setup that was causing occassional authentication errors. 
 * Update Power BI library.
 
+= 1.1.4 =
+* Corrected static call of non static Oath get_token() request to correct singleton flow of get_instance() to call the private construct
+* Powerbi-client javascript library udpated to v2.19.1
+* CMB2 library update
+* Added initial rewrite flush the first time register post type is called
+* Created uninstall.php to remove options and transients on uninstall
+* Added credentials check for Power BI settings page to prevent uncessary curl call and php warning
+* Created new class for endpoints and moved getToken() to the new class
+* Created new flow for report generation instead of using shortcodes.  Report data now generated through new JS standalone file and functions.
+* Added security escapes and sanitization in report data collection and display.
+* Mobile settings and support added for reports
+
 == Upgrade Notice ==
 
 = 1.0.1 =
@@ -222,3 +234,6 @@ This release contains important bug fixes.
 
 = 1.1.3 = 
 This release contains important bug fixes. 
+
+= 1.1.4 = 
+This release contains important bug fixes and new features. 

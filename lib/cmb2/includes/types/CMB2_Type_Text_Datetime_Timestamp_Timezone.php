@@ -15,19 +15,14 @@ class CMB2_Type_Text_Datetime_Timestamp_Timezone extends CMB2_Type_Base {
 	public function render( $args = array() ) {
 		$field = $this->field;
 
-		$value = $field->escaped_value();
-		if ( empty( $value ) ) {
-			$value = $field->get_default();
-		}
-
 		$args = wp_parse_args( $this->args, array(
-			'value'                   => $value,
+			'value'                   => $field->escaped_value(),
 			'desc'                    => $this->_desc( true ),
 			'text_datetime_timestamp' => array(),
 			'select_timezone'         => array(),
 		) );
 
-		$args['value'] = $value;
+		$args['value'] = $field->escaped_value();
 		if ( is_array( $args['value'] ) ) {
 			$args['value'] = '';
 		}

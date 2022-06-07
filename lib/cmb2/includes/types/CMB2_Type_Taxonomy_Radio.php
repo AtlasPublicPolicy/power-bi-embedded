@@ -34,7 +34,7 @@ class CMB2_Type_Taxonomy_Radio extends CMB2_Type_Taxonomy_Base {
 
 		if ( ! empty( $option_none ) ) {
 
-			$field_id = $this->_id( '', false );
+			$field_id = $this->_id();
 
 			/**
 			 * Default (option-none) taxonomy-radio value.

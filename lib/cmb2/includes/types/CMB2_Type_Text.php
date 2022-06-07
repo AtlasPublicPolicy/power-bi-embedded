@@ -10,7 +10,7 @@
  * @license   GPL-2.0+
  * @link      https://cmb2.io
  */
-class CMB2_Type_Text extends CMB2_Type_Counter_Base {
+class CMB2_Type_Text extends CMB2_Type_Base {
 
 	/**
 	 * The type of field
@@ -50,9 +50,6 @@ class CMB2_Type_Text extends CMB2_Type_Counter_Base {
 			'desc'            => $this->_desc( true ),
 			'js_dependencies' => array(),
 		), $args );
-
-		// Add character counter?
-		$a = $this->maybe_update_attributes_for_char_counter( $a );
 
 		return $this->rendered(
 			sprintf( '<input%s/>%s', $this->concat_attrs( $a, array( 'desc' ) ), $a['desc'] )

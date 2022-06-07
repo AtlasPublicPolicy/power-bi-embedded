@@ -16,7 +16,7 @@
                     },
                     type: 'GET',
                     dataType: 'json',
-                }).success(function(response){
+                }).done(function(response){
                     resolve(response.replace(/"/g,""));
                 }).fail(function(){
                     resolve(false);
@@ -33,7 +33,7 @@
                     },
                     type: 'GET',
                     dataType: 'json',
-                }).success(function(response){
+                }).done(function(response){
                     resolve(response);
                 }).fail(function(){
                     resolve(false);
