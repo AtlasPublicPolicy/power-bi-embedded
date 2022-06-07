@@ -127,9 +127,13 @@
 
             window.report = 'create' === reportData.report_mode && 'report' === reportData.embed_type ? powerbi.createReport(container.get(0), embedConfiguration) : powerbi.embed(container.get(0), embedConfiguration);
             if(breakpoint !== '' && window.innerWidth <= Number(breakpoint)){
+                let mobileWidth = reportData.mobile_width ? reportData.mobile_width : '100%';
+                let mobileHeight = reportData.mobile_height ? reportData.mobile_height : 'auto';
+                container.width(mobileWidth);
+                container.height(mobileHeight);
                 window.report.on('rendered', function(e){
-                    pages = report.getPages().then(pages => {
-                        if(pages.length){
+                    let pages = report.getPages().then(pages => {
+                        if(pages.length && reportData.page_navigation){
                             //create mobile nav
                             let pagesHTML = '';
                             for(let page in pages){

@@ -332,6 +332,22 @@ class Power_Bi_Post_Types {
 			'default' => '350px',
 			'type'    => 'text',
 		) );
+
+        $metabox_settings->add_field( array(
+			'name'    => 'Mobile Width',
+			'desc'    => 'Enter mobile width in pixels or percent (include %).',
+			'id'      => $prefix . 'mobile_width',
+			'default' => '100%',
+			'type'    => 'text',
+		) );
+
+		$metabox_settings->add_field( array(
+			'name'    => 'Mobile Height',
+			'desc'    => 'Enter mobile height in pixels, percent (include %) or type auto.',
+			'id'      => $prefix . 'mobile_height',
+			'default' => '500px',
+			'type'    => 'text',
+		) );
 	}
 
 	public function set_custom_edit_powerbi_columns($columns) {

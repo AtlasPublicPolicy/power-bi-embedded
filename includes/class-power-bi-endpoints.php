@@ -67,6 +67,9 @@ class Power_Bi_Endpoints{
 		$response['background'] 	 = esc_attr(get_post_meta( $post_id, '_power_bi_background', true ));
 		$response['language'] 	     = esc_attr(get_post_meta( $post_id, '_power_bi_language', true ));
 		$response['format_local'] 	 = esc_attr(get_post_meta( $post_id, '_power_bi_format_local', true ));
+        $response['page_navigation'] = esc_attr(get_post_meta( $post_id, '_power_bi_page_navigation', true ));
+        $response['mobile_width'] = esc_attr(get_post_meta( $post_id, '_power_bi_mobile_width', true ));
+        $response['mobile_height'] = esc_attr(get_post_meta( $post_id, '_power_bi_mobile_height', true ));
 
 		if( 'dashboard' === $response['embed_type'] ) {
 			$response['embed_url'] = $response['api_url'] . "dashboardEmbed?dashboardId=" . $response['dashboard_id'] . "&groupId=" . $response['group_id'];
