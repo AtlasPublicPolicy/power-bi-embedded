@@ -10,7 +10,7 @@
 
  **Tags:** powerbi-embedded, wordpress-plugin, powerbi, wordpress
 
- **Tested up to:** 5.3.2
+ **Tested up to:** 6.0.0
 
  **Stable tag:** 1.1.4
 
