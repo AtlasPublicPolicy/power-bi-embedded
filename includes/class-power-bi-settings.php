@@ -53,6 +53,21 @@ class Power_Bi_Settings {
 
     	register_setting( 'power_bi', 'power_bi_settings' );
 
+        add_settings_section(
+    		'power_bi_display_section',
+    		__( 'Report Display Settings', 'power-bi' ),
+    		'power_bi_display_section_callback',
+    		'power_bi'
+    	);
+
+    	add_settings_field(
+    		'powerbi_mobile_breakpoint',
+    		__( 'Mobile Width Display Breakpoint', 'power-bi' ),
+    		'powerbi_mobile_breakpoint_render',
+    		'power_bi',
+    		'power_bi_display_section'
+    	);
+
     	add_settings_section(
     		'power_bi_section',
     		__( 'Azure Authorization', 'power-bi' ),

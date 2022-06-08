@@ -4,9 +4,24 @@ function get_power_bi_plugin_settings() {
 	$powerbi_resource_settings = Power_Bi_Settings::get_instance();
 	return $powerbi_resource_settings->get_power_bi_settings();
 }
+
 function power_bi_section_callback() {
 
 	echo __( 'The following fields must be filled correctly to get an access token. Help is available from Microsoft <a href="https://docs.microsoft.com/en-us/power-bi/developer/embedding-content" target=_blank>here</a>.', 'power-bi' );
+
+}
+
+function power_bi_display_section_callback() {
+
+	echo __( 'Enter the mobile width breakpoint in pixels (numbers only).  Any width less than the entered amount will trigger the mobile report functionality.', 'power-bi' );
+
+}
+
+function powerbi_mobile_breakpoint_render() {
+	$options = get_power_bi_plugin_settings();
+	?>
+	<input type="text" name="power_bi_settings[powerbi_mobile_breakpoint]" value="<?php echo $options['powerbi_mobile_breakpoint']; ?>">
+	<?php
 
 }
 
