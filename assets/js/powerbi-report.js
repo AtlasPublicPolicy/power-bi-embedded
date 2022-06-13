@@ -51,7 +51,6 @@
                             sessionStorage.setItem('access_token', report.getAccessToken() );
                         })
                         .catch(function(error) {console.log(error)} );
-
                     isTokenValid(report);
                 }).catch(function(error) { console.log(error)});
             }, 1000*60*10);
@@ -144,7 +143,7 @@
             window.report = 'create' === reportData.report_mode && 'report' === reportData.embed_type ? powerbi.createReport(container.get(0), embedConfiguration) : powerbi.embed(container.get(0), embedConfiguration);
             // set timeOut to refresh token
 			window.report.on('loaded', function(event) {
-                isTokenValid(report);
+                isTokenValid(window.report);
             });
             if(breakpoint !== '' && window.innerWidth <= Number(breakpoint)){
                 let mobileWidth = reportData.mobile_width ? reportData.mobile_width : '100%';
