@@ -41,6 +41,22 @@
             });
         }
 
+        function isTokenValid(report) {
+            setTimeout(function(){
+                getToken().then(function(data){
+                    console.log('Resetting token: ' + report.getAccessToken());
+                    report.setAccessToken(data)
+                        .then(function(resp) {
+                            console.log('New token: ' + report.getAccessToken());
+                            sessionStorage.setItem('access_token', report.getAccessToken() );
+                        })
+                        .catch(function(error) {console.log(error)} );
+
+                    isTokenValid(report);
+                }).catch(function(error) { console.log(error)});
+            }, 1000*60*10);
+        }
+
         window.changePowerBIPage = function(pageName){
             window.report.setPage(pageName);
         }
@@ -126,6 +142,10 @@
             }
 
             window.report = 'create' === reportData.report_mode && 'report' === reportData.embed_type ? powerbi.createReport(container.get(0), embedConfiguration) : powerbi.embed(container.get(0), embedConfiguration);
+            // set timeOut to refresh token
+			window.report.on('loaded', function(event) {
+                isTokenValid(report);
+            });
             if(breakpoint !== '' && window.innerWidth <= Number(breakpoint)){
                 let mobileWidth = reportData.mobile_width ? reportData.mobile_width : '100%';
                 let mobileHeight = reportData.mobile_height ? reportData.mobile_height : 'auto';
