@@ -108,7 +108,7 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			wp_register_script($this->plugin_name . '-main', POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js', array('jquery'), filemtime(POWER_BI_PLUGIN_DIR . '/assets/js/powerbi.min.js'), true );
 			wp_enqueue_script( $this->plugin_name . '-main');
             $args = [
-                'rest_url' => get_rest_url(),
+                'rest_url' => get_site_url(null, 'wp-json/powerbi/v1'),
                 'nonce' => wp_create_nonce('wp_rest'),
                 'mobile_breakpoint' => $this->getSetting('powerbi_mobile_breakpoint'),
             ];

@@ -109,11 +109,12 @@ class Power_Bi_Endpoints{
 			$response['tile_id']   = esc_attr(get_post_meta( $post_id, '_power_bi_tile_id', true ));
 			$response['embed_url'] = $response['api_url'] . "embed?dashboardId=" . $response['dashboard_id'] . "&tileId=" . $response['tile_id'] . "&groupId=" . $response['group_id'];
 		}
-        return !(empty($response)) ? $response : false;
+        nocache_headers();
+        return new WP_REST_Response(!(empty($response)) ? $response : false);
     }
 
     public function add_get_report_data_endpoint(){
-        register_rest_route('wp/v2/powerbi', 'getReportData', [
+        register_rest_route('powerbi/v1', 'getReportData', [
             'methods' => WP_REST_SERVER::READABLE,
             'callback' => [$this, 'get_report_data'],
             'permission_callback' => function(){
@@ -125,7 +126,8 @@ class Power_Bi_Endpoints{
     public function get_powerbi_access_token() {
         $oauth = Power_Bi_Oauth::get_instance();
         $returnObject = $oauth->get_token();
-        return $returnObject['access_token'];
+        nocache_headers();
+        return new WP_REST_Response($returnObject['access_token']);
     }
 
     /**
@@ -135,7 +137,7 @@ class Power_Bi_Endpoints{
      * @return void
      */
     public function register_get_powerbi_access_token() {
-        register_rest_route( 'wp/v2/powerbi', '/getToken', array(
+        register_rest_route( 'powerbi/v1', '/getToken', array(
             'methods' => WP_REST_SERVER::READABLE,
             'callback' => array ($this, 'get_powerbi_access_token'),
             'permission_callback' => function(){

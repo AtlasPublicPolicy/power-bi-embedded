@@ -2,7 +2,7 @@
     "use strict";
     $(document).ready(function() {
         let models = window['powerbi-client'].models;	
-        let restURL = powerBiEmbed.rest_url + 'wp/v2/powerbi/';
+        let restURL = powerBiEmbed.rest_url;
         let container = $('.powerbi-embed');
         let breakpoint = powerBiEmbed.mobile_breakpoint
         window.report = {};
@@ -10,7 +10,7 @@
         function getToken(){
             return new Promise(function(resolve, reject){
                 $.ajax({
-                    url: restURL + 'getToken',
+                    url: restURL + '/getToken',
                     beforeSend: function(xhr){
                         xhr.setRequestHeader('X-WP-Nonce', powerBiEmbed.nonce);
                     },
@@ -27,7 +27,7 @@
         function getReportData(postID){
             return new Promise(function(resolve, reject){
                 $.ajax({
-                    url: restURL + 'getReportData?post_id=' + postID,
+                    url: restURL + '/getReportData?post_id=' + postID,
                     beforeSend: function(xhr){
                         xhr.setRequestHeader('X-WP-Nonce', powerBiEmbed.nonce);
                     },
@@ -194,7 +194,6 @@
                 });
             }
         }
-    
 
         if(container.length){
             let postID = container.data('postid');

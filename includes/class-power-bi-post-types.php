@@ -48,7 +48,6 @@ class Power_Bi_Post_Types {
         global $post;
         /* Checks for single template by post type */
         if ( $post->post_type == 'powerbi' ) {
-            error_log( plugin_dir_path( __DIR__ ) . 'templates/single-power_bi.php');
             if ( file_exists( plugin_dir_path( __DIR__ ) . 'templates/single-power_bi.php' ) ) {
                 return plugin_dir_path( __DIR__ ) . 'templates/single-power_bi.php';
             }
