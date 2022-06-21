@@ -109,7 +109,6 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			wp_enqueue_script( $this->plugin_name . '-main');
             $args = [
                 'rest_url' => get_site_url(null, 'wp-json/powerbi/v1'),
-                'nonce' => wp_create_nonce('wp_rest'),
                 'mobile_breakpoint' => $this->getSetting('powerbi_mobile_breakpoint'),
             ];
             wp_localize_script($this->plugin_name . '-main', 'powerBiEmbed', $args);

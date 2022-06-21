@@ -11,9 +11,6 @@
             return new Promise(function(resolve, reject){
                 $.ajax({
                     url: restURL + '/getToken',
-                    beforeSend: function(xhr){
-                        xhr.setRequestHeader('X-WP-Nonce', powerBiEmbed.nonce);
-                    },
                     type: 'GET',
                     dataType: 'json',
                 }).done(function(response){
@@ -28,9 +25,6 @@
             return new Promise(function(resolve, reject){
                 $.ajax({
                     url: restURL + '/getReportData?post_id=' + postID,
-                    beforeSend: function(xhr){
-                        xhr.setRequestHeader('X-WP-Nonce', powerBiEmbed.nonce);
-                    },
                     type: 'GET',
                     dataType: 'json',
                 }).done(function(response){
