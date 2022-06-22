@@ -48,7 +48,6 @@ class Power_Bi_Post_Types {
         global $post;
         /* Checks for single template by post type */
         if ( $post->post_type == 'powerbi' ) {
-            error_log( plugin_dir_path( __DIR__ ) . 'templates/single-power_bi.php');
             if ( file_exists( plugin_dir_path( __DIR__ ) . 'templates/single-power_bi.php' ) ) {
                 return plugin_dir_path( __DIR__ ) . 'templates/single-power_bi.php';
             }
@@ -112,6 +111,9 @@ class Power_Bi_Post_Types {
         //flush rewrite rules the first time post type is registered
         $rewrite_rules_flushed = get_option('_powerbi_embed_flushed', false);
         if(!$rewrite_rules_flushed || $rewrite_rules_flushed !== 'flushed'){
+            //clear transient this first time to ensure we are not off on our transient timer refresh
+            delete_transient('t_token');
+            //make sure post types load correctly            
             flush_rewrite_rules();
             update_option('_powerbi_embed_flushed', 'flushed');
         }

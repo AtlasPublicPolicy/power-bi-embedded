@@ -35,7 +35,7 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			if ( defined( 'POWER_BI_VERSION' ) ) {
 				$this->version = POWER_BI_VERSION;
 			} else {
-				$this->version = '1.1.4';
+				$this->version = '1.1.5';
 			}
 
 			$this->plugin_name = 'power-bi';
@@ -49,11 +49,11 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			include_once POWER_BI_PLUGIN_DIR . '/lib/cmb2/init.php';
 			include_once POWER_BI_PLUGIN_DIR . '/lib/cmb2-conditionals/cmb2-conditionals.php';
 
+            include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-endpoints.php';
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-post-types.php';
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-settings.php';
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-oauth.php';
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-shortcodes.php';
-            include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-endpoints.php';
 
 			include_once POWER_BI_PLUGIN_DIR . '/includes/functions-power-bi-settings.php';
             
@@ -108,8 +108,7 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			wp_register_script($this->plugin_name . '-main', POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js', array('jquery'), filemtime(POWER_BI_PLUGIN_DIR . '/assets/js/powerbi.min.js'), true );
 			wp_enqueue_script( $this->plugin_name . '-main');
             $args = [
-                'rest_url' => get_rest_url(),
-                'nonce' => wp_create_nonce('wp_rest'),
+                'rest_url' => get_site_url(null, 'wp-json/powerbi/v1'),
                 'mobile_breakpoint' => $this->getSetting('powerbi_mobile_breakpoint'),
             ];
             wp_localize_script($this->plugin_name . '-main', 'powerBiEmbed', $args);
