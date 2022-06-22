@@ -4,7 +4,7 @@ Tags: powerbi-embedded, wordpress-plugin, powerbi, wordpress
 Requires at least: 5.0.0
 Requires PHP: 7.0
 Tested up to: 6.0.0
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GNU General Public License v3.0
 License URI: https://www.gnu.org/licenses/lgpl.html
 
@@ -84,6 +84,13 @@ The Embed Type determines the remaining fields to fill out.
 
 = Other Settings for Power BI Content =
 You can also configure how the content is embedded including whether to show the filter pane or page navigation along with the language (defines the language Power BI uses for localization and locale format (defines the text formatting that powerBI uses for dates, currency, etc.). Finally, you can set the default width and height for the container in pixels or as a percentage.
+
+= Important Cache Notes and Fixes =
+When installing or upgrading this plugin you may run into display errors when using a CDN, cache plugin or security plugin.  The following can be done to fix most caching/security plugin issues.
+
+* Manually purge/clear your plugin and browser cache
+* Whitelist the /wp-json path in your security plugin, cache or CDN settings to allow updated data to always be returned.
+* Lower your cache timer to 10 hours or less to allow WP nonces to refresh properly
 
 = Embedding Content in WordPress =
 Once the Power BI content is created in WordPress, you can embed it anywhere with a shortcode. The shortcode accepts the unique identifier for the Power BI content (visible from "All Power BI Items") and an optional width and height to customize the size of the content where it is being embedded, if you want to override the default width and/or height for the content.
@@ -215,6 +222,10 @@ N/A
 * Added security escapes and sanitization in report data collection and display.
 * Mobile settings and support added for reports
 
+= 1.1.5 =
+* Cache mitigation for rest endpoints
+* Transient cleanup on removal and activation
+
 == Upgrade Notice ==
 
 = 1.0.1 =
@@ -237,3 +248,6 @@ This release contains important bug fixes.
 
 = 1.1.4 = 
 This release contains important bug fixes and new features. 
+
+= 1.1.5 = 
+This release contains important bug fixes. 

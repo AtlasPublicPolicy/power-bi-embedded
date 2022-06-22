@@ -35,7 +35,7 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			if ( defined( 'POWER_BI_VERSION' ) ) {
 				$this->version = POWER_BI_VERSION;
 			} else {
-				$this->version = '1.1.4';
+				$this->version = '1.1.5';
 			}
 
 			$this->plugin_name = 'power-bi';
