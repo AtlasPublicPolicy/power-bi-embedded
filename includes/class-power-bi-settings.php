@@ -75,6 +75,14 @@ class Power_Bi_Settings {
     		'power_bi'
     	);
 
+					add_settings_field(
+    		'powerbi_auth_type',
+    		__( 'Auth type', 'power-bi' ),
+    		'powerbi_auth_type_render',
+    		'power_bi',
+    		'power_bi_section'
+    	);
+
     	add_settings_field(
     		'power_bi_username',
     		__( 'User Name', 'power-bi' ),
@@ -103,6 +111,14 @@ class Power_Bi_Settings {
     		'power_bi_client_secret',
     		__( 'Client Secret', 'power-bi' ),
     		'power_bi_client_secret_render',
+    		'power_bi',
+    		'power_bi_section'
+    	);
+
+					add_settings_field(
+    		'powerbi_rls_effecitve_identity',
+    		__( 'Username for Effective Identity (RLS)', 'power-bi' ),
+    		'powerbi_rls_effecitve_identity_render',
     		'power_bi',
     		'power_bi_section'
     	);

@@ -41,8 +41,7 @@ class Power_Bi_Oauth {
 
     public function add_token() {
         $power_bi_credentials = get_option('power_bi_credentials');
-
-        if( isset( $power_bi_credentials['access_token'] ) || isset( $power_bi_credentials['error'] ) ) {
+        if( is_array($power_bi_credentials) && isset( $power_bi_credentials['access_token'] ) || isset( $power_bi_credentials['error'] ) ) {
             $token_credentials = $this->get_token();
             update_option('power_bi_credentials', $token_credentials);
 
@@ -77,7 +76,65 @@ class Power_Bi_Oauth {
         }
     }
 
-    public function get_token() {
+    public function get_token_by_service_principal() {
+
+        $token_transient = get_transient( 't_token' );
+
+        if(! empty( $token_transient )) {
+            return $token_transient;
+        }
+
+        $user_credentials = get_option( 'power_bi_settings' );
+
+        $client_id         = $user_credentials['power_bi_client_id'];
+        $client_secret     = $user_credentials['power_bi_client_secret'];
+        $tenant_id         = $user_credentials['power_bi_azure_tenant_id'];
+
+ 
+        $curl = curl_init();
+        if(!$curl) {
+            die("Embedded PowerBi could not initialize a cURL handle.  Please have your hosting provider install curl");
+        }
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://login.microsoftonline.com/' . $tenant_id . '/oauth2/token',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'POST',
+            'grant_type=client_credentials&resource=https%3A%2F%2Fanalysis.windows.net%2Fpowerbi%2Fapi&client_id=' . $client_id . '&client_secret=' . $client_secret . '',
+            CURLOPT_POSTFIELDS => 'grant_type=client_credentials&resource=https%3A%2F%2Fanalysis.windows.net%2Fpowerbi%2Fapi&client_id=b54b6bd0-3ccd-4d99-8dcd-a71d92ed4bb3%0A&client_secret=yYB8Q~YTb4AtabGEyQLjrpDmIrT6WHIAXVIwIaU~',
+            CURLOPT_HTTPHEADER => array(
+              'Content-Type: application/x-www-form-urlencoded',
+            ),
+        ));
+ 
+        $response = curl_exec($curl);
+ 
+        $err = curl_error($curl);
+ 
+        curl_close($curl);
+ 
+        if ($err) {
+            $err = json_decode($err, true);
+            return $err;
+        } 
+ 
+        $token = json_decode($response, true);
+
+        if ( isset($token['error']) ) {
+            return $token;
+        }
+
+        set_transient( 't_token', $token, HOUR_IN_SECONDS );
+        return $token;
+
+    }
+
+    public function get_token_by_master_user() {
 
         $token_transient = get_transient( 't_token' );
 
@@ -134,6 +191,19 @@ class Power_Bi_Oauth {
         set_transient( 't_token', $token, HOUR_IN_SECONDS );
         return $token;
 
+    }
+    
+    public function get_token()
+    {
+        $settings = get_option( 'power_bi_settings' );
+
+        if (  $settings['auth_type'] == 'master_user' ) {
+            $token = (array)$this->get_token_by_master_user();
+        }
+        else if ( $settings['auth_type'] == 'service_principal' ) {
+            $token = (array)$this->get_token_by_service_principal();
+        }
+        return $token;
     }
 
     // Provided new get token request for https://management.azure.com/
