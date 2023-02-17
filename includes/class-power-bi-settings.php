@@ -68,6 +68,14 @@ class Power_Bi_Settings {
     		'power_bi_display_section'
     	);
 
+					add_settings_field(
+    		'powerbi_mobile_breakpoint_notice_display_message',
+    		__( 'Enter message informing the user that the embedded frame is best viewed on a large screen (optional)', 'power-bi' ),
+    		'powerbi_mobile_breakpoint_notice_display_message_render',
+    		'power_bi',
+    		'power_bi_display_section'
+    	);
+
     	add_settings_section(
     		'power_bi_section',
     		__( 'Azure Authorization', 'power-bi' ),

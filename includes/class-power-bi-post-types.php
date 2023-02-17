@@ -126,6 +126,8 @@ class Power_Bi_Post_Types {
 		// Start with an underscore to hide fields from custom fields list.
 		$prefix = '_power_bi_';
 		$languages = $this->get_languages();
+		$options = get_power_bi_plugin_settings();
+
 		/**
 		 * Sample metabox to demonstrate the different conditions you can set.
 		 */
@@ -348,6 +350,21 @@ class Power_Bi_Post_Types {
 			'desc'    => 'Enter mobile height in pixels, percent (include %) or type auto.',
 			'id'      => $prefix . 'mobile_height',
 			'default' => '500px',
+			'type'    => 'text',
+		) );
+		
+		$metabox_settings->add_field( array(
+			'name'    => 'Display breakpoint notice above the embedded frame (on mobile)',
+			'id'      => $prefix . 'display_breakpoint_notice',
+			'default' => '0',
+			'type'    => 'checkbox',
+		) );
+		
+		$metabox_settings->add_field( array(
+			'name'    => 'Breakpoint notice message',
+			'desc'    => 'Override global message informing the user that the embedded frame is best viewed on a large screen',
+			'id'      => $prefix . 'display_breakpoint_notice_message',
+			'default' => $options['powerbi_mobile_breakpoint_notice_display_message'],
 			'type'    => 'text',
 		) );
 	}
