@@ -22,7 +22,13 @@ function powerbi_mobile_breakpoint_render() {
 	?>
 	<input type="text" name="power_bi_settings[powerbi_mobile_breakpoint]" value="<?php echo $options['powerbi_mobile_breakpoint']; ?>">
 	<?php
+}
 
+function powerbi_mobile_breakpoint_notice_display_message_render() {
+	$options = get_power_bi_plugin_settings();
+	?>
+	<input type="text" name="power_bi_settings[powerbi_mobile_breakpoint_notice_display_message]" value="<?php echo $options['powerbi_mobile_breakpoint_notice_display_message']; ?>">
+	<?php
 }
 
 function power_bi_username_render() {
