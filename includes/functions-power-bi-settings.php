@@ -28,7 +28,7 @@ function powerbi_mobile_breakpoint_render() {
 function power_bi_username_render() {
 	$options = get_power_bi_plugin_settings();
 	?>
-	<input type='text' name='power_bi_settings[power_bi_username]' value='<?php echo $options['power_bi_username']; ?>'>
+	<input id="power_bi_username" type='text' name='power_bi_settings[power_bi_username]' value='<?php echo $options['power_bi_username']; ?>'>
 	<?php
 
 }
@@ -37,7 +37,7 @@ function power_bi_username_render() {
 function power_bi_password_render() {
 	$options = get_power_bi_plugin_settings();
 	?>
-	<input type='password' name='power_bi_settings[power_bi_password]' value='<?php echo $options['power_bi_password']; ?>'>
+	<input id="power_bi_password" type='password' name='power_bi_settings[power_bi_password]' value='<?php echo $options['power_bi_password']; ?>'>
 	<?php
 
 }
@@ -59,6 +59,57 @@ function power_bi_client_secret_render() {
 	<?php
 
 }
+
+
+function powerbi_rls_effecitve_identity_render() {
+	$options = get_power_bi_plugin_settings();
+	?>
+	<input id="powerbi_rls_effecitve_identity" type='text' name='power_bi_settings[powerbi_rls_effecitve_identity]' value='<?php echo $options['powerbi_rls_effecitve_identity']; ?>'>
+	<?php
+
+}
+
+function powerbi_auth_type_render() {
+	$options = get_power_bi_plugin_settings();
+	if ( empty($options['auth_type']) ) {
+		$options['auth_type'] = 'service_principal';
+	}
+	?>
+	<label for="master_user">
+		<input id="master_user" type='radio' name='power_bi_settings[auth_type]' <?php echo ($options['auth_type'] == 'master_user') ? 'checked' : ''; ?> value='master_user'>
+		<?php echo __('Master user', 'power-bi') ?>
+	</label>
+
+	<label for="service_principal">
+		<input id="service_principal" type='radio' name='power_bi_settings[auth_type]' <?php echo ($options['auth_type'] == 'service_principal') ? 'checked' : ''; ?> value='service_principal'>
+		<?php echo __('Service Principal', 'power-bi') ?>
+	</label>
+	<script>
+		var init = 0;
+		function checkAuthType() {
+			if(jQuery('#service_principal').is(':checked')) {
+				jQuery('#powerbi_rls_effecitve_identity').closest('tr').show();
+				jQuery('#power_bi_password, #power_bi_username').closest('tr').hide();
+			} else {
+				jQuery('#powerbi_rls_effecitve_identity').closest('tr').hide();
+				jQuery('#power_bi_password, #power_bi_username').closest('tr').show();
+			}
+		}
+		jQuery('#master_user, #service_principal').on('change', function () {
+			checkAuthType();
+		});
+
+		jQuery( document ).ready(function() {
+				checkAuthType();
+				setTimeout(function () {
+					checkAuthType();
+				}, 1000)
+		});
+	</script>
+	<?php
+
+}
+
 
 function power_bi_oauth_success_render() {
 

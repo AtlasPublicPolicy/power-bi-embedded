@@ -41,6 +41,35 @@ class Power_Bi_Endpoints{
     private function __construct(){}
 
     /**
+	 * Get Embedded Token for report.
+	 *
+	 * @since  1.1.5
+	 * @access public
+	 * @return mixed
+	 */
+	public function get_embedded_token($workspace_id, $report_id, $ms_token, $dataset_id)	{
+		$username = (!empty(get_option('power_bi_settings')['powerbi_rls_effecitve_identity'])) ? get_option('power_bi_settings')['powerbi_rls_effecitve_identity'] : false;
+		$params = ['identities' => [['username' => $username, 'datasets' => [$dataset_id]],],  "accessLevel" => "View", "datasetId" => $dataset_id];
+
+		$url = "https://api.powerbi.com/v1.0/myorg/groups/$workspace_id/reports/$report_id/GenerateToken";
+
+		$postdata = json_encode($params);
+
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_POST, 1);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, 
+		array(
+			"Content-Type: application/json", 
+		"Authorization: Bearer $ms_token",));
+		$result = curl_exec($ch);
+		curl_close($ch);
+
+		return json_decode((string) $result);
+	}
+
+    /**
 	 * Get Report Data to make api call.
 	 *
 	 * @since  1.1.5
@@ -50,6 +79,8 @@ class Power_Bi_Endpoints{
     public function get_report_data($data){
         if(!isset($data['post_id'])) return false;
         $power_bi_credentials = get_option('power_bi_credentials');
+        $settings = get_option( 'power_bi_settings' );
+
         $response = [];
         if(!isset( $power_bi_credentials['access_token'])) return false;
         $response['access_token'] = $power_bi_credentials['access_token'];
@@ -108,6 +139,13 @@ class Power_Bi_Endpoints{
 		if( 'tile' === $response['embed_type'] ) {
 			$response['tile_id']   = esc_attr(get_post_meta( $post_id, '_power_bi_tile_id', true ));
 			$response['embed_url'] = $response['api_url'] . "embed?dashboardId=" . $response['dashboard_id'] . "&tileId=" . $response['tile_id'] . "&groupId=" . $response['group_id'];
+		}
+	
+		if (  $settings['auth_type'] == 'service_principal' ) {
+			$result = $this->get_embedded_token($response['group_id'], $response['report_id'], $power_bi_credentials['access_token'], $response['dataset_id']);
+			$response['access_token'] = $result->token;
+			$response['embed_token'] = $result->token;
+			$response['token_type'] = 'Embed';
 		}
         nocache_headers();
         return new WP_REST_Response(!(empty($response)) ? $response : false);
