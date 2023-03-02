@@ -104,9 +104,7 @@ class Power_Bi_Oauth {
             CURLOPT_TIMEOUT => 0,
             CURLOPT_FOLLOWLOCATION => true,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'POST',
-            'grant_type=client_credentials&resource=https%3A%2F%2Fanalysis.windows.net%2Fpowerbi%2Fapi&client_id=' . $client_id . '&client_secret=' . $client_secret . '',
-            CURLOPT_POSTFIELDS => 'grant_type=client_credentials&resource=https%3A%2F%2Fanalysis.windows.net%2Fpowerbi%2Fapi&client_id=b54b6bd0-3ccd-4d99-8dcd-a71d92ed4bb3%0A&client_secret=yYB8Q~YTb4AtabGEyQLjrpDmIrT6WHIAXVIwIaU~',
+            CURLOPT_POSTFIELDS => 'grant_type=client_credentials&resource=https%3A%2F%2Fanalysis.windows.net%2Fpowerbi%2Fapi&client_id=' . $client_id . '&client_secret=' . $client_secret . '',
             CURLOPT_HTTPHEADER => array(
               'Content-Type: application/x-www-form-urlencoded',
             ),
