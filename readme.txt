@@ -226,15 +226,12 @@ N/A
 * Cache mitigation for rest endpoints
 * Transient cleanup on removal and activation
 
-<<<<<<< HEAD
 = 1.1.6 =
 * Revert to v1.1.3 due to regressions
 
 = 1.1.7 =
 * Fix for PHP 8.0
 
-=======
->>>>>>> c58c2d04e831b1f5e969b0752e551043a5217cc9
 == Upgrade Notice ==
 
 = 1.0.1 =
@@ -259,13 +256,10 @@ This release contains important bug fixes.
 This release contains important bug fixes and new features. 
 
 = 1.1.5 = 
-<<<<<<< HEAD
 This release contains important bug fixes. 
 
 = 1.1.6 = 
 This release contains important bug fixes. 
 
-= 1.1.6 = 
-=======
->>>>>>> c58c2d04e831b1f5e969b0752e551043a5217cc9
+= 1.1.7 = 
 This release contains important bug fixes. 
