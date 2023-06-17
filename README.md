@@ -49,6 +49,13 @@ The plugin also includes support to control the Power BI Embedded resource on Az
 
  For scheduling, it is recommended to use cron on your web server instead of WP Cron. Many websites exist to walk you through the process of using your web server instead of WP Cron. For example, see [https://www.nextscripts.com/tutorials/wp-cron-scheduling-tasks-in-wordpress](https://www.nextscripts.com/tutorials/wp-cron-scheduling-tasks-in-wordpress).
 
+## Important Cache Notes and Fixes
+When installing or upgrading this plugin you may run into display errors when using a CDN, cache plugin or security plugin.  The following can be done to fix most caching/security plugin issues.
+
+* Manually purge/clear your plugin and browser cache
+* Whitelist the /wp-json path in your security plugin, cache or CDN settings to allow updated data to always be returned.
+* Lower your cache timer to 10 hours or less to allow WP nonces to refresh properly
+
 ## Power BI Content
 The plugin uses a custom content type for each Power BI component to embed (dashboard, report, etc.). Go to "All Power BI Items" to add a new component.
 
@@ -171,4 +178,4 @@ var relatedURL = pageURL + "?slicers=" +  encodeURIComponent(JSON.stringify(slic
 
 ## Plugin Dependencies
 
-powerbi-client v2.5.1 [https://github.com/Microsoft/PowerBI-JavaScript](https://github.com/Microsoft/PowerBI-JavaScript), CMB2 v2.6.0 [https://github.com/CMB2/CMB2](https://github.com/CMB2/CMB2), CMB2 Conditionals v1.0.4 [(https://github.com/jcchavezs/cmb2-conditionals)](https://github.com/jcchavezs/cmb2-conditionals), URL Search Params Polyfill v5.0.0 [https://github.com/jerrybendy/url-search-params-polyfill](https://github.com/jerrybendy/url-search-params-polyfill)
+powerbi-client v2.19.1 [https://github.com/Microsoft/PowerBI-JavaScript](https://github.com/Microsoft/PowerBI-JavaScript), CMB2 v2.6.0 [https://github.com/CMB2/CMB2](https://github.com/CMB2/CMB2), CMB2 Conditionals v1.0.4 [(https://github.com/jcchavezs/cmb2-conditionals)](https://github.com/jcchavezs/cmb2-conditionals), URL Search Params Polyfill v5.0.0 [https://github.com/jerrybendy/url-search-params-polyfill](https://github.com/jerrybendy/url-search-params-polyfill)

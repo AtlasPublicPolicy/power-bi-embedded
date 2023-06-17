@@ -71,9 +71,13 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 				$this->version = POWER_BI_VERSION;
 
 			} else {
+<<<<<<< HEAD
 
 				$this->version = '1.0.0';
 
+=======
+				$this->version = '1.1.5';
+>>>>>>> c58c2d04e831b1f5e969b0752e551043a5217cc9
 			}
 
 
@@ -98,8 +102,12 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 
 			include_once POWER_BI_PLUGIN_DIR . '/lib/cmb2-conditionals/cmb2-conditionals.php';
 
+<<<<<<< HEAD
 
 
+=======
+            include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-endpoints.php';
+>>>>>>> c58c2d04e831b1f5e969b0752e551043a5217cc9
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-post-types.php';
 
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-settings.php';
@@ -107,8 +115,11 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-oauth.php';
 
 			include_once POWER_BI_PLUGIN_DIR . '/includes/class-power-bi-shortcodes.php';
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> c58c2d04e831b1f5e969b0752e551043a5217cc9
 
 			include_once POWER_BI_PLUGIN_DIR . '/includes/functions-power-bi-settings.php';
 
@@ -229,7 +240,16 @@ if ( ! class_exists( 'Power_Bi' ) ) {
 			wp_register_script($this->plugin_name . '-main', POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js', array('jquery'), filemtime(POWER_BI_PLUGIN_DIR . '/assets/js/powerbi.min.js'), true );
 
 			wp_enqueue_script( $this->plugin_name . '-main');
+<<<<<<< HEAD
 
+=======
+            $args = [
+                'rest_url' => get_site_url(null, 'wp-json/powerbi/v1'),
+                'mobile_breakpoint' => $this->getSetting('powerbi_mobile_breakpoint'),
+            ];
+            wp_localize_script($this->plugin_name . '-main', 'powerBiEmbed', $args);
+            wp_enqueue_script($this->plugin_name . '-report', POWER_BI_PLUGIN_URL . '/assets/js/powerbi-report.js', array(  ), filemtime(POWER_BI_PLUGIN_DIR. '/assets/js/powerbi-report.js'), true );
+>>>>>>> c58c2d04e831b1f5e969b0752e551043a5217cc9
 			//wp_enqueue_script( $this->plugin_name . '-main', POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js', array( 'jquery' ), filemtime(POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js'), false );
 
 			wp_enqueue_script( 'url-search-params-polyfill', POWER_BI_PLUGIN_URL . '/assets/js/url-search-params-polyfill.js', array(  ), filemtime(POWER_BI_PLUGIN_DIR. '/assets/js/url-search-params-polyfill.js'), true );

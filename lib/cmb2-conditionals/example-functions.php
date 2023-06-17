@@ -227,7 +227,7 @@ function yourprefix_register_conditionals_demo_metabox() {
 		'type'        => 'group',
 		'description' => 'Repeatable group',
 		'options'     => array(
-			'group_title'   => 'Entry {#}', // Since version 1.1.4, {#} gets replaced by row number.
+			'group_title'   => 'Entry {#}', // Since version 1.1.5, {#} gets replaced by row number.
 			'add_button'    => 'Add Another Entry',
 			'remove_button' => 'Remove Entry',
 			'sortable'      => true, // Beta.

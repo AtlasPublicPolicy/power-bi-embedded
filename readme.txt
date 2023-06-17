@@ -85,6 +85,13 @@ The Embed Type determines the remaining fields to fill out.
 = Other Settings for Power BI Content =
 You can also configure how the content is embedded including whether to show the filter pane or page navigation along with the language (defines the language Power BI uses for localization and locale format (defines the text formatting that powerBI uses for dates, currency, etc.). Finally, you can set the default width and height for the container in pixels or as a percentage.
 
+= Important Cache Notes and Fixes =
+When installing or upgrading this plugin you may run into display errors when using a CDN, cache plugin or security plugin.  The following can be done to fix most caching/security plugin issues.
+
+* Manually purge/clear your plugin and browser cache
+* Whitelist the /wp-json path in your security plugin, cache or CDN settings to allow updated data to always be returned.
+* Lower your cache timer to 10 hours or less to allow WP nonces to refresh properly
+
 = Embedding Content in WordPress =
 Once the Power BI content is created in WordPress, you can embed it anywhere with a shortcode. The shortcode accepts the unique identifier for the Power BI content (visible from "All Power BI Items") and an optional width and height to customize the size of the content where it is being embedded, if you want to override the default width and/or height for the content.
 
@@ -219,12 +226,15 @@ N/A
 * Cache mitigation for rest endpoints
 * Transient cleanup on removal and activation
 
+<<<<<<< HEAD
 = 1.1.6 =
 * Revert to v1.1.3 due to regressions
 
 = 1.1.7 =
 * Fix for PHP 8.0
 
+=======
+>>>>>>> c58c2d04e831b1f5e969b0752e551043a5217cc9
 == Upgrade Notice ==
 
 = 1.0.1 =
@@ -249,10 +259,13 @@ This release contains important bug fixes.
 This release contains important bug fixes and new features. 
 
 = 1.1.5 = 
+<<<<<<< HEAD
 This release contains important bug fixes. 
 
 = 1.1.6 = 
 This release contains important bug fixes. 
 
 = 1.1.6 = 
+=======
+>>>>>>> c58c2d04e831b1f5e969b0752e551043a5217cc9
 This release contains important bug fixes. 
