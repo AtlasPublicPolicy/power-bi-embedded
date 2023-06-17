@@ -1,20 +1,11 @@
-// powerbi-client v2.19.1
-// Copyright (c) Microsoft Corporation.
-// Licensed under the MIT License.
-declare module "config" {
-    /** @ignore */ /** */
-    const config: {
-        version: string;
-        type: string;
-    };
-    export default config;
-}
-declare module "errors" {
-    export const APINotSupportedForRDLError = "This API is currently not supported for RDL reports";
-    export const EmbedUrlNotSupported = "Embed URL is invalid for this scenario. Please use Power BI REST APIs to get the valid URL";
-}
+/*! powerbi-client v2.10.2 | (c) 2016 Microsoft Corporation MIT */
 declare module "util" {
     import { HttpPostMessage } from 'http-post-message';
+    global  {
+        interface Window {
+            msCrypto: Crypto;
+        }
+    }
     /**
      * Raises a custom event with event data on the specified HTML element.
      *
@@ -61,7 +52,7 @@ declare module "util" {
      */
     export function createRandomString(): string;
     /**
-     * Generates a 20 character uuid.
+     * Generates a 20 charachter uuid.
      *
      * @export
      * @returns {string}
@@ -91,193 +82,193 @@ declare module "util" {
      * Checks if the embed url is for RDL report.
      *
      * @export
-     * @param {string} embedUrl
-     * @returns {boolean}
+      * @param {string} embedUrl
+      * @returns {boolean}
      */
     export function isRDLEmbed(embedUrl: string): boolean;
-    /**
-     * Checks if the embed url contains autoAuth=true.
-     *
-     * @export
-     * @param {string} embedUrl
-     * @returns {boolean}
-     */
-    export function autoAuthInEmbedUrl(embedUrl: string): boolean;
     /**
      * Returns random number
      */
     export function getRandomValue(): number;
-    /**
-     * Returns the time interval between two dates in milliseconds
-     *
-     * @export
-     * @param {Date} start
-     * @param {Date} end
-     * @returns {number}
-     */
-    export function getTimeDiffInMilliseconds(start: Date, end: Date): number;
+}
+declare module "config" {
+    const config: {
+        version: string;
+        type: string;
+    };
+    export default config;
+}
+declare module "defaults" {
+    import * as models from 'powerbi-models';
+    export abstract class Defaults {
+        static defaultSettings: models.ISettings;
+        static defaultQnaSettings: models.IQnaSettings;
+    }
 }
 declare module "embed" {
+    import * as service from "service";
     import * as models from 'powerbi-models';
-    import { ICustomEvent, IEvent, IEventHandler, Service } from "service";
-    global {
+    global  {
         interface Document {
-            mozCancelFullScreen: any;
-            msExitFullscreen: any;
-            webkitExitFullscreen: void;
+            mozCancelFullScreen: Function;
+            msExitFullscreen: Function;
         }
         interface HTMLIFrameElement {
             mozRequestFullScreen: Function;
             msRequestFullscreen: Function;
-            webkitRequestFullscreen: {
-                (): void;
-            };
         }
     }
-    export type IBootstrapEmbedConfiguration = models.IBootstrapEmbedConfiguration;
-    export type IEmbedConfigurationBase = models.IEmbedConfigurationBase;
-    export type IEmbedConfiguration = models.IEmbedConfiguration;
-    export type IVisualEmbedConfiguration = models.IVisualEmbedConfiguration;
-    export type IReportEmbedConfiguration = models.IReportEmbedConfiguration;
-    export type IDashboardEmbedConfiguration = models.IDashboardEmbedConfiguration;
-    export type ITileEmbedConfiguration = models.ITileEmbedConfiguration;
-    export type IQnaEmbedConfiguration = models.IQnaEmbedConfiguration;
-    export type ILocaleSettings = models.ILocaleSettings;
-    export type IQnaSettings = models.IQnaSettings;
-    export type IEmbedSettings = models.ISettings;
-    /** @hidden */
+    /**
+     * Prepare configuration for Power BI embed components.
+     *
+     * @export
+     * @interface IBootstrapEmbedConfiguration
+     */
+    export interface IBootstrapEmbedConfiguration {
+        hostname?: string;
+        embedUrl?: string;
+        settings?: ISettings;
+        uniqueId?: string;
+        type?: string;
+        groupId?: string;
+        bootstrapped?: boolean;
+    }
+    /**
+     * Base Configuration settings for Power BI embed components
+     *
+     * @export
+     * @interface IEmbedConfigurationBase
+     * @extends IBootstrapEmbedConfiguration
+     */
+    export interface IEmbedConfigurationBase extends IBootstrapEmbedConfiguration {
+        accessToken?: string;
+        tokenType?: models.TokenType;
+    }
+    /**
+     * Configuration settings for Power BI embed components
+     *
+     * @export
+     * @interface IEmbedConfiguration
+     */
+    export interface IEmbedConfiguration extends IEmbedConfigurationBase {
+        id?: string;
+        settings?: IEmbedSettings;
+        pageName?: string;
+        filters?: models.IFilter[];
+        pageView?: models.PageView;
+        datasetId?: string;
+        permissions?: models.Permissions;
+        viewMode?: models.ViewMode;
+        action?: string;
+        dashboardId?: string;
+        height?: number;
+        width?: number;
+        theme?: models.IReportTheme;
+    }
+    export interface IVisualEmbedConfiguration extends IEmbedConfiguration {
+        visualName: string;
+    }
+    /**
+     * Configuration settings for Power BI QNA embed component
+     *
+     * @export
+     * @interface IEmbedConfiguration
+     */
+    export interface IQnaEmbedConfiguration extends IEmbedConfigurationBase {
+        datasetIds: string[];
+        question?: string;
+        viewMode?: models.QnaMode;
+    }
+    export interface ILocaleSettings {
+        language?: string;
+        formatLocale?: string;
+    }
+    export interface ISettings {
+        localeSettings?: ILocaleSettings;
+    }
+    export interface IEmbedSettings extends models.ISettings, ISettings {
+    }
+    export interface IQnaSettings extends models.IQnaSettings, ISettings {
+    }
     export interface IInternalEventHandler<T> {
-        test(event: IEvent<T>): boolean;
-        handle(event: ICustomEvent<T>): void;
+        test(event: service.IEvent<T>): boolean;
+        handle(event: service.ICustomEvent<T>): void;
     }
     /**
      * Base class for all Power BI embed components
      *
      * @export
      * @abstract
-     * @hidden
      * @class Embed
      */
     export abstract class Embed {
-        /** @hidden */
         static allowedEvents: string[];
-        /** @hidden */
         static accessTokenAttribute: string;
-        /** @hidden */
         static embedUrlAttribute: string;
-        /** @hidden */
         static nameAttribute: string;
-        /** @hidden */
         static typeAttribute: string;
-        /** @hidden */
         static defaultEmbedHostName: string;
-        /** @hidden */
         static type: string;
-        /** @hidden */
         static maxFrontLoadTimes: number;
-        /** @hidden */
-        allowedEvents: string[];
-        /** @hidden */
-        protected commands: models.ICommandExtension[];
-        /** @hidden */
-        protected initialLayoutType: models.LayoutType;
-        /** @hidden */
-        groups: models.IMenuGroupExtension[];
+        allowedEvents: any[];
         /**
          * Gets or sets the event handler registered for this embed component.
          *
          * @type {IInternalEventHandler<any>[]}
-         * @hidden
          */
         eventHandlers: IInternalEventHandler<any>[];
-        /**
-         * Gets or sets the eventHooks.
-         *
-         * @type {models.EventHooks}
-         * @hidden
-         */
-        eventHooks: models.EventHooks;
         /**
          * Gets or sets the Power BI embed service.
          *
          * @type {service.Service}
-         * @hidden
          */
-        service: Service;
+        service: service.Service;
         /**
          * Gets or sets the HTML element that contains the Power BI embed component.
          *
          * @type {HTMLElement}
-         * @hidden
          */
         element: HTMLElement;
         /**
          * Gets or sets the HTML iframe element that renders the Power BI embed component.
          *
          * @type {HTMLIFrameElement}
-         * @hidden
          */
         iframe: HTMLIFrameElement;
-        /**
-         * Saves the iframe state. Each iframe should be loaded only once.
-         * After first load, .embed will go into embedExisting path which will send
-         * a postMessage of /report/load instead of creating a new iframe.
-         *
-         * @type {boolean}
-         * @hidden
-         */
-        iframeLoaded: boolean;
         /**
          * Gets or sets the configuration settings for the Power BI embed component.
          *
          * @type {IEmbedConfigurationBase}
-         * @hidden
          */
         config: IEmbedConfigurationBase;
         /**
          * Gets or sets the bootstrap configuration for the Power BI embed component received by powerbi.bootstrap().
          *
          * @type {IBootstrapEmbedConfiguration}
-         * @hidden
          */
         bootstrapConfig: IBootstrapEmbedConfiguration;
         /**
          * Gets or sets the configuration settings for creating report.
          *
          * @type {models.IReportCreateConfiguration}
-         * @hidden
          */
         createConfig: models.IReportCreateConfiguration;
         /**
          * Url used in the load request.
-         *
-         * @hidden
          */
         loadPath: string;
         /**
          * Url used in the load request.
-         *
-         * @hidden
          */
         phasedLoadPath: string;
         /**
          * Type of embed
-         *
-         * @hidden
          */
-        embedtype: string;
+        embeType: string;
         /**
          * Handler function for the 'ready' event
-         *
-         * @hidden
          */
         frontLoadHandler: () => any;
-        /**
-         * The time the last /load request was sent
-         *
-         * @hidden
-         */
-        lastLoadRequest: Date;
         /**
          * Creates an instance of Embed.
          *
@@ -287,9 +278,8 @@ declare module "embed" {
          * @param {service.Service} service
          * @param {HTMLElement} element
          * @param {IEmbedConfigurationBase} config
-         * @hidden
          */
-        constructor(service: Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean, isBootstrap?: boolean);
+        constructor(service: service.Service, element: HTMLElement, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * Sends createReport configuration data.
          *
@@ -299,7 +289,6 @@ declare module "embed" {
          *   accessToken: 'eyJ0eXA ... TaE2rTSbmg',
          * ```
          *
-         * @hidden
          * @param {models.IReportCreateConfiguration} config
          * @returns {Promise<void>}
          */
@@ -316,20 +305,6 @@ declare module "embed" {
          * @returns {Promise<void>}
          */
         saveAs(saveAsParameters: models.ISaveAsParameters): Promise<void>;
-        /**
-         * Get the correlationId for the current embed session.
-         *
-         * ```javascript
-         * // Get the correlationId for the current embed session
-         * report.getCorrelationId()
-         *   .then(correlationId => {
-         *     ...
-         *   });
-         * ```
-         *
-         * @returns {Promise<string>}
-         */
-        getCorrelationId(): Promise<string>;
         /**
          * Sends load configuration data.
          *
@@ -351,12 +326,11 @@ declare module "embed" {
          *   .catch(error => { ... });
          * ```
          *
-         * @hidden
          * @param {models.ILoadConfiguration} config
          * @param {boolean} phasedRender
          * @returns {Promise<void>}
          */
-        load(phasedRender?: boolean): Promise<void>;
+        load(config: IEmbedConfigurationBase, phasedRender?: boolean): Promise<void>;
         /**
          * Removes one or more event handlers from the list of handlers.
          * If a reference to the existing handle function is specified, remove the specific handler.
@@ -376,9 +350,9 @@ declare module "embed" {
          *
          * @template T
          * @param {string} eventName
-         * @param {IEventHandler<T>} [handler]
+         * @param {service.IEventHandler<T>} [handler]
          */
-        off<T>(eventName: string, handler?: IEventHandler<T>): void;
+        off<T>(eventName: string, handler?: service.IEventHandler<T>): void;
         /**
          * Adds an event handler for a specific event.
          *
@@ -392,7 +366,7 @@ declare module "embed" {
          * @param {string} eventName
          * @param {service.IEventHandler<T>} handler
          */
-        on<T>(eventName: string, handler: IEventHandler<T>): void;
+        on<T>(eventName: string, handler: service.IEventHandler<T>): void;
         /**
          * Reloads embed using existing configuration.
          * E.g. For reports this effectively clears all filters and makes the first page active which simulates resetting a report back to loaded state.
@@ -414,62 +388,45 @@ declare module "embed" {
          * @private
          * @param {string} globalAccessToken
          * @returns {string}
-         * @hidden
          */
-        private getAccessToken;
+        private getAccessToken(globalAccessToken);
         /**
          * Populate config for create and load
          *
-         * @hidden
          * @param {IEmbedConfiguration}
          * @returns {void}
          */
         populateConfig(config: IBootstrapEmbedConfiguration, isBootstrap: boolean): void;
         /**
-       * Validate EventHooks
-       *
-       * @private
-       * @param {models.EventHooks} eventHooks
-       * @hidden
-       */
-        private validateEventHooks;
-        /**
          * Adds locale parameters to embedUrl
          *
          * @private
-         * @param {IEmbedConfiguration | models.ICommonEmbedConfiguration} config
-         * @hidden
+         * @param {IEmbedConfiguration} config
          */
-        private addLocaleToEmbedUrl;
+        private addLocaleToEmbedUrl(config);
         /**
          * Gets an embed url from the first available location: options, attribute.
          *
          * @private
          * @returns {string}
-         * @hidden
          */
-        private getEmbedUrl;
-        /**
-         * @hidden
-         */
-        private getDefaultEmbedUrl;
+        private getEmbedUrl(isBootstrap);
+        private getDefaultEmbedUrl(hostname);
         /**
          * Gets a unique ID from the first available location: options, attribute.
          * If neither is provided generate a unique string.
          *
          * @private
          * @returns {string}
-         * @hidden
          */
-        private getUniqueId;
+        private getUniqueId();
         /**
          * Gets the group ID from the first available location: options, embeddedUrl.
          *
          * @private
          * @returns {string}
-         * @hidden
          */
-        private getGroupId;
+        private getGroupId();
         /**
          * Gets the report ID from the first available location: options, attribute.
          *
@@ -480,7 +437,6 @@ declare module "embed" {
         /**
          * Raise a config changed event.
          *
-         * @hidden
          * @returns {void}
          */
         abstract configChanged(isBootstrap: boolean): void;
@@ -489,7 +445,6 @@ declare module "embed" {
          * For example: report embed endpoint is reportEmbed.
          * This will help creating a default embed URL such as: https://app.powerbi.com/reportEmbed
          *
-         * @hidden
          * @returns {string} endpoint.
          */
         abstract getDefaultEmbedUrlEndpoint(): string;
@@ -508,23 +463,18 @@ declare module "embed" {
          * @private
          * @param {HTMLIFrameElement} iframe
          * @returns {boolean}
-         * @hidden
          */
-        private isFullscreen;
+        private isFullscreen(iframe);
         /**
          * Validate load and create configuration.
-         *
-         * @hidden
          */
         abstract validate(config: IEmbedConfigurationBase): models.IError[];
         /**
          * Sets Iframe for embed
-         *
-         * @hidden
          */
-        private setIframe;
+        private setIframe(isLoad, phasedRender?, isBootstrap?);
         /**
-         * Set the component title for accessibility. In case of iframes, this method will change the iframe title.
+         * Sets Iframe's title
          */
         setComponentTitle(title: string): void;
         /**
@@ -534,12 +484,11 @@ declare module "embed" {
         /**
          * Removes element's tabindex attribute
          */
-        removeComponentTabIndex(_tabIndex?: number): void;
+        removeComponentTabIndex(tabIndex?: number): void;
         /**
          * Adds the ability to get groupId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
          *
-         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
@@ -547,15 +496,15 @@ declare module "embed" {
         static findGroupIdFromEmbedUrl(url: string): string;
         /**
          * Sends the config for front load calls, after 'ready' message is received from the iframe
-         *
-         * @hidden
          */
-        private frontLoadSendConfig;
+        private frontLoadSendConfig(config);
     }
 }
+declare module "errors" {
+    export let APINotSupportedForRDLError: string;
+}
 declare module "ifilterable" {
-    import { FiltersOperations, IFilter } from 'powerbi-models';
-    import { IHttpPostMessageResponse } from 'http-post-message';
+    import * as models from 'powerbi-models';
     /**
      * Decorates embed components that support filters
      * Examples include reports and pages
@@ -567,35 +516,26 @@ declare module "ifilterable" {
         /**
          * Gets the filters currently applied to the object.
          *
-         * @returns {(Promise<IFilter[]>)}
+         * @returns {(Promise<models.IFilter[]>)}
          */
-        getFilters(): Promise<IFilter[]>;
-        /**
-         * Update the filters for the current instance according to the operation: Add, replace all, replace by target or remove.
-         *
-         * @param {(FiltersOperations)} operation
-         * @param {(IFilter[])} filters
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        updateFilters(operation: FiltersOperations, filters?: IFilter[]): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Removes all filters from the current object.
-         *
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        removeFilters(): Promise<IHttpPostMessageResponse<void>>;
+        getFilters(): Promise<models.IFilter[]>;
         /**
          * Replaces all filters on the current object with the specified filter values.
          *
-         * @param {(IFilter[])} filters
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @param {(models.IFilter[])} filters
+         * @returns {Promise<void>}
          */
-        setFilters(filters: IFilter[]): Promise<IHttpPostMessageResponse<void>>;
+        setFilters(filters: models.IFilter[]): Promise<void>;
+        /**
+         * Removes all filters from the current object.
+         *
+         * @returns {Promise<void>}
+         */
+        removeFilters(): Promise<void>;
     }
 }
 declare module "visualDescriptor" {
-    import { ExportDataType, FiltersOperations, ICloneVisualRequest, ICloneVisualResponse, IExportDataResult, IFilter, ISlicerState, ISortByVisualRequest, IVisualLayout, VisualContainerDisplayMode } from 'powerbi-models';
-    import { IHttpPostMessageResponse } from 'http-post-message';
+    import * as models from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { IPageNode } from "page";
     /**
@@ -608,7 +548,7 @@ declare module "visualDescriptor" {
         name: string;
         title: string;
         type: string;
-        layout: IVisualLayout;
+        layout: models.IVisualLayout;
         page: IPageNode;
     }
     /**
@@ -638,21 +578,18 @@ declare module "visualDescriptor" {
          */
         type: string;
         /**
-         * The visual layout: position, size and visibility.
+         * The visual layout: position, size and visiblity.
          *
          * @type {string}
          */
-        layout: IVisualLayout;
+        layout: models.IVisualLayout;
         /**
          * The parent Power BI page that contains this visual
          *
          * @type {IPageNode}
          */
         page: IPageNode;
-        /**
-         * @hidden
-         */
-        constructor(page: IPageNode, name: string, title: string, type: string, layout: IVisualLayout);
+        constructor(page: IPageNode, name: string, title: string, type: string, layout: models.IVisualLayout);
         /**
          * Gets all visual level filters of the current visual.
          *
@@ -661,21 +598,9 @@ declare module "visualDescriptor" {
          *  .then(filters => { ... });
          * ```
          *
-         * @returns {(Promise<IFilter[]>)}
+         * @returns {(Promise<models.IFilter[]>)}
          */
-        getFilters(): Promise<IFilter[]>;
-        /**
-         * Update the filters for the current visual according to the operation: Add, replace all, replace by target or remove.
-         *
-         * ```javascript
-         * visual.updateFilters(FiltersOperations.Add, filters)
-         *   .catch(errors => { ... });
-         * ```
-         *
-         * @param {(IFilter[])} filters
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        updateFilters(operation: FiltersOperations, filters?: IFilter[]): Promise<IHttpPostMessageResponse<void>>;
+        getFilters(): Promise<models.IFilter[]>;
         /**
          * Removes all filters from the current visual.
          *
@@ -683,9 +608,9 @@ declare module "visualDescriptor" {
          * visual.removeFilters();
          * ```
          *
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @returns {Promise<void>}
          */
-        removeFilters(): Promise<IHttpPostMessageResponse<void>>;
+        removeFilters(): Promise<void>;
         /**
          * Sets the filters on the current visual to 'filters'.
          *
@@ -694,35 +619,33 @@ declare module "visualDescriptor" {
          *   .catch(errors => { ... });
          * ```
          *
-         * @param {(IFilter[])} filters
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @param {(models.IFilter[])} filters
+         * @returns {Promise<void>}
          */
-        setFilters(filters: IFilter[]): Promise<IHttpPostMessageResponse<void>>;
+        setFilters(filters: models.IFilter[]): Promise<void>;
         /**
          * Exports Visual data.
          * Can export up to 30K rows.
-         *
          * @param rows: Optional. Default value is 30K, maximum value is 30K as well.
-         * @param exportDataType: Optional. Default is ExportDataType.Summarized.
+         * @param exportDataType: Optional. Default is models.ExportDataType.Summarized.
          * ```javascript
          * visual.exportData()
          *  .then(data => { ... });
          * ```
          *
-         * @returns {(Promise<IExportDataResult>)}
+         * @returns {(Promise<models.ExportDataType>)}
          */
-        exportData(exportDataType?: ExportDataType, rows?: number): Promise<IExportDataResult>;
+        exportData(exportDataType?: models.ExportDataType, rows?: number): Promise<models.ExportDataType>;
         /**
          * Set slicer state.
          * Works only for visuals of type slicer.
-         *
          * @param state: A new state which contains the slicer filters.
          * ```javascript
          * visual.setSlicerState()
          *  .then(() => { ... });
          * ```
          */
-        setSlicerState(state: ISlicerState): Promise<IHttpPostMessageResponse<void>>;
+        setSlicerState(state: models.ISlicerState): Promise<void>;
         /**
          * Get slicer state.
          * Works only for visuals of type slicer.
@@ -732,15 +655,15 @@ declare module "visualDescriptor" {
          *  .then(state => { ... });
          * ```
          *
-         * @returns {(Promise<ISlicerState>)}
+         * @returns {(Promise<models.ISlicerState>)}
          */
-        getSlicerState(): Promise<ISlicerState>;
+        getSlicerState(): Promise<models.ISlicerState>;
         /**
          * Clone existing visual to a new instance.
          *
-         * @returns {(Promise<ICloneVisualResponse>)}
+         * @returns {(Promise<models.ICloneVisualResponse>)}
          */
-        clone(request?: ICloneVisualRequest): Promise<ICloneVisualResponse>;
+        clone(request?: models.ICloneVisualRequest): Promise<models.ICloneVisualResponse>;
         /**
          * Sort a visual by dataField and direction.
          *
@@ -751,54 +674,14 @@ declare module "visualDescriptor" {
          *  .then(() => { ... });
          * ```
          */
-        sortBy(request: ISortByVisualRequest): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Updates the position of a visual.
-         *
-         * ```javascript
-         * visual.moveVisual(x, y, z)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {number} x
-         * @param {number} y
-         * @param {number} z
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        moveVisual(x: number, y: number, z?: number): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Updates the display state of a visual.
-         *
-         * ```javascript
-         * visual.setVisualDisplayState(displayState)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {VisualContainerDisplayMode} displayState
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        setVisualDisplayState(displayState: VisualContainerDisplayMode): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Resize a visual.
-         *
-         * ```javascript
-         * visual.resizeVisual(width, height)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {number} width
-         * @param {number} height
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        resizeVisual(width: number, height: number): Promise<IHttpPostMessageResponse<void>>;
+        sortBy(request: models.ISortByVisualRequest): Promise<void>;
     }
 }
 declare module "page" {
-    import { IHttpPostMessageResponse } from 'http-post-message';
-    import { DisplayOption, FiltersOperations, ICustomPageSize, IFilter, IVisual, LayoutType, PageSizeType, SectionVisibility, VisualContainerDisplayMode, IPageBackground, IPageWallpaper } from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { IReportNode } from "report";
     import { VisualDescriptor } from "visualDescriptor";
+    import * as models from 'powerbi-models';
     /**
      * A Page node within a report hierarchy
      *
@@ -847,39 +730,19 @@ declare module "page" {
          * 0 - Always Visible
          * 1 - Hidden in View Mode
          *
-         * @type {SectionVisibility}
+         * @type {models.SectionVisibility}
          */
-        visibility: SectionVisibility;
+        visibility: models.SectionVisibility;
         /**
          * Page size as saved in the report.
-         *
-         * @type {ICustomPageSize}
+         * @type {models.ICustomPageSize}
          */
-        defaultSize: ICustomPageSize;
-        /**
-         * Mobile view page size (if defined) as saved in the report.
-         *
-         * @type {ICustomPageSize}
-         */
-        mobileSize: ICustomPageSize;
+        defaultSize: models.ICustomPageSize;
         /**
          * Page display options as saved in the report.
-         *
-         * @type {ICustomPageSize}
+         * @type {models.ICustomPageSize}
          */
-        defaultDisplayOption: DisplayOption;
-        /**
-         * Page background color.
-         *
-         * @type {IPageBackground}
-         */
-        background: IPageBackground;
-        /**
-         * Page wallpaper color.
-         *
-         * @type {IPageWallpaper}
-         */
-        wallpaper: IPageWallpaper;
+        defaultDisplayOption: models.DisplayOption;
         /**
          * Creates an instance of a Power BI report page.
          *
@@ -887,10 +750,9 @@ declare module "page" {
          * @param {string} name
          * @param {string} [displayName]
          * @param {boolean} [isActivePage]
-         * @param {SectionVisibility} [visibility]
-         * @hidden
+         * @param {models.SectionVisibility} [visibility]
          */
-        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: SectionVisibility, defaultSize?: ICustomPageSize, defaultDisplayOption?: DisplayOption, mobileSize?: ICustomPageSize, background?: IPageBackground, wallpaper?: IPageWallpaper);
+        constructor(report: IReportNode, name: string, displayName?: string, isActivePage?: boolean, visibility?: models.SectionVisibility, defaultSize?: models.ICustomPageSize, defaultDisplayOption?: models.DisplayOption);
         /**
          * Gets all page level filters within the report.
          *
@@ -899,21 +761,9 @@ declare module "page" {
          *  .then(filters => { ... });
          * ```
          *
-         * @returns {(Promise<IFilter[]>)}
+         * @returns {(Promise<models.IFilter[]>)}
          */
-        getFilters(): Promise<IFilter[]>;
-        /**
-         * Update the filters for the current page according to the operation: Add, replace all, replace by target or remove.
-         *
-         * ```javascript
-         * page.updateFilters(FiltersOperations.Add, filters)
-         *   .catch(errors => { ... });
-         * ```
-         *
-         * @param {(IFilter[])} filters
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        updateFilters(operation: FiltersOperations, filters?: IFilter[]): Promise<IHttpPostMessageResponse<void>>;
+        getFilters(): Promise<models.IFilter[]>;
         /**
          * Removes all filters from this page of the report.
          *
@@ -921,52 +771,31 @@ declare module "page" {
          * page.removeFilters();
          * ```
          *
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @returns {Promise<void>}
          */
-        removeFilters(): Promise<IHttpPostMessageResponse<void>>;
+        removeFilters(): Promise<void>;
         /**
-         * Sets all filters on the current page.
+         * Makes the current page the active page of the report.
          *
-         * ```javascript
-         * page.setFilters(filters)
-         *   .catch(errors => { ... });
-         * ```
-         *
-         * @param {(IFilter[])} filters
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        setFilters(filters: IFilter[]): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Delete the page from the report
-         *
-         * ```javascript
-         * // Delete the page from the report
-         * page.delete();
+         * ```javascripot
+         * page.setActive();
          * ```
          *
          * @returns {Promise<void>}
          */
-        delete(): Promise<void>;
+        setActive(): Promise<void>;
         /**
-         * Makes the current page the active page of the report.
+         * Sets all filters on the current page.
          *
          * ```javascript
-         * page.setActive();
+         * page.setFilters(filters);
+         *   .catch(errors => { ... });
          * ```
          *
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @param {(models.IFilter[])} filters
+         * @returns {Promise<void>}
          */
-        setActive(): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Set displayName to the current page.
-         *
-         * ```javascript
-         * page.setName(displayName);
-         * ```
-         *
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        setDisplayName(displayName: string): Promise<IHttpPostMessageResponse<void>>;
+        setFilters(filters: models.IFilter[]): Promise<void>;
         /**
          * Gets all the visuals on the page.
          *
@@ -979,89 +808,6 @@ declare module "page" {
          */
         getVisuals(): Promise<VisualDescriptor[]>;
         /**
-         * Gets a visual by name on the page.
-         *
-         * ```javascript
-         * page.getVisualByName(visualName: string)
-         *  .then(visual => {
-         *      ...
-         *  });
-         * ```
-         *
-         * @param {string} visualName
-         * @returns {Promise<VisualDescriptor>}
-         */
-        getVisualByName(visualName: string): Promise<VisualDescriptor>;
-        /**
-         * Updates the display state of a visual in a page.
-         *
-         * ```javascript
-         * page.setVisualDisplayState(visualName, displayState)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {string} visualName
-         * @param {VisualContainerDisplayMode} displayState
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        setVisualDisplayState(visualName: string, displayState: VisualContainerDisplayMode): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Updates the position of a visual in a page.
-         *
-         * ```javascript
-         * page.moveVisual(visualName, x, y, z)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {string} visualName
-         * @param {number} x
-         * @param {number} y
-         * @param {number} z
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        moveVisual(visualName: string, x: number, y: number, z?: number): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Resize a visual in a page.
-         *
-         * ```javascript
-         * page.resizeVisual(visualName, width, height)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {string} visualName
-         * @param {number} width
-         * @param {number} height
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        resizeVisual(visualName: string, width: number, height: number): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Updates the size of active page.
-         *
-         * ```javascript
-         * page.resizePage(pageSizeType, width, height)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {PageSizeType} pageSizeType
-         * @param {number} width
-         * @param {number} height
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        resizePage(pageSizeType: PageSizeType, width?: number, height?: number): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Gets the list of slicer visuals on the page.
-         *
-         * ```javascript
-         * page.getSlicers()
-         *  .then(slicers => {
-         *      ...
-         *  });
-         * ```
-         *
-         * @returns {Promise<IVisual[]>}
-         */
-        getSlicers(): Promise<IVisual[]>;
-        /**
          * Checks if page has layout.
          *
          * ```javascript
@@ -1071,16 +817,16 @@ declare module "page" {
          *
          * @returns {(Promise<boolean>)}
          */
-        hasLayout(layoutType: LayoutType): Promise<boolean>;
+        hasLayout(layoutType: any): Promise<boolean>;
     }
 }
 declare module "report" {
-    import { IReportLoadConfiguration, IReportEmbedConfiguration, FiltersOperations, IError, IFilter, IReportTheme, ISettings, LayoutType, SectionVisibility, ViewMode, IEmbedConfiguration, IEmbedConfigurationBase, MenuLocation, PageSizeType, VisualContainerDisplayMode } from 'powerbi-models';
-    import { IHttpPostMessageResponse } from 'http-post-message';
-    import { IService, Service } from "service";
-    import { Embed } from "embed";
+    import * as service from "service";
+    import * as embed from "embed";
+    import * as models from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     import { Page } from "page";
+    import { IReportLoadConfiguration } from 'powerbi-models';
     import { BookmarksManager } from "bookmarksManager";
     /**
      * A Report node within a report hierarchy
@@ -1090,48 +836,40 @@ declare module "report" {
      */
     export interface IReportNode {
         iframe: HTMLIFrameElement;
-        service: IService;
-        config: IEmbedConfiguration | IReportEmbedConfiguration;
+        service: service.IService;
+        config: embed.IEmbedConfiguration;
     }
     /**
      * The Power BI Report embed component
      *
      * @export
      * @class Report
-     * @extends {Embed}
+     * @extends {embed.Embed}
      * @implements {IReportNode}
      * @implements {IFilterable}
      */
-    export class Report extends Embed implements IReportNode, IFilterable {
-        /** @hidden */
+    export class Report extends embed.Embed implements IReportNode, IFilterable {
         static allowedEvents: string[];
-        /** @hidden */
         static reportIdAttribute: string;
-        /** @hidden */
         static filterPaneEnabledAttribute: string;
-        /** @hidden */
         static navContentPaneEnabledAttribute: string;
-        /** @hidden */
         static typeAttribute: string;
-        /** @hidden */
         static type: string;
         bookmarksManager: BookmarksManager;
         /**
          * Creates an instance of a Power BI Report.
          *
-         * @param {Service} service
+         * @param {service.Service} service
          * @param {HTMLElement} element
-         * @param {IEmbedConfiguration} config
-         * @hidden
+         * @param {embed.IEmbedConfiguration} config
          */
-        constructor(service: Service, element: HTMLElement, baseConfig: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
         /**
          * Adds backwards compatibility for the previous load configuration, which used the reportId query parameter to specify the report ID
          * (e.g. http://embedded.powerbi.com/appTokenReportEmbed?reportId=854846ed-2106-4dc2-bc58-eb77533bf2f1).
          *
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
          *
-         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
@@ -1152,40 +890,7 @@ declare module "report" {
          *
          * @returns {Promise<void>}
          */
-        render(config?: IReportLoadConfiguration | IReportEmbedConfiguration): Promise<void>;
-        /**
-         * Add an empty page to the report
-         *
-         * ```javascript
-         * // Add a page to the report with "Sales" as the page display name
-         * report.addPage("Sales");
-         * ```
-         *
-         * @returns {Promise<Page>}
-         */
-        addPage(displayName?: string): Promise<Page>;
-        /**
-         * Delete a page from a report
-         *
-         * ```javascript
-         * // Delete a page from a report by pageName (PageName is different than the display name and can be acquired from the getPages API)
-         * report.deletePage("ReportSection145");
-         * ```
-         *
-         * @returns {Promise<void>}
-         */
-        deletePage(pageName: string): Promise<void>;
-        /**
-         * Rename a page from a report
-         *
-         * ```javascript
-         * // Rename a page from a report by changing displayName (pageName is different from the display name and can be acquired from the getPages API)
-         * report.renamePage("ReportSection145", "Sales");
-         * ```
-         *
-         * @returns {Promise<void>}
-         */
-        renamePage(pageName: string, displayName: string): Promise<void>;
+        render(config?: IReportLoadConfiguration): Promise<void>;
         /**
          * Gets filters that are applied at the report level.
          *
@@ -1197,49 +902,9 @@ declare module "report" {
          *   });
          * ```
          *
-         * @returns {Promise<IFilter[]>}
+         * @returns {Promise<models.IFilter[]>}
          */
-        getFilters(): Promise<IFilter[]>;
-        /**
-         * Update the filters at the report level according to the operation: Add, replace all, replace by target or remove.
-         *
-         * ```javascript
-         * report.updateFilters(FiltersOperations.Add, filters)
-         *   .catch(errors => { ... });
-         * ```
-         *
-         * @param {(IFilter[])} filters
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        updateFilters(operation: FiltersOperations, filters?: IFilter[]): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Removes all filters at the report level.
-         *
-         * ```javascript
-         * report.removeFilters();
-         * ```
-         *
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        removeFilters(): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Sets filters at the report level.
-         *
-         * ```javascript
-         * const filters: [
-         *    ...
-         * ];
-         *
-         * report.setFilters(filters)
-         *  .catch(errors => {
-         *    ...
-         *  });
-         * ```
-         *
-         * @param {(IFilter[])} filters
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        setFilters(filters: IFilter[]): Promise<IHttpPostMessageResponse<void>>;
+        getFilters(): Promise<models.IFilter[]>;
         /**
          * Gets the report ID from the first available location: options, attribute, embed url.
          *
@@ -1260,33 +925,6 @@ declare module "report" {
          */
         getPages(): Promise<Page[]>;
         /**
-         * Gets a report page by its name.
-         *
-         * ```javascript
-         * report.getPageByName(pageName)
-         *  .then(page => {
-         *      ...
-         *  });
-         * ```
-         *
-         * @param {string} pageName
-         * @returns {Promise<Page>}
-         */
-        getPageByName(pageName: string): Promise<Page>;
-        /**
-         * Gets the active report page.
-         *
-         * ```javascript
-         * report.getActivePage()
-         *  .then(activePage => {
-         *      ...
-         *  });
-         * ```
-         *
-         * @returns {Promise<Page>}
-         */
-        getActivePage(): Promise<Page>;
-        /**
          * Creates an instance of a Page.
          *
          * Normally you would get Page objects by calling `report.getPages()`, but in the case
@@ -1295,17 +933,31 @@ declare module "report" {
          *
          * Note: Because you are creating the page manually there is no guarantee that the page actually exists in the report, and subsequent requests could fail.
          *
+         * ```javascript
+         * const page = report.page('ReportSection1');
+         * page.setActive();
+         * ```
+         *
          * @param {string} name
          * @param {string} [displayName]
          * @param {boolean} [isActive]
          * @returns {Page}
-         * @hidden
          */
-        page(name: string, displayName?: string, isActive?: boolean, visibility?: SectionVisibility): Page;
+        page(name: string, displayName?: string, isActive?: boolean, visibility?: models.SectionVisibility): Page;
         /**
          * Prints the active page of the report by invoking `window.print()` on the embed iframe component.
          */
         print(): Promise<void>;
+        /**
+         * Removes all filters at the report level.
+         *
+         * ```javascript
+         * report.removeFilters();
+         * ```
+         *
+         * @returns {Promise<void>}
+         */
+        removeFilters(): Promise<void>;
         /**
          * Sets the active page of the report.
          *
@@ -1315,59 +967,68 @@ declare module "report" {
          * ```
          *
          * @param {string} pageName
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @returns {Promise<void>}
          */
-        setPage(pageName: string): Promise<IHttpPostMessageResponse<void>>;
+        setPage(pageName: string): Promise<void>;
+        /**
+         * Sets filters at the report level.
+         *
+         * ```javascript
+         * const filters: [
+         *    ...
+         * ];
+         *
+         * report.setFilters(filters)
+         *  .catch(errors => {
+         *    ...
+         *  });
+         * ```
+         *
+         * @param {(models.IFilter[])} filters
+         * @returns {Promise<void>}
+         */
+        setFilters(filters: models.IFilter[]): Promise<void>;
         /**
          * Updates visibility settings for the filter pane and the page navigation pane.
          *
          * ```javascript
          * const newSettings = {
-         *   panes: {
-         *     filters: {
-         *       visible: false
-         *     }
-         *   }
+         *   navContentPaneEnabled: true,
+         *   filterPaneEnabled: false
          * };
          *
          * report.updateSettings(newSettings)
          *   .catch(error => { ... });
          * ```
          *
-         * @param {ISettings} settings
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @param {models.ISettings} settings
+         * @returns {Promise<void>}
          */
-        updateSettings(settings: ISettings): Promise<IHttpPostMessageResponse<void>>;
+        updateSettings(settings: models.ISettings): Promise<void>;
         /**
          * Validate load configuration.
-         *
-         * @hidden
          */
-        validate(config: IEmbedConfigurationBase): IError[];
+        validate(config: embed.IEmbedConfigurationBase): models.IError[];
         /**
          * Handle config changes.
          *
          * @returns {void}
          */
         configChanged(isBootstrap: boolean): void;
-        /**
-         * @hidden
-         * @returns {string}
-         */
         getDefaultEmbedUrlEndpoint(): string;
         /**
          * Switch Report view mode.
          *
          * @returns {Promise<void>}
          */
-        switchMode(viewMode: ViewMode | string): Promise<void>;
+        switchMode(viewMode: models.ViewMode | string): Promise<void>;
         /**
-         * Refreshes data sources for the report.
-         *
-         * ```javascript
-         * report.refresh();
-         * ```
-         */
+        * Refreshes data sources for the report.
+        *
+        * ```javascript
+        * report.refresh();
+        * ```
+        */
         refresh(): Promise<void>;
         /**
          * checks if the report is saved.
@@ -1386,246 +1047,26 @@ declare module "report" {
          * report.applyTheme(theme);
          * ```
          */
-        applyTheme(theme: IReportTheme): Promise<void>;
+        applyTheme(theme: models.IReportTheme): Promise<void>;
         /**
-         * Reset and apply the default theme of the report
-         *
-         * ```javascript
-         * report.resetTheme();
-         * ```
-         */
+        * Reset and apply the default theme of the report
+        *
+        * ```javascript
+        * report.resetTheme();
+        * ```
+        */
         resetTheme(): Promise<void>;
-        /**
-         * get the theme of the report
-         *
-         * ```javascript
-         * report.getTheme();
-         * ```
-         */
-        getTheme(): Promise<IReportTheme>;
-        /**
-         * Reset user's filters, slicers, and other data view changes to the default state of the report
-         *
-         * ```javascript
-         * report.resetPersistentFilters();
-         * ```
-         */
-        resetPersistentFilters(): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Save user's filters, slicers, and other data view changes of the report
-         *
-         * ```javascript
-         * report.savePersistentFilters();
-         * ```
-         */
-        savePersistentFilters(): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Returns if there are user's filters, slicers, or other data view changes applied on the report.
-         * If persistent filters is disable, returns false.
-         *
-         * ```javascript
-         * report.arePersistentFiltersApplied();
-         * ```
-         *
-         * @returns {Promise<boolean>}
-         */
-        arePersistentFiltersApplied(): Promise<boolean>;
-        /**
-         * Remove context menu extension command.
-         *
-         * ```javascript
-         * report.removeContextMenuCommand(commandName, contextMenuTitle)
-         *  .catch(error => {
-         *      ...
-         *  });
-         * ```
-         *
-         * @param {string} commandName
-         * @param {string} contextMenuTitle
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        removeContextMenuCommand(commandName: string, contextMenuTitle: string): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Add context menu extension command.
-         *
-         * ```javascript
-         * report.addContextMenuCommand(commandName, commandTitle, contextMenuTitle, menuLocation, visualName, visualType, groupName)
-         *  .catch(error => {
-         *      ...
-         *  });
-         * ```
-         *
-         * @param {string} commandName
-         * @param {string} commandTitle
-         * @param {string} contextMenuTitle
-         * @param {MenuLocation} menuLocation
-         * @param {string} visualName
-         * @param {string} visualType
-         * @param {string} groupName
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        addContextMenuCommand(commandName: string, commandTitle: string, contextMenuTitle: string, menuLocation: MenuLocation, visualName: string, visualType: string, groupName?: string): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Remove options menu extension command.
-         *
-         * ```javascript
-         * report.removeOptionsMenuCommand(commandName, optionsMenuTitle)
-         *  .then({
-         *      ...
-         *  });
-         * ```
-         *
-         * @param {string} commandName
-         * @param {string} optionsMenuTitle
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        removeOptionsMenuCommand(commandName: string, optionsMenuTitle: string): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Add options menu extension command.
-         *
-         * ```javascript
-         * report.addOptionsMenuCommand(commandName, commandTitle, optionsMenuTitle, menuLocation, visualName, visualType, groupName, commandIcon)
-         *  .catch(error => {
-         *      ...
-         *  });
-         * ```
-         *
-         * @param {string} commandName
-         * @param {string} commandTitle
-         * @param {string} optionMenuTitle
-         * @param {MenuLocation} menuLocation
-         * @param {string} visualName
-         * @param {string} visualType
-         * @param {string} groupName
-         * @param {string} commandIcon
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        addOptionsMenuCommand(commandName: string, commandTitle: string, optionsMenuTitle?: string, menuLocation?: MenuLocation, visualName?: string, visualType?: string, groupName?: string, commandIcon?: string): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Updates the display state of a visual in a page.
-         *
-         * ```javascript
-         * report.setVisualDisplayState(pageName, visualName, displayState)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {string} pageName
-         * @param {string} visualName
-         * @param {VisualContainerDisplayMode} displayState
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        setVisualDisplayState(pageName: string, visualName: string, displayState: VisualContainerDisplayMode): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Resize a visual in a page.
-         *
-         * ```javascript
-         * report.resizeVisual(pageName, visualName, width, height)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {string} pageName
-         * @param {string} visualName
-         * @param {number} width
-         * @param {number} height
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        resizeVisual(pageName: string, visualName: string, width: number, height: number): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Updates the size of active page in report.
-         *
-         * ```javascript
-         * report.resizeActivePage(pageSizeType, width, height)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {PageSizeType} pageSizeType
-         * @param {number} width
-         * @param {number} height
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        resizeActivePage(pageSizeType: PageSizeType, width?: number, height?: number): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Updates the position of a visual in a page.
-         *
-         * ```javascript
-         * report.moveVisual(pageName, visualName, x, y, z)
-         *   .catch(error => { ... });
-         * ```
-         *
-         * @param {string} pageName
-         * @param {string} visualName
-         * @param {number} x
-         * @param {number} y
-         * @param {number} z
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        moveVisual(pageName: string, visualName: string, x: number, y: number, z?: number): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Updates the report layout
-         *
-         * ```javascript
-         * report.switchLayout(layoutType);
-         * ```
-         *
-         * @param {LayoutType} layoutType
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        switchLayout(layoutType: LayoutType): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * @hidden
-         */
-        private createMenuCommand;
-        /**
-         * @hidden
-         */
-        private findCommandMenuIndex;
-        /**
-         * @hidden
-         */
-        private buildLayoutSettingsObject;
-        /**
-         * @hidden
-         */
-        private validateVisual;
-        /**
-         * @hidden
-         */
-        private applyThemeInternal;
-        /**
-         * @hidden
-         */
-        private viewModeToString;
-        /**
-         * @hidden
-         */
-        private isMobileSettings;
-        /**
-         * Return the current zoom level of the report.
-         *
-         * @returns {Promise<number>}
-         */
-        getZoom(): Promise<number>;
-        /**
-         * Sets the report's zoom level.
-         *
-         * @param zoomLevel zoom level to set
-         */
-        setZoom(zoomLevel: number): Promise<void>;
+        private applyThemeInternal(theme);
+        private viewModeToString(viewMode);
+        private isMobileSettings(settings);
     }
 }
 declare module "create" {
-    import { IReportCreateConfiguration, IError } from 'powerbi-models';
-    import { Service } from "service";
-    import { Embed, IEmbedConfigurationBase, IEmbedConfiguration } from "embed";
-    /**
-     * A Power BI Report creator component
-     *
-     * @export
-     * @class Create
-     * @extends {Embed}
-     */
-    export class Create extends Embed {
-        constructor(service: Service, element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration, phasedRender?: boolean, isBootstrap?: boolean);
+    import * as service from "service";
+    import * as models from 'powerbi-models';
+    import * as embed from "embed";
+    export class Create extends embed.Embed {
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfiguration, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * Gets the dataset ID from the first available location: createConfig or embed url.
          *
@@ -1635,18 +1076,13 @@ declare module "create" {
         /**
          * Validate create report configuration.
          */
-        validate(config: IEmbedConfigurationBase): IError[];
+        validate(config: embed.IEmbedConfigurationBase): models.IError[];
         /**
          * Handle config changes.
          *
-         * @hidden
          * @returns {void}
          */
         configChanged(isBootstrap: boolean): void;
-        /**
-         * @hidden
-         * @returns {string}
-         */
         getDefaultEmbedUrlEndpoint(): string;
         /**
          * checks if the report is saved.
@@ -1667,15 +1103,14 @@ declare module "create" {
          * @static
          * @param {string} url
          * @returns {string}
-         * @hidden
          */
         static findIdFromEmbedUrl(url: string): string;
     }
 }
 declare module "dashboard" {
-    import { IError } from 'powerbi-models';
-    import { Service, IService } from "service";
-    import { Embed, IEmbedConfigurationBase } from "embed";
+    import * as service from "service";
+    import * as embed from "embed";
+    import * as models from 'powerbi-models';
     /**
      * A Dashboard node within a dashboard hierarchy
      *
@@ -1684,41 +1119,36 @@ declare module "dashboard" {
      */
     export interface IDashboardNode {
         iframe: HTMLIFrameElement;
-        service: IService;
-        config: IEmbedConfigurationBase;
+        service: service.IService;
+        config: embed.IEmbedConfigurationBase;
     }
     /**
      * A Power BI Dashboard embed component
      *
      * @export
      * @class Dashboard
-     * @extends {Embed}
+     * @extends {embed.Embed}
      * @implements {IDashboardNode}
+     * @implements {IFilterable}
      */
-    export class Dashboard extends Embed implements IDashboardNode {
-        /** @hidden */
+    export class Dashboard extends embed.Embed implements IDashboardNode {
         static allowedEvents: string[];
-        /** @hidden */
         static dashboardIdAttribute: string;
-        /** @hidden */
         static typeAttribute: string;
-        /** @hidden */
         static type: string;
         /**
          * Creates an instance of a Power BI Dashboard.
          *
          * @param {service.Service} service
-         * @hidden
          * @param {HTMLElement} element
          */
-        constructor(service: Service, element: HTMLElement, config: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * This adds backwards compatibility for older config which used the dashboardId query param to specify dashboard id.
          * E.g. https://powerbi-df.analysis-df.windows.net/dashboardEmbedHost?dashboardId=e9363c62-edb6-4eac-92d3-2199c5ca2a9e
          *
          * By extracting the id we can ensure id is always explicitly provided as part of the load configuration.
          *
-         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
@@ -1732,34 +1162,25 @@ declare module "dashboard" {
         getId(): string;
         /**
          * Validate load configuration.
-         *
-         * @hidden
          */
-        validate(baseConfig: IEmbedConfigurationBase): IError[];
+        validate(baseConfig: embed.IEmbedConfigurationBase): models.IError[];
         /**
          * Handle config changes.
          *
-         * @hidden
          * @returns {void}
          */
         configChanged(isBootstrap: boolean): void;
-        /**
-         * @hidden
-         * @returns {string}
-         */
         getDefaultEmbedUrlEndpoint(): string;
         /**
-         * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in PageView
-         *
-         * @hidden
+         * Validate that pageView has a legal value: if page view is defined it must have one of the values defined in models.PageView
          */
-        private validatePageView;
+        private ValidatePageView(pageView);
     }
 }
 declare module "tile" {
-    import { IError } from 'powerbi-models';
-    import { Service } from "service";
-    import { Embed, IEmbedConfigurationBase } from "embed";
+    import * as service from "service";
+    import * as models from 'powerbi-models';
+    import * as embed from "embed";
     /**
      * The Power BI tile embed component
      *
@@ -1767,15 +1188,10 @@ declare module "tile" {
      * @class Tile
      * @extends {Embed}
      */
-    export class Tile extends Embed {
-        /** @hidden */
+    export class Tile extends embed.Embed {
         static type: string;
-        /** @hidden */
         static allowedEvents: string[];
-        /**
-         * @hidden
-         */
-        constructor(service: Service, element: HTMLElement, baseConfig: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
         /**
          * The ID of the tile
          *
@@ -1785,23 +1201,18 @@ declare module "tile" {
         /**
          * Validate load configuration.
          */
-        validate(config: IEmbedConfigurationBase): IError[];
+        validate(config: embed.IEmbedConfigurationBase): models.IError[];
         /**
          * Handle config changes.
          *
          * @returns {void}
          */
         configChanged(isBootstrap: boolean): void;
-        /**
-         * @hidden
-         * @returns {string}
-         */
         getDefaultEmbedUrlEndpoint(): string;
         /**
          * Adds the ability to get tileId from url.
          * By extracting the ID we can ensure that the ID is always explicitly provided as part of the load configuration.
          *
-         * @hidden
          * @static
          * @param {string} url
          * @returns {string}
@@ -1810,28 +1221,22 @@ declare module "tile" {
     }
 }
 declare module "qna" {
-    import { IHttpPostMessageResponse } from 'http-post-message';
-    import { IError } from 'powerbi-models';
-    import { Embed, IEmbedConfigurationBase } from "embed";
-    import { Service } from "service";
+    import * as service from "service";
+    import * as models from 'powerbi-models';
+    import * as embed from "embed";
     /**
-     * The Power BI Q&A embed component
+     * The Power BI Qna embed component
      *
      * @export
      * @class Qna
      * @extends {Embed}
      */
-    export class Qna extends Embed {
-        /** @hidden */
+    export class Qna extends embed.Embed {
         static type: string;
-        /** @hidden */
         static allowedEvents: string[];
+        constructor(service: service.Service, element: HTMLElement, config: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
         /**
-         * @hidden
-         */
-        constructor(service: Service, element: HTMLElement, config: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean);
-        /**
-         * The ID of the Q&A embed component
+         * The ID of the Qna embed component
          *
          * @returns {string}
          */
@@ -1839,34 +1244,29 @@ declare module "qna" {
         /**
          * Change the question of the Q&A embed component
          *
-         * @param {string} question - question which will render Q&A data
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @param question - question which will render Q&A data
+         * @returns {string}
          */
-        setQuestion(question: string): Promise<IHttpPostMessageResponse<void>>;
+        setQuestion(question: string): Promise<void>;
         /**
          * Handle config changes.
          *
          * @returns {void}
          */
-        configChanged(_isBootstrap: boolean): void;
-        /**
-         * @hidden
-         * @returns {string}
-         */
+        configChanged(isBootstrap: boolean): void;
         getDefaultEmbedUrlEndpoint(): string;
         /**
          * Validate load configuration.
          */
-        validate(config: IEmbedConfigurationBase): IError[];
+        validate(config: embed.IEmbedConfigurationBase): models.IError[];
     }
 }
 declare module "visual" {
-    import { FiltersLevel, FiltersOperations, IEmbedConfigurationBase, IFilter, IReportEmbedConfiguration, IReportLoadConfiguration } from 'powerbi-models';
-    import { IHttpPostMessageResponse } from 'http-post-message';
-    import { Service } from "service";
+    import * as service from "service";
+    import * as embed from "embed";
+    import * as models from 'powerbi-models';
     import { Report } from "report";
     import { Page } from "page";
-    import { VisualDescriptor } from "visualDescriptor";
     /**
      * The Power BI Visual embed component
      *
@@ -1874,58 +1274,31 @@ declare module "visual" {
      * @class Visual
      */
     export class Visual extends Report {
-        /** @hidden */
         static type: string;
-        /** @hidden */
         static GetPagesNotSupportedError: string;
-        /** @hidden */
         static SetPageNotSupportedError: string;
-        /** @hidden */
-        static RenderNotSupportedError: string;
         /**
          * Creates an instance of a Power BI Single Visual.
          *
-         * @param {Service} service
+         * @param {service.Service} service
          * @param {HTMLElement} element
-         * @param {IEmbedConfiguration} config
-         * @hidden
+         * @param {embed.IEmbedConfiguration} config
          */
-        constructor(service: Service, element: HTMLElement, baseConfig: IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
+        constructor(service: service.Service, element: HTMLElement, baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean, iframe?: HTMLIFrameElement);
+        load(baseConfig: embed.IEmbedConfigurationBase, phasedRender?: boolean): Promise<void>;
         /**
-         * @hidden
-         */
-        load(phasedRender?: boolean): Promise<void>;
-        /**
-         * Gets the list of pages within the report - not supported in visual
+         * Gets the list of pages within the report - not supported in visual embed.
          *
          * @returns {Promise<Page[]>}
          */
         getPages(): Promise<Page[]>;
         /**
-         * Sets the active page of the report - not supported in visual
+         * Sets the active page of the report - not supported in visual embed.
          *
          * @param {string} pageName
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        setPage(_pageName: string): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * Render a preloaded report, using phased embedding API
-         *
-         * @hidden
          * @returns {Promise<void>}
          */
-        render(_config?: IReportLoadConfiguration | IReportEmbedConfiguration): Promise<void>;
-        /**
-         * Gets the embedded visual descriptor object that contains the visual name, type, etc.
-         *
-         * ```javascript
-         * visual.getVisualDescriptor()
-         *   .then(visualDetails => { ... });
-         * ```
-         *
-         * @returns {Promise<VisualDescriptor>}
-         */
-        getVisualDescriptor(): Promise<VisualDescriptor>;
+        setPage(pageName: string): Promise<void>;
         /**
          * Gets filters that are applied to the filter level.
          * Default filter level is visual level.
@@ -1937,28 +1310,9 @@ declare module "visual" {
          *   });
          * ```
          *
-         * @returns {Promise<IFilter[]>}
+         * @returns {Promise<models.IFilter[]>}
          */
-        getFilters(filtersLevel?: FiltersLevel): Promise<IFilter[]>;
-        /**
-         * Updates filters at the filter level.
-         * Default filter level is visual level.
-         *
-         * ```javascript
-         * const filters: [
-         *    ...
-         * ];
-         *
-         * visual.updateFilters(FiltersOperations.Add, filters, filtersLevel)
-         *  .catch(errors => {
-         *    ...
-         *  });
-         * ```
-         *
-         * @param {(IFilter[])} filters
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
-         */
-        updateFilters(operation: FiltersOperations, filters: IFilter[], filtersLevel?: FiltersLevel): Promise<IHttpPostMessageResponse<void>>;
+        getFilters(filtersLevel?: models.FiltersLevel): Promise<models.IFilter[]>;
         /**
          * Sets filters at the filter level.
          * Default filter level is visual level.
@@ -1974,10 +1328,10 @@ declare module "visual" {
          *  });
          * ```
          *
-         * @param {(IFilter[])} filters
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @param {(models.IFilter[])} filters
+         * @returns {Promise<void>}
          */
-        setFilters(filters: IFilter[], filtersLevel?: FiltersLevel): Promise<IHttpPostMessageResponse<void>>;
+        setFilters(filters: models.IFilter[], filtersLevel?: models.FiltersLevel): Promise<void>;
         /**
          * Removes all filters from the current filter level.
          * Default filter level is visual level.
@@ -1986,59 +1340,40 @@ declare module "visual" {
          * visual.removeFilters(filtersLevel);
          * ```
          *
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @returns {Promise<void>}
          */
-        removeFilters(filtersLevel?: FiltersLevel): Promise<IHttpPostMessageResponse<void>>;
-        /**
-         * @hidden
-         */
-        private getFiltersLevelUrl;
+        removeFilters(filtersLevel?: models.FiltersLevel): Promise<void>;
+        private getFiltersLevelUrl(filtersLevel);
     }
 }
 declare module "service" {
-    import { WindowPostMessageProxy } from 'window-post-message-proxy';
-    import { HttpPostMessage } from 'http-post-message';
-    import { Router } from 'powerbi-router';
-    import { IReportCreateConfiguration } from 'powerbi-models';
-    import { Embed, IBootstrapEmbedConfiguration, IDashboardEmbedConfiguration, IEmbedConfiguration, IEmbedConfigurationBase, IQnaEmbedConfiguration, IReportEmbedConfiguration, ITileEmbedConfiguration, IVisualEmbedConfiguration } from "embed";
+    import * as embed from "embed";
+    import * as wpmp from 'window-post-message-proxy';
+    import * as hpm from 'http-post-message';
+    import * as router from 'powerbi-router';
     export interface IEvent<T> {
         type: string;
         id: string;
         name: string;
         value: T;
     }
-    /**
-     * @hidden
-     */
     export interface ICustomEvent<T> extends CustomEvent {
         detail: T;
     }
-    /**
-     * @hidden
-     */
     export interface IEventHandler<T> {
         (event: ICustomEvent<T>): any;
     }
-    /**
-     * @hidden
-     */
     export interface IHpmFactory {
-        (wpmp: WindowPostMessageProxy, targetWindow?: Window, version?: string, type?: string, origin?: string): HttpPostMessage;
+        (wpmp: wpmp.WindowPostMessageProxy, targetWindow?: Window, version?: string, type?: string, origin?: string): hpm.HttpPostMessage;
     }
-    /**
-     * @hidden
-     */
     export interface IWpmpFactory {
-        (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window): WindowPostMessageProxy;
+        (name?: string, logMessages?: boolean, eventSourceOverrideWindow?: Window): wpmp.WindowPostMessageProxy;
     }
-    /**
-     * @hidden
-     */
     export interface IRouterFactory {
-        (wpmp: WindowPostMessageProxy): Router;
+        (wpmp: wpmp.WindowPostMessageProxy): router.Router;
     }
     export interface IPowerBiElement extends HTMLElement {
-        powerBiEmbed: Embed;
+        powerBiEmbed: embed.Embed;
     }
     export interface IDebugOptions {
         logMessages?: boolean;
@@ -2051,9 +1386,8 @@ declare module "service" {
         type?: string;
     }
     export interface IService {
-        hpm: HttpPostMessage;
+        hpm: hpm.HttpPostMessage;
     }
-    export type IComponentEmbedConfiguration = IReportEmbedConfiguration | IDashboardEmbedConfiguration | ITileEmbedConfiguration | IVisualEmbedConfiguration | IQnaEmbedConfiguration;
     /**
      * The Power BI Service embed component, which is the entry point to embed all other Power BI components into your application
      *
@@ -2074,23 +1408,16 @@ declare module "service" {
          * Gets or sets the access token as the global fallback token to use when a local token is not provided for a report or tile.
          *
          * @type {string}
-         * @hidden
          */
         accessToken: string;
-        /** The Configuration object for the service*/
+        /**The Configuration object for the service*/
         private config;
         /** A list of Dashboard, Report and Tile components that have been embedded using this service instance. */
         private embeds;
-        /** TODO: Look for way to make hpm private without sacrificing ease of maintenance. This should be private but in embed needs to call methods.
-         *
-         * @hidden
-         */
-        hpm: HttpPostMessage;
-        /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests
-         *
-         * @hidden
-         */
-        wpmp: WindowPostMessageProxy;
+        /** TODO: Look for way to make hpm private without sacraficing ease of maitenance. This should be private but in embed needs to call methods. */
+        hpm: hpm.HttpPostMessage;
+        /** TODO: Look for way to make wpmp private.  This is only public to allow stopping the wpmp in tests */
+        wpmp: wpmp.WindowPostMessageProxy;
         private router;
         private uniqueSessionId;
         /**
@@ -2100,36 +1427,33 @@ declare module "service" {
          * @param {IWpmpFactory} wpmpFactory The window post message factory used in the postMessage communication layer
          * @param {IRouterFactory} routerFactory The router factory used in the postMessage communication layer
          * @param {IServiceConfiguration} [config={}]
-         * @hidden
          */
         constructor(hpmFactory: IHpmFactory, wpmpFactory: IWpmpFactory, routerFactory: IRouterFactory, config?: IServiceConfiguration);
         /**
          * Creates new report
-         *
          * @param {HTMLElement} element
-         * @param {IEmbedConfiguration} [config={}]
-         * @returns {Embed}
+         * @param {embed.IEmbedConfiguration} [config={}]
+         * @returns {embed.Embed}
          */
-        createReport(element: HTMLElement, config: IEmbedConfiguration | IReportCreateConfiguration): Embed;
+        createReport(element: HTMLElement, config: embed.IEmbedConfiguration): embed.Embed;
         /**
          * TODO: Add a description here
          *
          * @param {HTMLElement} [container]
-         * @param {IEmbedConfiguration} [config=undefined]
-         * @returns {Embed[]}
-         * @hidden
+         * @param {embed.IEmbedConfiguration} [config=undefined]
+         * @returns {embed.Embed[]}
          */
-        init(container?: HTMLElement, config?: IEmbedConfiguration): Embed[];
+        init(container?: HTMLElement, config?: embed.IEmbedConfiguration): embed.Embed[];
         /**
          * Given a configuration based on an HTML element,
          * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
          * otherwise creates a new component instance.
          *
          * @param {HTMLElement} element
-         * @param {IEmbedConfigurationBase} [config={}]
-         * @returns {Embed}
+         * @param {embed.IEmbedConfigurationBase} [config={}]
+         * @returns {embed.Embed}
          */
-        embed(element: HTMLElement, config?: IComponentEmbedConfiguration | IEmbedConfigurationBase): Embed;
+        embed(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
         /**
          * Given a configuration based on an HTML element,
          * if the component has already been created and attached to the element, reuses the component instance and existing iframe,
@@ -2137,51 +1461,44 @@ declare module "service" {
          * This is used for the phased embedding API, once element is loaded successfully, one can call 'render' on it.
          *
          * @param {HTMLElement} element
-         * @param {IEmbedConfigurationBase} [config={}]
-         * @returns {Embed}
+         * @param {embed.IEmbedConfigurationBase} [config={}]
+         * @returns {embed.Embed}
          */
-        load(element: HTMLElement, config?: IComponentEmbedConfiguration | IEmbedConfigurationBase): Embed;
+        load(element: HTMLElement, config?: embed.IEmbedConfigurationBase): embed.Embed;
         /**
          * Given an HTML element and entityType, creates a new component instance, and bootstrap the iframe for embedding.
          *
          * @param {HTMLElement} element
-         * @param {IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
+         * @param {embed.IBootstrapEmbedConfiguration} config: a bootstrap config which is an embed config without access token.
          */
-        bootstrap(element: HTMLElement, config: IComponentEmbedConfiguration | IBootstrapEmbedConfiguration): Embed;
-        /** @hidden */
-        embedInternal(element: HTMLElement, config?: IComponentEmbedConfiguration | IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): Embed;
-        /** @hidden */
+        bootstrap(element: HTMLElement, config: embed.IBootstrapEmbedConfiguration): embed.Embed;
+        embedInternal(element: HTMLElement, config?: embed.IEmbedConfigurationBase, phasedRender?: boolean, isBootstrap?: boolean): embed.Embed;
         getNumberOfComponents(): number;
-        /** @hidden */
         getSdkSessionId(): string;
         /**
          * Given a configuration based on a Power BI element, saves the component instance that reference the element for later lookup.
          *
          * @private
          * @param {IPowerBiElement} element
-         * @param {IEmbedConfigurationBase} config
-         * @returns {Embed}
-         * @hidden
+         * @param {embed.IEmbedConfigurationBase} config
+         * @returns {embed.Embed}
          */
-        private embedNew;
+        private embedNew(element, config, phasedRender?, isBootstrap?);
         /**
          * Given an element that already contains an embed component, load with a new configuration.
          *
          * @private
          * @param {IPowerBiElement} element
-         * @param {IEmbedConfigurationBase} config
-         * @returns {Embed}
-         * @hidden
+         * @param {embed.IEmbedConfigurationBase} config
+         * @returns {embed.Embed}
          */
-        private embedExisting;
+        private embedExisting(element, config, phasedRender?);
         /**
          * Adds an event handler for DOMContentLoaded, which searches the DOM for elements that have the 'powerbi-embed-url' attribute,
          * and automatically attempts to embed a powerbi component based on information from other powerbi-* attributes.
          *
          * Note: Only runs if `config.autoEmbedOnContentLoaded` is true when the service is created.
          * This handler is typically useful only for applications that are rendered on the server so that all required data is available when the handler is called.
-         *
-         * @hidden
          */
         enableAutoEmbed(): void;
         /**
@@ -2190,24 +1507,15 @@ declare module "service" {
          * @param {HTMLElement} element
          * @returns {(Report | Tile)}
          */
-        get(element: HTMLElement): Embed;
+        get(element: HTMLElement): embed.Embed;
         /**
          * Finds an embed instance by the name or unique ID that is provided.
          *
          * @param {string} uniqueId
          * @returns {(Report | Tile)}
-         * @hidden
          */
-        find(uniqueId: string): Embed;
-        /**
-         * Removes embed components whose container element is same as the given element
-         *
-         * @param {Embed} component
-         * @param {HTMLElement} element
-         * @returns {void}
-         * @hidden
-         */
-        addOrOverwriteEmbed(component: Embed, element: HTMLElement): void;
+        find(uniqueId: string): embed.Embed;
+        addOrOverwriteEmbed(component: embed.Embed, element: HTMLElement): void;
         /**
          * Given an HTML element that has a component embedded within it, removes the component from the list of embedded components, removes the association between the element and the component, and removes the iframe.
          *
@@ -2219,46 +1527,42 @@ declare module "service" {
          * handles tile events
          *
          * @param {IEvent<any>} event
-         * @hidden
          */
         handleTileEvents(event: IEvent<any>): void;
-        private invokeSDKHook;
         /**
          * Given an event object, finds the embed component with the matching type and ID, and invokes its handleEvent method with the event object.
          *
          * @private
          * @param {IEvent<any>} event
-         * @hidden
          */
-        private handleEvent;
+        private handleEvent(event);
         /**
          * API for warm starting powerbi embedded endpoints.
          * Use this API to preload Power BI Embedded in the background.
          *
          * @public
-         * @param {IEmbedConfigurationBase} [config={}]
+         * @param {embed.IEmbedConfigurationBase} [config={}]
          * @param {HTMLElement} [element=undefined]
          */
-        preload(config: IComponentEmbedConfiguration | IEmbedConfigurationBase, element?: HTMLElement): HTMLIFrameElement;
+        preload(config: embed.IEmbedConfigurationBase, element?: HTMLElement): HTMLIFrameElement;
     }
 }
 declare module "bookmarksManager" {
-    import { BookmarksPlayMode, ICaptureBookmarkOptions, IReportBookmark } from 'powerbi-models';
-    import { IHttpPostMessageResponse } from 'http-post-message';
-    import { Service } from "service";
-    import { IEmbedConfigurationBase } from "embed";
+    import * as service from "service";
+    import * as embed from "embed";
+    import * as models from 'powerbi-models';
     /**
-     * APIs for managing the report bookmarks.
+     * Report bookmarks management APIs.
      *
      * @export
      * @interface IBookmarksManager
      */
     export interface IBookmarksManager {
-        getBookmarks(): Promise<IReportBookmark[]>;
-        apply(bookmarkName: string): Promise<IHttpPostMessageResponse<void>>;
-        play(playMode: BookmarksPlayMode): Promise<IHttpPostMessageResponse<void>>;
-        capture(options?: ICaptureBookmarkOptions): Promise<IReportBookmark>;
-        applyState(state: string): Promise<IHttpPostMessageResponse<void>>;
+        getBookmarks(): Promise<models.IReportBookmark[]>;
+        apply(bookmarkName: string): Promise<void>;
+        play(playMode: models.BookmarksPlayMode): Promise<void>;
+        capture(): Promise<models.IReportBookmark>;
+        applyState(state: string): Promise<void>;
     }
     /**
      * Manages report bookmarks.
@@ -2270,11 +1574,8 @@ declare module "bookmarksManager" {
     export class BookmarksManager implements IBookmarksManager {
         private service;
         private config;
-        private iframe?;
-        /**
-         * @hidden
-         */
-        constructor(service: Service, config: IEmbedConfigurationBase, iframe?: HTMLIFrameElement);
+        private iframe;
+        constructor(service: service.Service, config: embed.IEmbedConfigurationBase, iframe?: HTMLIFrameElement);
         /**
          * Gets bookmarks that are defined in the report.
          *
@@ -2286,504 +1587,79 @@ declare module "bookmarksManager" {
          *   });
          * ```
          *
-         * @returns {Promise<IReportBookmark[]>}
+         * @returns {Promise<models.IReportBookmark[]>}
          */
-        getBookmarks(): Promise<IReportBookmark[]>;
+        getBookmarks(): Promise<models.IReportBookmark[]>;
         /**
-         * Apply bookmark by name.
+         * Apply bookmark By name.
          *
          * ```javascript
          * bookmarksManager.apply(bookmarkName)
          * ```
          *
-         * @param {string} bookmarkName The name of the bookmark to be applied
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @returns {Promise<void>}
          */
-        apply(bookmarkName: string): Promise<IHttpPostMessageResponse<void>>;
+        apply(bookmarkName: string): Promise<void>;
         /**
          * Play bookmarks: Enter or Exit bookmarks presentation mode.
          *
          * ```javascript
          * // Enter presentation mode.
-         * bookmarksManager.play(BookmarksPlayMode.Presentation)
+         * bookmarksManager.play(true)
          * ```
          *
-         * @param {BookmarksPlayMode} playMode Play mode can be either `Presentation` or `Off`
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @returns {Promise<void>}
          */
-        play(playMode: BookmarksPlayMode): Promise<IHttpPostMessageResponse<void>>;
+        play(playMode: models.BookmarksPlayMode): Promise<void>;
         /**
          * Capture bookmark from current state.
          *
          * ```javascript
-         * bookmarksManager.capture(options)
+         * bookmarksManager.capture()
          * ```
          *
-         * @param {ICaptureBookmarkOptions} [options] Options for bookmark capturing
-         * @returns {Promise<IReportBookmark>}
+         * @returns {Promise<models.IReportBookmark>}
          */
-        capture(options?: ICaptureBookmarkOptions): Promise<IReportBookmark>;
+        capture(): Promise<models.IReportBookmark>;
         /**
          * Apply bookmark state.
          *
          * ```javascript
-         * bookmarksManager.applyState(bookmarkState)
+         * bookmarksManager.applyState(bookmarkName)
          * ```
          *
-         * @param {string} state A base64 bookmark state to be applied
-         * @returns {Promise<IHttpPostMessageResponse<void>>}
+         * @returns {Promise<void>}
          */
-        applyState(state: string): Promise<IHttpPostMessageResponse<void>>;
+        applyState(state: string): Promise<void>;
     }
 }
 declare module "factories" {
+    /**
+     * TODO: Need to find better place for these factory functions or refactor how we handle dependency injection
+     */
     import { IHpmFactory, IWpmpFactory, IRouterFactory } from "service";
     export { IHpmFactory, IWpmpFactory, IRouterFactory };
     export const hpmFactory: IHpmFactory;
     export const wpmpFactory: IWpmpFactory;
     export const routerFactory: IRouterFactory;
 }
-declare module "FilterBuilders/filterBuilder" {
-    import { IFilterTarget } from "powerbi-models";
-    /**
-     * Generic filter builder for BasicFilter, AdvancedFilter, RelativeDate, RelativeTime and TopN
-     *
-     * @class
-     */
-    export class FilterBuilder {
-        target: IFilterTarget;
-        /**
-         * Sets target property for filter with target object
-         *
-         * ```javascript
-         * const target = {
-         *  table: 'table1',
-         *  column: 'column1'
-         * };
-         *
-         * const filterBuilder = new FilterBuilder().withTargetObject(target);
-         * ```
-         *
-         * @returns {FilterBuilder}
-         */
-        withTargetObject(target: IFilterTarget): this;
-        /**
-         * Sets target property for filter with column target object
-         *
-         * ```
-         * const filterBuilder = new FilterBuilder().withColumnTarget(tableName, columnName);
-         * ```
-         *
-         * @returns {FilterBuilder}
-         */
-        withColumnTarget(tableName: string, columnName: string): this;
-        /**
-         * Sets target property for filter with measure target object
-         *
-         * ```
-         * const filterBuilder = new FilterBuilder().withMeasureTarget(tableName, measure);
-         * ```
-         *
-         * @returns {FilterBuilder}
-         */
-        withMeasureTarget(tableName: string, measure: string): this;
-        /**
-         * Sets target property for filter with hierarchy level target object
-         *
-         * ```
-         * const filterBuilder = new FilterBuilder().withHierarchyLevelTarget(tableName, hierarchy, hierarchyLevel);
-         * ```
-         *
-         * @returns {FilterBuilder}
-         */
-        withHierarchyLevelTarget(tableName: string, hierarchy: string, hierarchyLevel: string): this;
-        /**
-         * Sets target property for filter with column aggregation target object
-         *
-         * ```
-         * const filterBuilder = new FilterBuilder().withColumnAggregation(tableName, columnName, aggregationFunction);
-         * ```
-         *
-         * @returns {FilterBuilder}
-         */
-        withColumnAggregation(tableName: string, columnName: string, aggregationFunction: string): this;
-        /**
-         * Sets target property for filter with hierarchy level aggregation target object
-         *
-         * ```
-         * const filterBuilder = new FilterBuilder().withHierarchyLevelAggregationTarget(tableName, hierarchy, hierarchyLevel, aggregationFunction);
-         * ```
-         *
-         * @returns {FilterBuilder}
-         */
-        withHierarchyLevelAggregationTarget(tableName: string, hierarchy: string, hierarchyLevel: string, aggregationFunction: string): this;
-    }
-}
-declare module "FilterBuilders/basicFilterBuilder" {
-    import { BasicFilter } from "powerbi-models";
-    import { FilterBuilder } from "FilterBuilders/filterBuilder";
-    /**
-     * Power BI Basic filter builder component
-     *
-     * @export
-     * @class BasicFilterBuilder
-     * @extends {FilterBuilder}
-     */
-    export class BasicFilterBuilder extends FilterBuilder {
-        private values;
-        private operator;
-        private isRequireSingleSelection;
-        /**
-         * Sets In as operator for Basic filter
-         *
-         * ```javascript
-         *
-         * const basicFilterBuilder = new BasicFilterBuilder().in([values]);
-         * ```
-         *
-         * @returns {BasicFilterBuilder}
-         */
-        in(values: Array<(string | number | boolean)>): BasicFilterBuilder;
-        /**
-         * Sets NotIn as operator for Basic filter
-         *
-         * ```javascript
-         *
-         * const basicFilterBuilder = new BasicFilterBuilder().notIn([values]);
-         * ```
-         *
-         * @returns {BasicFilterBuilder}
-         */
-        notIn(values: Array<(string | number | boolean)>): BasicFilterBuilder;
-        /**
-         * Sets All as operator for Basic filter
-         *
-         * ```javascript
-         *
-         * const basicFilterBuilder = new BasicFilterBuilder().all();
-         * ```
-         *
-         * @returns {BasicFilterBuilder}
-         */
-        all(): BasicFilterBuilder;
-        /**
-         * Sets required single selection property for Basic filter
-         *
-         * ```javascript
-         *
-         * const basicFilterBuilder = new BasicFilterBuilder().requireSingleSelection(isRequireSingleSelection);
-         * ```
-         *
-         * @returns {BasicFilterBuilder}
-         */
-        requireSingleSelection(isRequireSingleSelection?: boolean): BasicFilterBuilder;
-        /**
-         * Creates Basic filter
-         *
-         * ```javascript
-         *
-         * const basicFilterBuilder = new BasicFilterBuilder().build();
-         * ```
-         *
-         * @returns {BasicFilter}
-         */
-        build(): BasicFilter;
-    }
-}
-declare module "FilterBuilders/advancedFilterBuilder" {
-    import { AdvancedFilter, AdvancedFilterConditionOperators } from "powerbi-models";
-    import { FilterBuilder } from "FilterBuilders/filterBuilder";
-    /**
-     * Power BI Advanced filter builder component
-     *
-     * @export
-     * @class AdvancedFilterBuilder
-     * @extends {FilterBuilder}
-     */
-    export class AdvancedFilterBuilder extends FilterBuilder {
-        private logicalOperator;
-        private conditions;
-        /**
-         * Sets And as logical operator for Advanced filter
-         *
-         * ```javascript
-         *
-         * const advancedFilterBuilder = new AdvancedFilterBuilder().and();
-         * ```
-         *
-         * @returns {AdvancedFilterBuilder}
-         */
-        and(): AdvancedFilterBuilder;
-        /**
-         * Sets Or as logical operator for Advanced filter
-         *
-         * ```javascript
-         *
-         * const advancedFilterBuilder = new AdvancedFilterBuilder().or();
-         * ```
-         *
-         * @returns {AdvancedFilterBuilder}
-         */
-        or(): AdvancedFilterBuilder;
-        /**
-         * Adds a condition in Advanced filter
-         *
-         * ```javascript
-         *
-         * // Add two conditions
-         * const advancedFilterBuilder = new AdvancedFilterBuilder().addCondition("Contains", "Wash").addCondition("Contains", "Park");
-         * ```
-         *
-         * @returns {AdvancedFilterBuilder}
-         */
-        addCondition(operator: AdvancedFilterConditionOperators, value?: (string | number | boolean | Date)): AdvancedFilterBuilder;
-        /**
-         * Creates Advanced filter
-         *
-         * ```javascript
-         *
-         * const advancedFilterBuilder = new AdvancedFilterBuilder().build();
-         * ```
-         *
-         * @returns {AdvancedFilter}
-         */
-        build(): AdvancedFilter;
-    }
-}
-declare module "FilterBuilders/topNFilterBuilder" {
-    import { ITarget, TopNFilter } from "powerbi-models";
-    import { FilterBuilder } from "FilterBuilders/filterBuilder";
-    /**
-     * Power BI Top N filter builder component
-     *
-     * @export
-     * @class TopNFilterBuilder
-     * @extends {FilterBuilder}
-     */
-    export class TopNFilterBuilder extends FilterBuilder {
-        private itemCount;
-        private operator;
-        private orderByTargetValue;
-        /**
-         * Sets Top as operator for Top N filter
-         *
-         * ```javascript
-         *
-         * const topNFilterBuilder = new TopNFilterBuilder().top(itemCount);
-         * ```
-         *
-         * @returns {TopNFilterBuilder}
-         */
-        top(itemCount: number): TopNFilterBuilder;
-        /**
-         * Sets Bottom as operator for Top N filter
-         *
-         * ```javascript
-         *
-         * const topNFilterBuilder = new TopNFilterBuilder().bottom(itemCount);
-         * ```
-         *
-         * @returns {TopNFilterBuilder}
-         */
-        bottom(itemCount: number): TopNFilterBuilder;
-        /**
-         * Sets order by for Top N filter
-         *
-         * ```javascript
-         *
-         * const topNFilterBuilder = new TopNFilterBuilder().orderByTarget(target);
-         * ```
-         *
-         * @returns {TopNFilterBuilder}
-         */
-        orderByTarget(target: ITarget): TopNFilterBuilder;
-        /**
-         * Creates Top N filter
-         *
-         * ```javascript
-         *
-         * const topNFilterBuilder = new TopNFilterBuilder().build();
-         * ```
-         *
-         * @returns {TopNFilter}
-         */
-        build(): TopNFilter;
-    }
-}
-declare module "FilterBuilders/relativeDateFilterBuilder" {
-    import { RelativeDateFilter, RelativeDateFilterTimeUnit } from "powerbi-models";
-    import { FilterBuilder } from "FilterBuilders/filterBuilder";
-    /**
-     * Power BI Relative Date filter builder component
-     *
-     * @export
-     * @class RelativeDateFilterBuilder
-     * @extends {FilterBuilder}
-     */
-    export class RelativeDateFilterBuilder extends FilterBuilder {
-        private operator;
-        private timeUnitsCount;
-        private timeUnitType;
-        private isTodayIncluded;
-        /**
-         * Sets inLast as operator for Relative Date filter
-         *
-         * ```javascript
-         *
-         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inLast(timeUnitsCount, timeUnitType);
-         * ```
-         *
-         * @param {number} timeUnitsCount - The amount of time units
-         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
-         * @returns {RelativeDateFilterBuilder}
-         */
-        inLast(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeDateFilterBuilder;
-        /**
-         * Sets inThis as operator for Relative Date filter
-         *
-         * ```javascript
-         *
-         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inThis(timeUnitsCount, timeUnitType);
-         * ```
-         *
-         * @param {number} timeUnitsCount - The amount of time units
-         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
-         * @returns {RelativeDateFilterBuilder}
-         */
-        inThis(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeDateFilterBuilder;
-        /**
-         * Sets inNext as operator for Relative Date filter
-         *
-         * ```javascript
-         *
-         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().inNext(timeUnitsCount, timeUnitType);
-         * ```
-         *
-         * @param {number} timeUnitsCount - The amount of time units
-         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
-         * @returns {RelativeDateFilterBuilder}
-         */
-        inNext(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeDateFilterBuilder;
-        /**
-         * Sets includeToday for Relative Date filter
-         *
-         * ```javascript
-         *
-         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().includeToday(includeToday);
-         * ```
-         *
-         * @param {boolean} includeToday - Denotes if today is included or not
-         * @returns {RelativeDateFilterBuilder}
-         */
-        includeToday(includeToday: boolean): RelativeDateFilterBuilder;
-        /**
-         * Creates Relative Date filter
-         *
-         * ```javascript
-         *
-         * const relativeDateFilterBuilder = new RelativeDateFilterBuilder().build();
-         * ```
-         *
-         * @returns {RelativeDateFilter}
-         */
-        build(): RelativeDateFilter;
-    }
-}
-declare module "FilterBuilders/relativeTimeFilterBuilder" {
-    import { RelativeTimeFilter, RelativeDateFilterTimeUnit } from "powerbi-models";
-    import { FilterBuilder } from "FilterBuilders/filterBuilder";
-    /**
-     * Power BI Relative Time filter builder component
-     *
-     * @export
-     * @class RelativeTimeFilterBuilder
-     * @extends {FilterBuilder}
-     */
-    export class RelativeTimeFilterBuilder extends FilterBuilder {
-        private operator;
-        private timeUnitsCount;
-        private timeUnitType;
-        /**
-         * Sets inLast as operator for Relative Time filter
-         *
-         * ```javascript
-         *
-         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inLast(timeUnitsCount, timeUnitType);
-         * ```
-         *
-         * @param {number} timeUnitsCount - The amount of time units
-         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
-         * @returns {RelativeTimeFilterBuilder}
-         */
-        inLast(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeTimeFilterBuilder;
-        /**
-         * Sets inThis as operator for Relative Time filter
-         *
-         * ```javascript
-         *
-         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inThis(timeUnitsCount, timeUnitType);
-         * ```
-         *
-         * @param {number} timeUnitsCount - The amount of time units
-         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
-         * @returns {RelativeTimeFilterBuilder}
-         */
-        inThis(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeTimeFilterBuilder;
-        /**
-         * Sets inNext as operator for Relative Time filter
-         *
-         * ```javascript
-         *
-         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().inNext(timeUnitsCount, timeUnitType);
-         * ```
-         *
-         * @param {number} timeUnitsCount - The amount of time units
-         * @param {RelativeDateFilterTimeUnit} timeUnitType - Defines the unit of time the filter is using
-         * @returns {RelativeTimeFilterBuilder}
-         */
-        inNext(timeUnitsCount: number, timeUnitType: RelativeDateFilterTimeUnit): RelativeTimeFilterBuilder;
-        /**
-         * Creates Relative Time filter
-         *
-         * ```javascript
-         *
-         * const relativeTimeFilterBuilder = new RelativeTimeFilterBuilder().build();
-         * ```
-         *
-         * @returns {RelativeTimeFilter}
-         */
-        build(): RelativeTimeFilter;
-    }
-}
-declare module "FilterBuilders/index" {
-    export { BasicFilterBuilder } from "FilterBuilders/basicFilterBuilder";
-    export { AdvancedFilterBuilder } from "FilterBuilders/advancedFilterBuilder";
-    export { TopNFilterBuilder } from "FilterBuilders/topNFilterBuilder";
-    export { RelativeDateFilterBuilder } from "FilterBuilders/relativeDateFilterBuilder";
-    export { RelativeTimeFilterBuilder } from "FilterBuilders/relativeTimeFilterBuilder";
-}
 declare module "powerbi-client" {
-    /**
-     * @hidden
-     */
-    import * as models from 'powerbi-models';
     import * as service from "service";
     import * as factories from "factories";
+    import * as models from 'powerbi-models';
     import { IFilterable } from "ifilterable";
     export { IFilterable, service, factories, models };
     export { Report } from "report";
     export { Dashboard } from "dashboard";
     export { Tile } from "tile";
-    export { IEmbedConfiguration, IQnaEmbedConfiguration, IVisualEmbedConfiguration, IReportEmbedConfiguration, IDashboardEmbedConfiguration, ITileEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings, IQnaSettings, } from "embed";
+    export { IEmbedConfiguration, Embed, ILocaleSettings, IEmbedSettings } from "embed";
     export { Page } from "page";
     export { Qna } from "qna";
     export { Visual } from "visual";
     export { VisualDescriptor } from "visualDescriptor";
-    export { BasicFilterBuilder, AdvancedFilterBuilder, TopNFilterBuilder, RelativeDateFilterBuilder, RelativeTimeFilterBuilder } from "FilterBuilders/index";
-    global {
+    global  {
         interface Window {
             powerbi: service.Service;
-            powerBISDKGlobalServiceInstanceName?: string;
         }
     }
 }

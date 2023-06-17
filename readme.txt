@@ -3,8 +3,8 @@ Contributors: atlaspolicy, upnrunn, stegel
 Tags: powerbi-embedded, wordpress-plugin, powerbi, wordpress
 Requires at least: 5.0.0
 Requires PHP: 7.0
-Tested up to: 6.0.0
-Stable tag: 1.1.4
+Tested up to: 6.2.2
+Stable tag: 1.1.7
 License: GNU General Public License v3.0
 License URI: https://www.gnu.org/licenses/lgpl.html
 
@@ -215,6 +215,16 @@ N/A
 * Added security escapes and sanitization in report data collection and display.
 * Mobile settings and support added for reports
 
+= 1.1.5 =
+* Cache mitigation for rest endpoints
+* Transient cleanup on removal and activation
+
+= 1.1.6 =
+* Revert to v1.1.3 due to regressions
+
+= 1.1.7 =
+* Fix for PHP 8.0
+
 == Upgrade Notice ==
 
 = 1.0.1 =
@@ -237,3 +247,12 @@ This release contains important bug fixes.
 
 = 1.1.4 = 
 This release contains important bug fixes and new features. 
+
+= 1.1.5 = 
+This release contains important bug fixes. 
+
+= 1.1.6 = 
+This release contains important bug fixes. 
+
+= 1.1.6 = 
+This release contains important bug fixes. 

@@ -7,7 +7,8 @@ foreach($options as $option){
     if(get_option($option)) delete_option($option);
 }
 //remove token transient
-//delete_transient('t_token');
+delete_transient('t_token');
+
 //delete all custom powerbi posts
 /*
 $reports = get_posts(['post_type' => 'powerbi', 'posts_per_page' => -1]);
