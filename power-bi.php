@@ -3,9 +3,7 @@
  * Plugin Name: Power BI Embedded for WordPress
  * Plugin URI: https://github.com/atlaspolicy/wordpress-power-bi-embedded
  * Description: Use Power BI Embedded to embed dashboards, reports, Q&A, visuals, and tiles in your WordPress website.
-
  * Version: 1.1.7
-
  * Author: Atlas Public Policy
  * Author URI: http://www.atlaspolicy.com
  * Text Domain: power-bi
@@ -14,33 +12,27 @@
  *
  * @package Power_Bi
  */
-
-if ( ! defined( 'ABSPATH' ) ) {
+if (!defined('ABSPATH')) {
 	exit;
 }
-
 /**
  * Currently plugin version.
  */
-
-define( 'POWER_BI_VERSION', '1.1.7' );
-
-define( 'POWER_BI_PLUGIN_DIR', untrailingslashit( plugin_dir_path( __FILE__ ) ) );
-define( 'POWER_BI_PLUGIN_URL', untrailingslashit( plugins_url( basename( plugin_dir_path( __FILE__ ) ), basename( __FILE__ ) ) ) );
-
+define('POWER_BI_VERSION', '1.1.7');
+define('POWER_BI_PLUGIN_DIR', untrailingslashit(plugin_dir_path(__FILE__)));
+define('POWER_BI_PLUGIN_URL', untrailingslashit(plugins_url(basename(plugin_dir_path(__FILE__)), basename(__FILE__))));
 /**
  * The core plugin class that is used to define internationalization,
  * admin-specific hooks, and public-facing site hooks.
  */
-require plugin_dir_path( __FILE__ ) . 'includes/class-power-bi.php';
-
+require plugin_dir_path(__FILE__) . 'includes/class-power-bi.php';
 /**
  * Gets the instance of the `Power_Bi` class.  This function is useful for quickly grabbing data
  * used throughout the plugin.
  */
-function power_bi() {
+function power_bi()
+{
 	return Power_Bi::get_instance();
 }
-
 // Let's roll!
 power_bi(); // this sets up the instance
