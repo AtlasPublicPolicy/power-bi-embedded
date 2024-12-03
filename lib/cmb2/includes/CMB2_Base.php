@@ -246,7 +246,7 @@ abstract class CMB2_Base {
 	 * @param string $param Field parameter.
 	 */
 	public function peform_param_callback( $param ) {
-		echo $this->get_param_callback_result( $param );
+		echo esc_attr($this->get_param_callback_result( $param ));
 	}
 
 	/**
@@ -413,8 +413,9 @@ abstract class CMB2_Base {
 	 */
 	protected function deprecated_param( $function, $version, $message = null ) {
 
+		$args = func_get_args();
+
 		if ( is_numeric( $message ) ) {
-			$args = func_get_args();
 
 			switch ( $message ) {
 
@@ -453,15 +454,15 @@ abstract class CMB2_Base {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && apply_filters( 'deprecated_argument_trigger_error', true ) ) {
 			if ( function_exists( '__' ) ) {
 				if ( ! is_null( $message ) ) {
-					trigger_error( sprintf( __( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'cmb2' ), $function, $version, $message ) );
+					trigger_error( sprintf( esc_html__( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'cmb2' ), esc_html($function), esc_html($version), esc_html($message) ) );
 				} else {
-					trigger_error( sprintf( __( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'cmb2' ), $function, $version ) );
+					trigger_error( sprintf(esc_html__( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'cmb2' ), esc_html($function), esc_html($version) ) );
 				}
 			} else {
 				if ( ! is_null( $message ) ) {
-					trigger_error( sprintf( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', $function, $version, $message ) );
+					trigger_error( sprintf( esc_html__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'cmb2'), esc_html($function), esc_html($version), esc_html($message) ) );
 				} else {
-					trigger_error( sprintf( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', $function, $version ) );
+					trigger_error( sprintf( esc_html__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'cmb2'), esc_html($function), esc_html($version) ) );
 				}
 			}
 		}
@@ -488,7 +489,7 @@ abstract class CMB2_Base {
 			case 'object_type':
 				return $this->{$field};
 			default:
-				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'cmb2' ), __CLASS__, $field ) );
+				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'cmb2' ), __CLASS__, esc_attr($field) ) );
 		}
 	}
 
@@ -506,7 +507,7 @@ abstract class CMB2_Base {
 		$object_class = strtolower( get_class( $this ) );
 
 		if ( ! has_filter( "{$object_class}_inherit_{$method}" ) ) {
-			throw new Exception( sprintf( esc_html__( 'Invalid %1$s method: %2$s', 'cmb2' ), get_class( $this ), $method ) );
+			throw new Exception( sprintf( esc_html__( 'Invalid %1$s method: %2$s', 'cmb2' ), esc_attr(get_class( $this )), esc_attr($method) ) );
 		}
 
 		array_unshift( $args, $this );

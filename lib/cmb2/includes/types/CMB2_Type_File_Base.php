@@ -22,7 +22,18 @@ class CMB2_Type_File_Base extends CMB2_Type_Text {
 	public function is_valid_img_ext( $file, $blah = false ) {
 		$file_ext = CMB2_Utils::get_file_ext( $file );
 
-		$valid_types = array( 'jpg', 'jpeg', 'png', 'gif', 'ico', 'icon' );
+		$valid_types = array( 'jpg', 'jpeg', 'jpe', 'png', 'gif', 'ico', 'icon' );
+
+		$allowed = get_allowed_mime_types();
+		if ( ! empty( $allowed ) ) {
+			foreach ( (array) $allowed as $type => $mime) {
+				if ( 0 === strpos( $mime, 'image/' ) ) {
+					$types = explode( '|', $type );
+					$valid_types = array_merge( $valid_types, $types );
+				}
+			}
+			$valid_types = array_unique( $valid_types );
+		}
 
 		/**
 		 * Which image types are considered valid image file extensions.
@@ -60,7 +71,7 @@ class CMB2_Type_File_Base extends CMB2_Type_Text {
 		return sprintf( '<%1$s class="img-status cmb2-media-item">%2$s<p class="cmb2-remove-wrapper"><a href="#" class="cmb2-remove-file-button"%3$s>%4$s</a></p>%5$s</%1$s>',
 			$args['tag'],
 			$args['image'],
-			isset( $args['cached_id'] ) ? ' rel="' . $args['cached_id'] . '"' : '',
+			isset( $args['cached_id'] ) ? ' rel="' . esc_attr( $args['cached_id'] ) . '"' : '',
 			esc_html( $this->_text( 'remove_image_text', esc_html__( 'Remove Image', 'cmb2' ) ) ),
 			isset( $args['id_input'] ) ? $args['id_input'] : ''
 		);
@@ -77,10 +88,10 @@ class CMB2_Type_File_Base extends CMB2_Type_Text {
 		return sprintf( '<%1$s class="file-status cmb2-media-item"><span>%2$s <strong>%3$s</strong></span>&nbsp;&nbsp; (<a href="%4$s" target="_blank" rel="external">%5$s</a> / <a href="#" class="cmb2-remove-file-button"%6$s>%7$s</a>)%8$s</%1$s>',
 			$args['tag'],
 			esc_html( $this->_text( 'file_text', esc_html__( 'File:', 'cmb2' ) ) ),
-			CMB2_Utils::get_file_name_from_path( $args['value'] ),
-			$args['value'],
+			esc_html( CMB2_Utils::get_file_name_from_path( $args['value'] ) ),
+			esc_url( $args['value'] ),
 			esc_html( $this->_text( 'file_download_text', esc_html__( 'Download', 'cmb2' ) ) ),
-			isset( $args['cached_id'] ) ? ' rel="' . $args['cached_id'] . '"' : '',
+			isset( $args['cached_id'] ) ? ' rel="' . esc_attr( $args['cached_id'] ) . '"' : '',
 			esc_html( $this->_text( 'remove_text', esc_html__( 'Remove', 'cmb2' ) ) ),
 			isset( $args['id_input'] ) ? $args['id_input'] : ''
 		);

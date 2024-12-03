@@ -244,7 +244,7 @@ class CMB2_Option {
 			case 'key':
 				return $this->{$field};
 			default:
-				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'cmb2' ), __CLASS__, $field ) );
+				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'cmb2' ), __CLASS__, esc_attr($field) ) );
 		}
 	}
 }

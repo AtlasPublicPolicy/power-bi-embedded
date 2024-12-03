@@ -22,7 +22,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function register_routes() {
 		/* translators: %s: register_routes() */
-		_doing_it_wrong( 'WP_REST_Controller::register_routes', sprintf( __( "Method '%s' must be overridden." ), __METHOD__ ), '4.7' );
+		_doing_it_wrong( 'WP_REST_Controller::register_routes', sprintf( esc_html__( "Method '%s' must be overridden." ), __METHOD__ ), '4.7' );
 	}
 
 	/**
