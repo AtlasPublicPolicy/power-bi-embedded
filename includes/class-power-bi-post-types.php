@@ -320,17 +320,17 @@ class Power_Bi_Post_Types
 			case 'type':
 				$type = get_post_meta($post_id, '_power_bi_embed_type', true);
 				if (!empty($type)) {
-					echo $type;
+					echo esc_html($type);
 				} else {
-					_e('Unable to get type', 'power-bi');
+					esc_html_e('Unable to get type', 'power-bi');
 				}
 				break;
 			case 'shortcode':
-				$container_width = get_post_meta($post_id, '_power_bi_width', true);
-				$container_height = get_post_meta($post_id, '_power_bi_height', true);
+				$container_width = sanitize_text_field(get_post_meta($post_id, '_power_bi_width', true));
+				$container_height = sanitize_text_field(get_post_meta($post_id, '_power_bi_height', true));
 				$param_width = empty($container_width) ? '' : ' width="' . $container_width . '"';
 				$param_height = empty($container_height) ? '' : ' height="' . $container_height . '"';
-				echo '[powerbi id="' . $post_id . '"' . $param_width . $param_height . ']';
+				echo '[powerbi id="' . esc_html($post_id) . '"' . esc_html($param_width) . esc_html($param_height) . ']';
 				break;
 		}
 	}
