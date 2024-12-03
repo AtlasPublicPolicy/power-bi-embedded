@@ -56,13 +56,38 @@ class Power_Bi_Shortcodes
 		return ob_get_clean();
 	}
 	public function powerbi_js($id)
-	{
+	{	
+		//Get logged in user's RSL role
+		$uid = get_current_user_id();
+		$meta = get_user_meta($uid);
+		$rls_role = $meta['rls_role'][0];
+
+		//Get Primary Power BI Credentials
+		$power_bi_settings = get_option('power_bi_settings');
 		$power_bi_credentials = get_option('power_bi_credentials');
-		if (isset($power_bi_credentials['access_token'])) {
-			$access_token = $power_bi_credentials['access_token'];
-		} else {
-			return;
+
+		// If the logged in user has row-level security role, then find the matching secondary Power BI credentials
+		if ($rls_role !== ''){
+			for ($i = 2; $i <= 11; $i++) {
+				$power_bi_credentials_secondary = get_option('power_bi_credentials_secondary' . $i);
+				if (!isset($power_bi_settings['rls_role'. $i])){
+					continue;
+				}
+				if (($rls_role == $power_bi_settings['rls_role'. $i]) && (isset($power_bi_credentials_secondary['access_token']))){
+					$access_token = $power_bi_credentials_secondary['access_token'];
+					$power_bi_credentials = $power_bi_credentials_secondary;
+					break;
+				}
+			}
 		}
+		else{
+			if (isset($power_bi_credentials['access_token'])) {
+				$access_token = $power_bi_credentials['access_token'];
+			} else {
+				return;
+			}
+		}
+
 		// Common metas
 		$token_type = 'Aad';
 		$api_url = "https://app.powerbi.com/";
@@ -122,8 +147,10 @@ class Power_Bi_Shortcodes
 							var access_token = data.responseText;
 						}
 					});
-					var access_token = tmpdata.responseText;
-					access_token = access_token.replace(/"/g, "");
+					// ADDED on 7/31 because above token refresh was failing... why?
+					var access_token = "<?php echo $power_bi_credentials['access_token']?>";
+					//var access_token = tmpdata.responseText;
+					//access_token = access_token.replace(/"/g, "");
 					// console.log('New Access Token:  ' + access_token );
 					// sessionStorage.setItem('access_token', 'access_token' );
 					sessionStorage.setItem('access_token', access_token);

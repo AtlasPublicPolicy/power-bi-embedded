@@ -46,22 +46,25 @@ class Power_Bi_Oauth
 
 	public function add_token()
 	{
-		$power_bi_credentials = get_option('power_bi_credentials');
-
-		if (isset($power_bi_credentials['access_token']) || isset($power_bi_credentials['error'])) {
-			$token_credentials = $this->get_token();
-			update_option('power_bi_credentials', $token_credentials);
-
-			return;
-		}
-
 		$token_credentials = $this->get_token();
-
-		if (isset($token_credentials['access_token']) || isset($token_credentials['error'])) {
-			if (!add_option('power_bi_credentials', $token_credentials)) {
-				update_option('power_bi_credentials', $token_credentials);
-			}
+		if (!add_option('power_bi_credentials', $token_credentials[0])) {
+			update_option('power_bi_credentials', $token_credentials[0]);
 		}
+		for ($i = 2; $i <= count($token_credentials)+1; $i++) {
+			$logic = "
+			if (!add_option('power_bi_credentials_secondary$i', \$token_credentials[$i-1])) {
+				update_option('power_bi_credentials_secondary$i', \$token_credentials[$i-1]);
+			}
+			";
+			eval($logic);
+		}
+		
+		/*
+		if (!add_option('power_bi_credentials_secondary', $token_credentials[1])) {
+			update_option('power_bi_credentials_secondary', $token_credentials[1]);
+		}
+		*/
+		return;
 	}
 
 	public function add_management_azure_token()
@@ -86,14 +89,16 @@ class Power_Bi_Oauth
 
 	public function get_token()
 	{
+		/*
 		$token_transient = get_transient('t_token');
-
-		if (!empty($token_transient)) {
-			return $token_transient;
+		$token_transient2 = get_transient('additional_tokens');
+		if (!empty($token_transient) && !empty($token_transient2)) {
+			return array($token_transient, $token_transient2);
 		}
+		*/
+		
 
 		$user_credentials = get_option('power_bi_settings');
-
 		$user_name = $user_credentials['power_bi_username'];
 		$password = $user_credentials['power_bi_password'];
 		$client_id = $user_credentials['power_bi_client_id'];
@@ -120,26 +125,127 @@ class Power_Bi_Oauth
 			),
 		)
 		);
+		$response = curl_exec($curl);
+		$err = curl_error($curl);
+		//curl_close($curl);
+		if ($err) {
+			$err = json_decode($err, true);
+			return $err;
+		}
+		$token = json_decode($response, true);
+
+		// Get second user tokens
+		$token_cat = array($token);
+		for ($i = 2; $i <= 11; $i++) {
+			$user_name = $user_credentials['power_bi_username' . $i];
+			$password = $user_credentials['power_bi_password' . $i];
+			$client_id = $user_credentials['power_bi_client_id'];
+			$client_secret = $user_credentials['power_bi_client_secret'];
+			
+			if (empty($user_name) || empty($password)) {
+				break;
+			}
+
+			if (!$curl) {
+				die("Embedded PowerBi could not initialize a cURL handle.  Please have your hosting provider install curl");
+			}
+
+			curl_setopt_array($curl, array(
+				CURLOPT_URL => "https://login.windows.net/common/oauth2/token",
+				CURLOPT_RETURNTRANSFER => true,
+				CURLOPT_ENCODING => "",
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 30,
+				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+				CURLOPT_CUSTOMREQUEST => "POST",
+				CURLOPT_SSL_VERIFYPEER => false,
+				CURLOPT_POSTFIELDS => "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"grant_type\"\r\n\r\npassword\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"username\"\r\n\r\n" . $user_name . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n" . $password . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_id\"\r\n\r\n" . $client_id . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"resource\"\r\n\r\nhttps://analysis.windows.net/powerbi/api\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_secret\"\r\n\r\n" . $client_secret . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--",
+				CURLOPT_HTTPHEADER => array(
+					"Cache-Control: no-cache",
+					"Postman-Token: b45c007e-0ab8-28d8-0960-6a2c37bf318e",
+					"content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
+				),
+			)
+			);
+	
+			$response = curl_exec($curl);
+			$err = curl_error($curl);
+			if ($err) {
+				$err = json_decode($err, true);
+				return $err;
+			}
+			$token2 = json_decode($response, true);
+			array_push($token_cat, $token2);
+		}
+		curl_close($curl);
+
+		// Get second user token -- hard coded to only two users but easy to make into an iterator where we add 1 to the end of each user field
+		/*
+		$user_credentials = get_option('power_bi_settings');
+
+		$user_name = $user_credentials['power_bi_username2'];
+		$password = $user_credentials['power_bi_password2'];
+		$client_id = $user_credentials['power_bi_client_id'];
+		$client_secret = $user_credentials['power_bi_client_secret'];
+
+		//$curl = curl_init();
+		if (!$curl) {
+			die("Embedded PowerBi could not initialize a cURL handle.  Please have your hosting provider install curl");
+		}
+		curl_setopt_array($curl, array(
+			CURLOPT_URL => "https://login.windows.net/common/oauth2/token",
+			CURLOPT_RETURNTRANSFER => true,
+			CURLOPT_ENCODING => "",
+			CURLOPT_MAXREDIRS => 10,
+			CURLOPT_TIMEOUT => 30,
+			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+			CURLOPT_CUSTOMREQUEST => "POST",
+			CURLOPT_SSL_VERIFYPEER => false,
+			CURLOPT_POSTFIELDS => "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"grant_type\"\r\n\r\npassword\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"username\"\r\n\r\n" . $user_name . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n" . $password . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_id\"\r\n\r\n" . $client_id . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"resource\"\r\n\r\nhttps://analysis.windows.net/powerbi/api\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_secret\"\r\n\r\n" . $client_secret . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--",
+			CURLOPT_HTTPHEADER => array(
+				"Cache-Control: no-cache",
+				"Postman-Token: b45c007e-0ab8-28d8-0960-6a2c37bf318e",
+				"content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
+			),
+		)
+		);
 
 		$response = curl_exec($curl);
 
 		$err = curl_error($curl);
 
 		curl_close($curl);
-
+		
 		if ($err) {
 			$err = json_decode($err, true);
 			return $err;
 		}
+			
+		
+		$token2 = json_decode($response, true);
+		$token_cat = array($token, $token2);
+		*/
 
-		$token = json_decode($response, true);
-
-		if (isset($token['error'])) {
-			return $token;
+		/*
+		//loop through $token_cat
+		for ($i = 0; $i <= count($token_cat); $i++) {
+			echo '<br> Looking at token ' . $i . '<br>';
+			//loop through key value of token_cat[$i]
+			foreach ($token_cat[$i] as $key => $value) {
+				echo $key . ' => ' . $value . '<br>';
+			}
 		}
+		*/
+		
+	
+		if (isset($token['error']) || isset($token2['error'])) {
+			return $token_cat;
+		}
+		
+		set_transient('t_token', $token_cat[0], HOUR_IN_SECONDS);
+		set_transient('additional_tokens', $token_cat[1], HOUR_IN_SECONDS);
 
-		set_transient('t_token', $token, HOUR_IN_SECONDS);
-		return $token;
+		return $token_cat;
 	}
 
 	// Provided new get token request for https://management.azure.com/

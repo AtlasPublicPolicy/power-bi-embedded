@@ -56,6 +56,39 @@ When installing or upgrading this plugin you may run into display errors when us
 * Whitelist the /wp-json path in your security plugin, cache or CDN settings to allow updated data to always be returned.
 * Lower your cache timer to 10 hours or less to allow WP nonces to refresh properly
 
+## Using Row Level Security
+This plugin supports Row Level Security (RLS) in Power BI. RLS is a feature in Power BI that allows you to restrict data access for given users. For RLS to function, you must create a custom user profile field called "rls_role" that is matched to the role of the Power BI credentials on the settings page. To add this custom field, you can use the following code in your theme's functions.php file:
+
+// Add custom field to user profile
+add_action( 'show_user_profile', 'my_show_extra_profile_fields' );
+add_action( 'edit_user_profile', 'my_show_extra_profile_fields' );
+
+function my_show_extra_profile_fields( $user ) { ?>
+
+	<h3>Extra profile information</h3>
+
+	<table class="form-table">
+
+		<tr>
+			<th><label for="rls_role">Power BI Embedded Plugin Field</label></th>
+
+			<td>
+				<input type="text" name="rls_role" id="rls_role" value="<?php echo esc_attr( get_the_author_meta( 'rls_role', $user->ID ) ); ?>" class="regular-text" /><br />
+			</td>
+		</tr>
+
+	</table>
+<?php }
+
+add_action( 'personal_options_update', 'my_save_extra_profile_fields' );
+add_action( 'edit_user_profile_update', 'my_save_extra_profile_fields' );
+
+function my_save_extra_profile_fields( $user_id ) {
+	if ( !current_user_can( 'edit_user', $user_id ) )
+		return false;
+	update_usermeta( $user_id, 'rls_role', $_POST['rls_role'] );
+}
+
 ## Power BI Content
 The plugin uses a custom content type for each Power BI component to embed (dashboard, report, etc.). Go to "All Power BI Items" to add a new component.
 

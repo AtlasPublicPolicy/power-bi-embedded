@@ -43,6 +43,7 @@ class Power_Bi_Settings
 	{
 		add_submenu_page('edit.php?post_type=powerbi', __('Power BI Settings', 'power-bi'), __('Settings', 'power-bi'), 'manage_options', 'powerbi', array($this, 'power_bi__options_page'));
 	}
+
 	/**
 	 * [settings_init description]
 	 * @return [type] [description]
@@ -50,6 +51,8 @@ class Power_Bi_Settings
 	public function settings_init()
 	{
 		register_setting('power_bi', 'power_bi_settings');
+		
+		//Add primary Power BI User (orginal design of single user)
 		add_settings_section(
 			'power_bi_section',
 			__('Azure Authorization', 'power-bi'),
@@ -91,6 +94,45 @@ class Power_Bi_Settings
 			'power_bi',
 			'power_bi_section'
 		);
+
+		// Add secondary Power BI Users
+		add_settings_section(
+			'power_bi_section_secondary',
+			__('Secondary Azure Authorization', 'power-bi'),
+			'power_bi_section_callback_secondary',
+			'power_bi'
+		);
+		for ($i = 2; $i <= 11; $i++) {	
+			add_settings_field(
+				'power_bi_username' . $i,
+				__('User Name ' . $i, 'power-bi'),
+				'power_bi_username_render' . $i,
+				'power_bi',
+				'power_bi_section_secondary'
+			);
+			add_settings_field(
+				'power_bi_password'. $i,
+				__('Password '. $i, 'power-bi'),
+				'power_bi_password_render'. $i,
+				'power_bi',
+				'power_bi_section_secondary'
+			);
+			add_settings_field(
+				'rls_role'. $i,
+				__('RLS Role '. $i, 'power-bi'),
+				'rls_role_render' . $i,
+				'power_bi',
+				'power_bi_section_secondary'
+			);
+			add_settings_field(
+				'power_bi_oauth_success'. $i,
+				__('Oauth Status '. $i, 'power-bi'),
+				'power_bi_oauth_success_render'. $i,
+				'power_bi',
+				'power_bi_section_secondary'
+			);
+		  }
+
 		// Schedule Power BI Resource
 		add_settings_section(
 			'power_bi_schedule_section',
@@ -194,6 +236,7 @@ class Power_Bi_Settings
 	{
 		return get_option('power_bi_settings');
 	}
+
 	/**
 	 * [power_bi__options_page description]
 	 *
@@ -222,7 +265,13 @@ class Power_Bi_Settings
 				<?php
 				settings_fields('power_bi');
 				do_settings_sections('power_bi');
+				/*
+				$uid = get_current_user_id();
+				$meta = get_user_meta($uid);
+				echo 'Power BI User Role: ' . $meta['rls_role'][0];
+				*/
 				submit_button();
+				
 				?>
 			</form>
 		</div>

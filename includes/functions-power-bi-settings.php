@@ -1,4 +1,5 @@
 <?php
+
 // get power bi plugins setting in single call
 function get_power_bi_plugin_settings()
 {
@@ -9,11 +10,15 @@ function power_bi_section_callback()
 {
 	echo __('The following fields must be filled correctly to get an access token. Help is available from Microsoft <a href="https://docs.microsoft.com/en-us/power-bi/developer/embedding-content" target=_blank>here</a>.', 'power-bi');
 }
-function power_bi_username_render()
+function power_bi_section_callback_secondary()
 {
+	echo __('The following fields are only necessary if you are implementing row level security with multiple users.', 'power-bi');
+}
+function power_bi_username_render()
+{	
 	$options = get_power_bi_plugin_settings();
 	?>
-	<input type='text' name='power_bi_settings[power_bi_username]' value='<?php echo $options['power_bi_username']; ?>'>
+	<input type='text' name='power_bi_settings[power_bi_username]' value='<?php echo esc_textarea($options['power_bi_username']); ?>'>
 	<?php
 }
 function power_bi_password_render()
@@ -47,6 +52,89 @@ function power_bi_oauth_success_render()
 		echo '<span class="dashicons dashicons-no-alt"></span> ' . $power_bi_credentials['error_description'];
 	}
 }
+// Add secondary Power BI Users
+for ($i = 2; $i <= 11; $i++) {
+	$function_name = "power_bi_username_render" . $i;
+    $function_code = "
+    function $function_name() {
+        \$options = get_power_bi_plugin_settings();
+		?>
+		<input type='text' name='power_bi_settings[power_bi_username$i]' value='<?php echo \$options['power_bi_username$i']; ?>'>
+		<?php
+    }
+    ";
+    eval($function_code);
+	$function_name = "power_bi_password_render" . $i;
+    $function_code = "
+    function $function_name() {
+        \$options = get_power_bi_plugin_settings();
+		?>
+		<input type='password' name='power_bi_settings[power_bi_password$i]' value='<?php echo \$options['power_bi_password$i']; ?>'>
+		<?php
+    }
+    ";
+    eval($function_code);
+	$function_name = "power_bi_oauth_success_render" . $i;
+	$function_code = "
+	function $function_name() {
+		\$power_bi_credentials_secondary = get_option('power_bi_credentials_secondary$i');
+		if (isset(\$power_bi_credentials_secondary['access_token'])) {
+			echo '<span class=\"dashicons dashicons-yes\"></span> Connected';
+		} elseif (isset(\$power_bi_credentials_secondary['error_description'])) {
+			echo '<span class=\"dashicons dashicons-no-alt\"></span> ' . \$power_bi_credentials_secondary['error_description'];
+		}
+		echo '<hr>';
+	}
+	";
+	eval($function_code);
+	$function_name = "rls_role_render" . $i;
+	$function_code = "
+	function $function_name() {
+		\$options = get_power_bi_plugin_settings();
+		?>
+		<input type='text' name='power_bi_settings[rls_role$i]'
+			value='<?php echo \$options['rls_role$i']; ?>'>
+		<?php
+	}
+	";
+	eval($function_code);
+	
+	/*
+	function power_bi_username_render2();
+	{
+		$options = get_power_bi_plugin_settings();
+		?>
+		<input type='text' name='power_bi_settings[power_bi_username2]' value='<?php echo $options['power_bi_username2']; ?>'>
+		<?php
+	}
+
+	function power_bi_password_render2()
+	{
+		$options = get_power_bi_plugin_settings();
+		?>
+		<input type='password' name='power_bi_settings[power_bi_password2]' value='<?php echo $options['power_bi_password2']; ?>'>
+		<?php
+	}
+	function power_bi_oauth_success_render2()
+	{
+		$power_bi_credentials_secondary = get_option('power_bi_credentials_secondary');
+		if (isset($power_bi_credentials_secondary['access_token'])) {
+			echo '<span class="dashicons dashicons-yes"></span> Connected';
+		} elseif (isset($power_bi_credentials_secondary['error_description'])) {
+			echo '<span class="dashicons dashicons-no-alt"></span> ' . $power_bi_credentials_secondary['error_description'];
+		}
+	}
+	function rls_role_render2()
+	{
+		$options = get_power_bi_plugin_settings();
+		?>
+		<input type='text' name='power_bi_settings[rls_role2]'
+			value='<?php echo $options['rls_role2']; ?>'>
+		<?php
+	}
+	*/
+}
+
 // For power_bi_schedule_section_callback
 function power_bi_schedule_section_callback()
 {
