@@ -66,7 +66,7 @@ class Power_Bi_Schedule_Resources
 		if ($resource_state == "Paused") {
 			$process_response = $this->handle_azure_resource_service("resume");
 			if ($process_response) {
-				_custlog("service started @ " . Date('Y-m-d : h:i:s'));
+				_custlog("service started @ " . gmdate('Y-m-d : h:i:s'));
 			}
 		}
 	}
@@ -77,7 +77,7 @@ class Power_Bi_Schedule_Resources
 		if ($resource_state == "Succeeded") {
 			$process_response = $this->handle_azure_resource_service("suspend");
 			if ($process_response) {
-				_custlog("service paused @ " . Date('Y-m-d : h:i:s'));
+				_custlog("service paused @ " . gmdate('Y-m-d : h:i:s'));
 			}
 		}
 	}
@@ -92,32 +92,41 @@ class Power_Bi_Schedule_Resources
 		$powerbi_azure_credentials = get_option('power_bi_management_azure_credentials');
 		// call url for start / resume resource capacity
 		$request_url = "https://management.azure.com/subscriptions/" . $subscription_id . "/resourceGroups/" . $resource_group . "/providers/Microsoft.PowerBIDedicated/capacities/" . $capacity . "/" . $action . "?api-version=2017-10-01";
-		$authorization = "Authorization: Bearer " . $powerbi_azure_credentials['access_token'];
-		$curl = curl_init();
-		curl_setopt_array(
-			$curl,
-			array(
-				CURLOPT_URL => $request_url,
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING => "",
-				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_TIMEOUT => 30,
-				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-				CURLOPT_CUSTOMREQUEST => "POST",
-				CURLOPT_SSL_VERIFYPEER => false,
-				CURLOPT_HTTPHEADER => array(
-					"Cache-Control: no-cache",
-					"Content-Type: application/json",
-					$authorization,
-					"Content-length: 0"
-				),
+		$authorization = "Authorization: Bearer " . $powerbi_azure_credentials;
+		// $curl = curl_init();
+		// curl_setopt_array(
+		// 	$curl,
+		// 	array(
+		// 		CURLOPT_URL => $request_url,
+		// 		CURLOPT_RETURNTRANSFER => true,
+		// 		CURLOPT_ENCODING => "",
+		// 		CURLOPT_MAXREDIRS => 10,
+		// 		CURLOPT_TIMEOUT => 30,
+		// 		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		// 		CURLOPT_CUSTOMREQUEST => "POST",
+		// 		CURLOPT_SSL_VERIFYPEER => false,
+		// 		CURLOPT_HTTPHEADER => array(
+		// 			"Cache-Control: no-cache",
+		// 			"Content-Type: application/json",
+		// 			$authorization,
+		// 			"Content-length: 0"
+		// 		),
+		// 	)
+		// );
+		$response = wp_remote_get($request_url, array(
+			'method' => 'POST',
+			'headers' => array(
+				"Cache-Control" => "no-cache",
+				"Content-Type" => "application/json",
+				$authorization,
+				"Content-length" => 0
 			)
-		);
-		$response = curl_exec($curl);
-		$err = curl_error($curl);
-		curl_close($curl);
-		if ($err) {
-			$err = json_decode($err, true);
+		));
+		$err = wp_remote_retrieve_response_code($response);
+		$response = wp_remote_retrieve_body($response);
+		// curl_close($curl);
+		if ($err != 200) {
+			$err = json_decode($response, true);
 			return $err;
 		} else {
 			$response = json_decode($response, true);
@@ -127,7 +136,7 @@ class Power_Bi_Schedule_Resources
 	function handle_start_pause_cron_power_bi_sch($start_pause = "")
 	{
 		$power_bi_scheduler_settings = get_option('power_bi_settings');
-		$weekdayname = strtolower(date("l"));
+		$weekdayname = strtolower(string: gmdate("l"));
 		switch ($weekdayname) {
 			case "sunday":
 				if ($power_bi_scheduler_settings['power_bi_schedule_' . $weekdayname . '_' . $start_pause . '_time'] != "") {
@@ -191,32 +200,41 @@ class Power_Bi_Schedule_Resources
 		$powerbi_azure_credentials = get_option('power_bi_management_azure_credentials');
 		// call url for start / resume resource capacity
 		$request_url = "https://management.azure.com/subscriptions/" . $subscription_id . "/resourceGroups/" . $resource_group . "/providers/Microsoft.PowerBIDedicated/capacities/" . $capacity . "?api-version=2017-10-01";
-		$authorization = "Authorization: Bearer " . $powerbi_azure_credentials['access_token'];
-		$curl = curl_init();
-		curl_setopt_array(
-			$curl,
-			array(
-				CURLOPT_URL => $request_url,
-				CURLOPT_RETURNTRANSFER => true,
-				CURLOPT_ENCODING => "",
-				CURLOPT_MAXREDIRS => 10,
-				CURLOPT_TIMEOUT => 30,
-				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-				CURLOPT_HTTPGET => true,
-				CURLOPT_SSL_VERIFYPEER => false,
-				CURLOPT_HTTPHEADER => array(
-					"Cache-Control: no-cache",
-					"Content-Type: application/json",
-					$authorization,
-					"Content-length: 0"
-				),
+		$authorization = "Authorization: Bearer " . $powerbi_azure_credentials;
+		// $curl = curl_init();
+		// curl_setopt_array(
+		// 	$curl,
+		// 	array(
+		// 		CURLOPT_URL => $request_url,
+		// 		CURLOPT_RETURNTRANSFER => true,
+		// 		CURLOPT_ENCODING => "",
+		// 		CURLOPT_MAXREDIRS => 10,
+		// 		CURLOPT_TIMEOUT => 30,
+		// 		CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		// 		CURLOPT_HTTPGET => true,
+		// 		CURLOPT_SSL_VERIFYPEER => false,
+		// 		CURLOPT_HTTPHEADER => array(
+		// 			"Cache-Control: no-cache",
+		// 			"Content-Type: application/json",
+		// 			$authorization,
+		// 			"Content-length: 0"
+		// 		),
+		// 	)
+		// );
+		$response = wp_remote_get($request_url, array(
+			'method' => 'GET',
+			'headers' => array(
+				"Cache-Control" => "no-cache",
+				"Content-Type" => "application/json",
+				$authorization,
+				"Content-length" => 0
 			)
-		);
-		$response = curl_exec($curl);
-		$err = curl_error($curl);
-		curl_close($curl);
-		if ($err) {
-			$err = json_decode($err, true);
+		));
+		$err = wp_remote_retrieve_response_code($response);
+		$response = wp_remote_retrieve_body($response);
+		
+		if ($err != 200) {
+			$err = json_decode($response, true);
 			return $err;
 		} else {
 			$response = json_decode($response, true);

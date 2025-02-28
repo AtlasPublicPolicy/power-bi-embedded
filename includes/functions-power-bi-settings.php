@@ -109,12 +109,12 @@ function power_bi_schedule_sunday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_sunday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi'); ?>
+			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_sunday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_sunday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi'); ?>
+			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_sunday_pause_time']); ?>
 	</select>
@@ -126,12 +126,12 @@ function power_bi_schedule_monday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_monday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi'); ?>
+			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_monday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_monday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi'); ?>
+			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_monday_pause_time']); ?>
 	</select>
@@ -143,12 +143,12 @@ function power_bi_schedule_tuesday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_tuesday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi'); ?>
+			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_tuesday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_tuesday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi'); ?>
+			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_tuesday_pause_time']); ?>
 	</select>
@@ -160,12 +160,12 @@ function power_bi_schedule_wednesday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_wednesday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi'); ?>
+			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_wednesday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_wednesday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi'); ?>
+			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_wednesday_pause_time']); ?>
 	</select>
@@ -177,12 +177,12 @@ function power_bi_schedule_thursday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_thursday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi'); ?>
+			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_thursday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_thursday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi'); ?>
+			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_thursday_pause_time']); ?>
 	</select>
@@ -194,12 +194,12 @@ function power_bi_schedule_friday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_friday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi'); ?>
+			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_friday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_friday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi'); ?>
+			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_friday_pause_time']); ?>
 	</select>
@@ -211,12 +211,12 @@ function power_bi_schedule_saturday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_saturday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi'); ?>
+			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_saturday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_saturday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi'); ?>
+			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_saturday_pause_time']); ?>
 	</select>
@@ -242,7 +242,7 @@ function power_bi_add_weekly_schedule($schedules)
 	$schedules['weekly'] = array(
 		'interval' => 7 * 24 * 60 * 60,
 		//7 days * 24 hours * 60 minutes * 60 seconds
-		'display' => esc_html_e('Once Weekly', 'power-bi')
+		'display' => esc_html_e('Once Weekly', 'power-bi-embedded')
 	);
 	return $schedules;
 }
@@ -252,11 +252,11 @@ if (!function_exists('_custlog')) {
 	{
 		if (WP_DEBUG === true) {
 			if (is_array($message) || is_object($message)) {
-				error_log('<<<<<<<< :: DEBUG Array :: >>>>>>>>');
-				error_log(print_r($message, true));
+				// error_log('<<<<<<<< :: DEBUG Array :: >>>>>>>>');
+				// error_log(print_r($message, true));
 			} else {
-				error_log('<<<<<<<< :: DEBUG String :: >>>>>>>>');
-				error_log($message);
+				// error_log('<<<<<<<< :: DEBUG String :: >>>>>>>>');
+				// error_log($message);
 			}
 		}
 	}
@@ -265,7 +265,7 @@ if (!function_exists('power_bi_debug_pr')) {
 	function power_bi_debug_pr($array, $exit = FALSE)
 	{
 		echo "<pre>";
-		print_r($array);
+		// print_r($array);
 		echo "</pre>";
 		if ($exit) {
 			exit();
@@ -281,7 +281,7 @@ function custom_power_bi_strtotime($strtotime)
 	$server_time_zone = date_default_timezone_get();
 	if (get_option('timezone_string') != "") {
 		define('POWER_BI_TIMEZONE', (get_option('timezone_string') ? get_option('timezone_string') : date_default_timezone_get()));
-		date_default_timezone_set(POWER_BI_TIMEZONE);
+		// date_default_timezone_set(POWER_BI_TIMEZONE);
 	} else {
 		if (get_option('gmt_offset') != "") {
 			setTimezoneByOffsetPB(get_option('gmt_offset'));
@@ -289,19 +289,19 @@ function custom_power_bi_strtotime($strtotime)
 	}
 	$custom_str = strtotime($strtotime);
 	// Reset server time zone
-	date_default_timezone_set($server_time_zone);
+	// date_default_timezone_set($server_time_zone);
 	return $custom_str;
 }
 function setTimezoneByOffsetPB($offset)
 {
 	$testTimestamp = time();
-	date_default_timezone_set('UTC');
+	// date_default_timezone_set('UTC');
 	$testLocaltime = localtime($testTimestamp, true);
 	$testHour = $testLocaltime['tm_hour'];
 	$abbrarray = timezone_abbreviations_list();
 	foreach ($abbrarray as $abbr) {
 		foreach ($abbr as $city) {
-			date_default_timezone_set($city['timezone_id']);
+			// date_default_timezone_set($city['timezone_id']);
 			$testLocaltime = localtime($testTimestamp, true);
 			$hour = $testLocaltime['tm_hour'];
 			$testOffset = $hour - $testHour;

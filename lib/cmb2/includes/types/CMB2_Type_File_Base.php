@@ -72,7 +72,7 @@ class CMB2_Type_File_Base extends CMB2_Type_Text {
 			$args['tag'],
 			$args['image'],
 			isset( $args['cached_id'] ) ? ' rel="' . esc_attr( $args['cached_id'] ) . '"' : '',
-			esc_html( $this->_text( 'remove_image_text', esc_html__( 'Remove Image', 'cmb2' ) ) ),
+			esc_html( $this->_text( 'remove_image_text', esc_html__( 'Remove Image', 'power-bi-embedded' ) ) ),
 			isset( $args['id_input'] ) ? $args['id_input'] : ''
 		);
 	}
@@ -87,12 +87,12 @@ class CMB2_Type_File_Base extends CMB2_Type_Text {
 	public function file_status_output( $args ) {
 		return sprintf( '<%1$s class="file-status cmb2-media-item"><span>%2$s <strong>%3$s</strong></span>&nbsp;&nbsp; (<a href="%4$s" target="_blank" rel="external">%5$s</a> / <a href="#" class="cmb2-remove-file-button"%6$s>%7$s</a>)%8$s</%1$s>',
 			$args['tag'],
-			esc_html( $this->_text( 'file_text', esc_html__( 'File:', 'cmb2' ) ) ),
+			esc_html( $this->_text( 'file_text', esc_html__( 'File:', 'power-bi-embedded' ) ) ),
 			esc_html( CMB2_Utils::get_file_name_from_path( $args['value'] ) ),
 			esc_url( $args['value'] ),
-			esc_html( $this->_text( 'file_download_text', esc_html__( 'Download', 'cmb2' ) ) ),
+			esc_html( $this->_text( 'file_download_text', esc_html__( 'Download', 'power-bi-embedded' ) ) ),
 			isset( $args['cached_id'] ) ? ' rel="' . esc_attr( $args['cached_id'] ) . '"' : '',
-			esc_html( $this->_text( 'remove_text', esc_html__( 'Remove', 'cmb2' ) ) ),
+			esc_html( $this->_text( 'remove_text', esc_html__( 'Remove', 'power-bi-embedded' ) ) ),
 			isset( $args['id_input'] ) ? $args['id_input'] : ''
 		);
 	}

@@ -41,7 +41,7 @@ class Power_Bi_Settings
 	 */
 	public function add_admin_menu()
 	{
-		add_submenu_page('edit.php?post_type=powerbi', __('Power BI Settings', 'power-bi'), __('Settings', 'power-bi'), 'manage_options', 'powerbi', array($this, 'power_bi__options_page'));
+		add_submenu_page('edit.php?post_type=powerbi', __('Power BI Settings', 'power-bi-embedded'), __('Settings', 'power-bi-embedded'), 'manage_options', 'powerbi', array($this, 'power_bi__options_page'));
 	}
 	/**
 	 * [settings_init description]
@@ -52,41 +52,41 @@ class Power_Bi_Settings
 		register_setting('power_bi', 'power_bi_settings');
 		add_settings_section(
 			'power_bi_section',
-			__('Azure Authorization', 'power-bi'),
+			__('Azure Authorization', 'power-bi-embedded'),
 			'power_bi_section_callback',
 			'power_bi'
 		);
 		add_settings_field(
 			'power_bi_username',
-			__('User Name', 'power-bi'),
+			__('User Name', 'power-bi-embedded'),
 			'power_bi_username_render',
 			'power_bi',
 			'power_bi_section'
 		);
 		add_settings_field(
 			'power_bi_password',
-			__('Password', 'power-bi'),
+			__('Password', 'power-bi-embedded'),
 			'power_bi_password_render',
 			'power_bi',
 			'power_bi_section'
 		);
 		add_settings_field(
 			'power_bi_client_id',
-			__('Client ID', 'power-bi'),
+			__('Client ID', 'power-bi-embedded'),
 			'power_bi_client_id_render',
 			'power_bi',
 			'power_bi_section'
 		);
 		add_settings_field(
 			'power_bi_client_secret',
-			__('Client Secret', 'power-bi'),
+			__('Client Secret', 'power-bi-embedded'),
 			'power_bi_client_secret_render',
 			'power_bi',
 			'power_bi_section'
 		);
 		add_settings_field(
 			'power_bi_oauth_success',
-			__('Oauth Status', 'power-bi'),
+			__('Oauth Status', 'power-bi-embedded'),
 			'power_bi_oauth_success_render',
 			'power_bi',
 			'power_bi_section'
@@ -94,14 +94,14 @@ class Power_Bi_Settings
 		// Schedule Power BI Resource
 		add_settings_section(
 			'power_bi_schedule_section',
-			__('Power BI Resource On/Off Schedule', 'power-bi'),
+			__('Power BI Resource On/Off Schedule', 'power-bi-embedded'),
 			'power_bi_schedule_section_callback',
 			'power_bi'
 		);
 		// Added Option to view resource status
 		add_settings_field(
 			'power_bi_azure_resource_state',
-			__('Power BI Resource Status', 'power-bi'),
+			__('Power BI Resource Status', 'power-bi-embedded'),
 			'power_bi_azure_resource_state_render',
 			'power_bi',
 			'power_bi_schedule_section'
@@ -109,77 +109,77 @@ class Power_Bi_Settings
 		// New setting for adding other required fields for make azure api call
 		add_settings_field(
 			'power_bi_azure_tenant_id',
-			__('Tenant ID or Directory ID under Azure Active Directory for Office 365', 'power-bi'),
+			__('Tenant ID or Directory ID under Azure Active Directory for Office 365', 'power-bi-embedded'),
 			'power_bi_azure_tenant_id_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_azure_subscription_id',
-			__('Subscription ID for Power BI Resource', 'power-bi'),
+			__('Subscription ID for Power BI Resource', 'power-bi-embedded'),
 			'power_bi_azure_subscription_id_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_azure_resource_group',
-			__('Resource Group Name', 'power-bi'),
+			__('Resource Group Name', 'power-bi-embedded'),
 			'power_bi_azure_resource_group_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_azure_capacity',
-			__('Resource Name', 'power-bi'),
+			__('Resource Name', 'power-bi-embedded'),
 			'power_bi_azure_capacity_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_sunday_time',
-			__('Sunday', 'power-bi'),
+			__('Sunday', 'power-bi-embedded'),
 			'power_bi_schedule_sunday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_monday_time',
-			__('Monday', 'power-bi'),
+			__('Monday', 'power-bi-embedded'),
 			'power_bi_schedule_monday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_tuesday_time',
-			__('Tuesday', 'power-bi'),
+			__('Tuesday', 'power-bi-embedded'),
 			'power_bi_schedule_tuesday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_wednesday_time',
-			__('Wednesday', 'power-bi'),
+			__('Wednesday', 'power-bi-embedded'),
 			'power_bi_schedule_wednesday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_thursday_time',
-			__('Thursday', 'power-bi'),
+			__('Thursday', 'power-bi-embedded'),
 			'power_bi_schedule_thursday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_friday_time',
-			__('Friday', 'power-bi'),
+			__('Friday', 'power-bi-embedded'),
 			'power_bi_schedule_friday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_saturday_time',
-			__('Saturday', 'power-bi'),
+			__('Saturday', 'power-bi-embedded'),
 			'power_bi_schedule_saturday_render',
 			'power_bi',
 			'power_bi_schedule_section'
@@ -201,8 +201,8 @@ class Power_Bi_Settings
 	 */
 	public function power_bi__options_page()
 	{
-		if (isset($_GET['settings-updated'])) {
-			add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'wporg'), 'updated');
+		if ($_GET['settings-updated']) {
+			add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'power-bi-embedded'), 'updated');
 			// clear all cron setup previously //
 			$days_arry = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
 			foreach ($days_arry as $day_name) {

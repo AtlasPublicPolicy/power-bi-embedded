@@ -254,7 +254,7 @@ abstract class CMB2_REST_Controller extends WP_REST_Controller {
 		$this->initiate_rest_box( $request, $request_type );
 
 		if ( ! is_wp_error( $this->rest_box ) && ! $this->rest_box->rest_read ) {
-			$this->rest_box = new WP_Error( 'cmb2_rest_no_read_error', __( 'This box does not have read permissions.', 'cmb2' ), array(
+			$this->rest_box = new WP_Error( 'cmb2_rest_no_read_error', __( 'This box does not have read permissions.', 'power-bi-embedded' ), array(
 				'status' => 403,
 			) );
 		}
@@ -274,7 +274,7 @@ abstract class CMB2_REST_Controller extends WP_REST_Controller {
 		$this->initiate_rest_box( $request, $request_type );
 
 		if ( ! is_wp_error( $this->rest_box ) && ! $this->rest_box->rest_edit ) {
-			$this->rest_box = new WP_Error( 'cmb2_rest_no_write_error', __( 'This box does not have write permissions.', 'cmb2' ), array(
+			$this->rest_box = new WP_Error( 'cmb2_rest_no_write_error', __( 'This box does not have write permissions.', 'power-bi-embedded' ), array(
 				'status' => 403,
 			) );
 		}
@@ -297,7 +297,7 @@ abstract class CMB2_REST_Controller extends WP_REST_Controller {
 
 		if ( ! $this->rest_box ) {
 
-			$this->rest_box = new WP_Error( 'cmb2_rest_box_not_found_error', __( 'No box found by that id. A box needs to be registered with the "show_in_rest" parameter configured.', 'cmb2' ), array(
+			$this->rest_box = new WP_Error( 'cmb2_rest_box_not_found_error', __( 'No box found by that id. A box needs to be registered with the "show_in_rest" parameter configured.', 'power-bi-embedded' ), array(
 				'status' => 403,
 			) );
 
@@ -375,21 +375,21 @@ abstract class CMB2_REST_Controller extends WP_REST_Controller {
 			'type'                 => 'object',
 			'properties'           => array(
 				'description' => array(
-					'description' => __( 'A human-readable description of the object.', 'cmb2' ),
+					'description' => __( 'A human-readable description of the object.', 'power-bi-embedded' ),
 					'type'        => 'string',
 					'context'     => array(
 						'view',
 					),
 				),
 				'name' => array(
-					'description' => __( 'The id for the object.', 'cmb2' ),
+					'description' => __( 'The id for the object.', 'power-bi-embedded' ),
 					'type'        => 'integer',
 					'context'     => array(
 						'view',
 					),
 				),
 				'name' => array(
-					'description' => __( 'The title for the object.', 'cmb2' ),
+					'description' => __( 'The title for the object.', 'power-bi-embedded' ),
 					'type'        => 'string',
 					'context'     => array(
 						'view',

@@ -223,7 +223,7 @@ class CMB2_Types {
 			$this->type = new $render_class_name( $this, $args );
 
 			if ( ! ( $this->type instanceof CMB2_Type_Base ) ) {
-				throw new Exception( esc_html__( 'Custom CMB2 field type classes must extend CMB2_Type_Base.', 'cmb2' ) );
+				throw new Exception( esc_html__( 'Custom CMB2 field type classes must extend CMB2_Type_Base.', 'power-bi-embedded' ) );
 			}
 
 			return $this->type;
@@ -341,7 +341,7 @@ class CMB2_Types {
 			</div>
 		</div>
 		<p class="cmb-add-row">
-			<button type="button" data-selector="<?php echo esc_attr($table_id); ?>" class="cmb-add-row-button button-secondary"><?php echo esc_html( $this->_text( 'add_row_text', esc_html__( 'Add Row', 'cmb2' ) ) ); ?></button>
+			<button type="button" data-selector="<?php echo esc_attr($table_id); ?>" class="cmb-add-row-button button-secondary"><?php echo esc_html( $this->_text( 'add_row_text', esc_html__( 'Add Row', 'power-bi-embedded' ) ) ); ?></button>
 		</p>
 
 		<?php
@@ -405,7 +405,7 @@ class CMB2_Types {
 				<?php $this->_render(); ?>
 			</div>
 			<div class="cmb-td cmb-remove-row">
-				<button type="button" class="button-secondary cmb-remove-row-button" title="<?php echo esc_attr( $this->_text( 'remove_row_button_title', esc_html__( 'Remove Row', 'cmb2' ) ) ); ?>"><?php echo esc_html( $this->_text( 'remove_row_text', esc_html__( 'Remove', 'cmb2' ) ) ); ?></button>
+				<button type="button" class="button-secondary cmb-remove-row-button" title="<?php echo esc_attr( $this->_text( 'remove_row_button_title', esc_html__( 'Remove Row', 'power-bi-embedded' ) ) ); ?>"><?php echo esc_html( $this->_text( 'remove_row_text', esc_html__( 'Remove', 'power-bi-embedded' ) ) ); ?></button>
 			</div>
 		</div>
 

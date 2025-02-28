@@ -105,7 +105,7 @@ if (!class_exists('Power_Bi')) {
 			wp_register_script($this->plugin_name . '-main', POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js', array('jquery'), filemtime(POWER_BI_PLUGIN_DIR . '/assets/js/powerbi.min.js'), true);
 			wp_enqueue_script($this->plugin_name . '-main');
 			//wp_enqueue_script( $this->plugin_name . '-main', POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js', array( 'jquery' ), filemtime(POWER_BI_PLUGIN_URL . '/assets/js/powerbi.min.js'), false );
-			wp_enqueue_script('url-search-params-polyfill', POWER_BI_PLUGIN_URL . '/assets/js/url-search-params-polyfill.js', array(), filemtime(POWER_BI_PLUGIN_DIR . '/assets/js/url-search-params-polyfill.js'), true);
+			wp_enqueue_script('url-search-params-polyfill', POWER_BI_PLUGIN_URL . '/assets/js/url-search-params-polyfill-copy.js', array(), filemtime(POWER_BI_PLUGIN_DIR . '/assets/js/url-search-params-polyfill-copy.js'), true);
 		}
 		/**
 		 * Enqueue styles.

@@ -22,7 +22,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function register_routes() {
 		/* translators: %s: register_routes() */
-		_doing_it_wrong( 'WP_REST_Controller::register_routes', sprintf( esc_html__( "Method '%s' must be overridden." ), __METHOD__ ), '4.7' );
+		_doing_it_wrong( 'WP_REST_Controller::register_routes', sprintf( esc_html__( "Method '%s' must be overridden.", 'power-bi-embedded'), __METHOD__ ), '4.7' );
 	}
 
 	/**
@@ -32,7 +32,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|boolean
 	 */
 	public function get_items_permissions_check( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -44,7 +45,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_items( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -56,7 +58,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|boolean
 	 */
 	public function get_item_permissions_check( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -68,7 +71,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function get_item( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -80,7 +84,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|boolean
 	 */
 	public function create_item_permissions_check( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -92,7 +97,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function create_item( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -104,7 +110,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|boolean
 	 */
 	public function update_item_permissions_check( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -116,7 +123,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function update_item( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -128,7 +136,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|boolean
 	 */
 	public function delete_item_permissions_check( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -140,7 +149,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|WP_REST_Response
 	 */
 	public function delete_item( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -152,7 +162,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_Error|object $prepared_item
 	 */
 	protected function prepare_item_for_database( $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -165,7 +176,8 @@ abstract class WP_REST_Controller {
 	 * @return WP_REST_Response $response
 	 */
 	public function prepare_item_for_response( $item, $request ) {
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass." ), __METHOD__ ), array(
+		/* translators: %s: Missing method name */
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -270,7 +282,7 @@ abstract class WP_REST_Controller {
 		return array(
 			'context'                => $this->get_context_param(),
 			'page'                   => array(
-				'description'        => __( 'Current page of the collection.' ),
+				'description'        => __( 'Current page of the collection.', 'power-bi-embedded' ),
 				'type'               => 'integer',
 				'default'            => 1,
 				'sanitize_callback'  => 'absint',
@@ -278,7 +290,7 @@ abstract class WP_REST_Controller {
 				'minimum'            => 1,
 			),
 			'per_page'               => array(
-				'description'        => __( 'Maximum number of items to be returned in result set.' ),
+				'description'        => __( 'Maximum number of items to be returned in result set.', 'power-bi-embedded' ),
 				'type'               => 'integer',
 				'default'            => 10,
 				'minimum'            => 1,
@@ -287,7 +299,7 @@ abstract class WP_REST_Controller {
 				'validate_callback'  => 'rest_validate_request_arg',
 			),
 			'search'                 => array(
-				'description'        => __( 'Limit results to those matching a string.' ),
+				'description'        => __( 'Limit results to those matching a string.', 'power-bi-embedded' ),
 				'type'               => 'string',
 				'sanitize_callback'  => 'sanitize_text_field',
 				'validate_callback'  => 'rest_validate_request_arg',
@@ -305,7 +317,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function get_context_param( $args = array() ) {
 		$param_details = array(
-			'description'        => __( 'Scope under which the request is made; determines fields present in response.' ),
+			'description'        => __( 'Scope under which the request is made; determines fields present in response.', 'power-bi-embedded' ),
 			'type'               => 'string',
 			'sanitize_callback'  => 'sanitize_key',
 			'validate_callback'  => 'rest_validate_request_arg',

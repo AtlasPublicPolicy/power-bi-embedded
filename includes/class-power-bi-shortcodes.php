@@ -52,7 +52,14 @@ class Power_Bi_Shortcodes
 		$powerbi_js = $this->powerbi_js($id);
 		ob_start();
 		echo '<div id="powerbi-embedded-' . esc_html($id) . '" style="height: ' . esc_html($container_height) . '; width: ' . esc_html($container_width) . ';"></div>';
-		echo $powerbi_js;
+		echo wp_kses($powerbi_js,
+			[
+				'script' => array(
+					'type' => array(),
+					'src' => array(),
+				),
+			]
+		);
 		return ob_get_clean();
 	}
 	public function powerbi_js($id)
