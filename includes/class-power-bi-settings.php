@@ -201,7 +201,11 @@ class Power_Bi_Settings
 	 */
 	public function power_bi__options_page()
 	{
-		if ($_GET['settings-updated']) {
+		if (isset($_GET['settings-updated'])) {
+			$nonce = isset($_REQUEST['power_bi_nonce']) ? sanitize_text_field(wp_unslash($_REQUEST['power_bi_nonce'])) : '';
+			if (!empty($nonce) && wp_verify_nonce(sanitize_text_field($nonce), 'power_bi_settings')) {
+				add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'power-bi-embedded'), 'updated');
+			}
 			add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'power-bi-embedded'), 'updated');
 			// clear all cron setup previously //
 			$days_arry = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
@@ -221,6 +225,7 @@ class Power_Bi_Settings
 			<form action='options.php' method='post'>
 				<?php
 				settings_fields('power_bi');
+				wp_nonce_field('power_bi_settings', 'power_bi_nonce', true, true);
 				do_settings_sections('power_bi');
 				submit_button();
 				?>
