@@ -99,40 +99,51 @@ class Power_Bi_Oauth
 		$client_id = $user_credentials['power_bi_client_id'];
 		$client_secret = $user_credentials['power_bi_client_secret'];
 
-		$curl = curl_init();
-		if (!$curl) {
-			die("Embedded PowerBi could not initialize a cURL handle.  Please have your hosting provider install curl");
-		}
-		curl_setopt_array($curl, array(
-			CURLOPT_URL => "https://login.windows.net/common/oauth2/token",
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING => "",
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 30,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			CURLOPT_CUSTOMREQUEST => "POST",
-			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_POSTFIELDS => "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"grant_type\"\r\n\r\npassword\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"username\"\r\n\r\n" . $user_name . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n" . $password . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_id\"\r\n\r\n" . $client_id . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"resource\"\r\n\r\nhttps://analysis.windows.net/powerbi/api\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_secret\"\r\n\r\n" . $client_secret . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--",
-			CURLOPT_HTTPHEADER => array(
-				"Cache-Control: no-cache",
-				"Postman-Token: b45c007e-0ab8-28d8-0960-6a2c37bf318e",
-				"content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
-			),
-		)
-		);
+		// $curl = curl_init();
+		// if (!$curl) {
+		// 	die("Embedded PowerBi could not initialize a cURL handle.  Please have your hosting provider install curl");
+		// }
+		// curl_setopt_array($curl, array(
+		// 	CURLOPT_URL => "https://login.windows.net/common/oauth2/token",
+		// 	CURLOPT_RETURNTRANSFER => true,
+		// 	CURLOPT_ENCODING => "",
+		// 	CURLOPT_MAXREDIRS => 10,
+		// 	CURLOPT_TIMEOUT => 30,
+		// 	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		// 	CURLOPT_CUSTOMREQUEST => "POST",
+		// 	CURLOPT_SSL_VERIFYPEER => false,
+		// 	CURLOPT_POSTFIELDS => "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"grant_type\"\r\n\r\npassword\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"username\"\r\n\r\n" . $user_name . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"password\"\r\n\r\n" . $password . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_id\"\r\n\r\n" . $client_id . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"resource\"\r\n\r\nhttps://analysis.windows.net/powerbi/api\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_secret\"\r\n\r\n" . $client_secret . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--",
+		// 	CURLOPT_HTTPHEADER => array(
+		// 		"Cache-Control: no-cache",
+		// 		"Postman-Token: b45c007e-0ab8-28d8-0960-6a2c37bf318e",
+		// 		"content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
+		// 	),
+		// )
+		// );
 
-		$response = curl_exec($curl);
+		$response = wp_remote_get("https://login.windows.net/common/oauth2/token", array(
+			'method' => 'POST',
+			'body' => array(
+				'grant_type' => 'password',
+				'username' => $user_name,
+				'password' => $password,
+				'client_id' => $client_id,
+				'resource' => 'https://analysis.windows.net/powerbi/api',
+				'client_secret' => $client_secret
+			)
+		));
 
-		$err = curl_error($curl);
+		$status = wp_remote_retrieve_response_code($response);
 
-		curl_close($curl);
+		// curl_close($curl);
 
-		if ($err) {
+		if ($status != 200) {
+			$err = wp_remote_retrieve_body($response);
 			$err = json_decode($err, true);
 			return $err;
 		}
 
-		$token = json_decode($response, true);
+		$token = json_decode(wp_remote_retrieve_body($response), true);
 
 		if (isset($token['error'])) {
 			return $token;
@@ -151,38 +162,47 @@ class Power_Bi_Oauth
 		$client_secret = $user_credentials['power_bi_client_secret'];
 		$azure_tenant_id = $user_credentials['power_bi_azure_tenant_id'];
 
-		$curl = curl_init();
-		if (!$curl) {
-			die("Embedded PowerBi could not initialize a cURL handle.  Please have your hosting provider install curl");
-		}
-		curl_setopt_array($curl, array(
-			CURLOPT_URL => "https://login.microsoftonline.com/" . $azure_tenant_id . "/oauth2/token",
-			CURLOPT_RETURNTRANSFER => true,
-			CURLOPT_ENCODING => "",
-			CURLOPT_MAXREDIRS => 10,
-			CURLOPT_TIMEOUT => 30,
-			CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-			CURLOPT_CUSTOMREQUEST => "POST",
-			CURLOPT_SSL_VERIFYPEER => false,
-			CURLOPT_POSTFIELDS => "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"grant_type\"\r\n\r\nclient_credentials\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_id\"\r\n\r\n" . $client_id . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"resource\"\r\n\r\nhttps://management.azure.com/\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_secret\"\r\n\r\n" . $client_secret . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--",
-			CURLOPT_HTTPHEADER => array(
-				"Cache-Control: no-cache",
-				"Postman-Token: b45c007e-0ab8-28d8-0960-6a2c37bf318e",
-				"content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
-			),
-		)
-		);
+		// $curl = curl_init();
+		// if (!$curl) {
+		// 	die("Embedded PowerBi could not initialize a cURL handle.  Please have your hosting provider install curl");
+		// }
+		// curl_setopt_array($curl, array(
+		// 	CURLOPT_URL => "https://login.microsoftonline.com/" . $azure_tenant_id . "/oauth2/token",
+		// 	CURLOPT_RETURNTRANSFER => true,
+		// 	CURLOPT_ENCODING => "",
+		// 	CURLOPT_MAXREDIRS => 10,
+		// 	CURLOPT_TIMEOUT => 30,
+		// 	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+		// 	CURLOPT_CUSTOMREQUEST => "POST",
+		// 	CURLOPT_SSL_VERIFYPEER => false,
+		// 	CURLOPT_POSTFIELDS => "------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"grant_type\"\r\n\r\nclient_credentials\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_id\"\r\n\r\n" . $client_id . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"resource\"\r\n\r\nhttps://management.azure.com/\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW\r\nContent-Disposition: form-data; name=\"client_secret\"\r\n\r\n" . $client_secret . "\r\n------WebKitFormBoundary7MA4YWxkTrZu0gW--",
+		// 	CURLOPT_HTTPHEADER => array(
+		// 		"Cache-Control: no-cache",
+		// 		"Postman-Token: b45c007e-0ab8-28d8-0960-6a2c37bf318e",
+		// 		"content-type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW"
+		// 	),
+		// )
+		// );
 
-		$response = curl_exec($curl);
-		$err = curl_error($curl);
+		$response = wp_remote_get("https://login.microsoftonline.com/" . $azure_tenant_id . "/oauth2/token", array(
+			'method' => 'POST',
+			'body' => array(
+				'grant_type' => 'client_credentials',
+				'client_id' => $client_id,
+				'resource' => 'https://management.azure.com/',
+				'client_secret' => $client_secret
+			)
+		));
+		$err = wp_remote_retrieve_response_code($response);
 
-		curl_close($curl);
+		// curl_close($curl);
 
-		if ($err) {
+		if ($err != 200) {
+			$err = wp_remote_retrieve_body($response);
 			$err = json_decode($err, true);
 			return $err;
 		} else {
-			$token = json_decode($response, true);
+			$token = json_decode(wp_remote_retrieve_body($response), true);
 			return $token;
 		}
 	}

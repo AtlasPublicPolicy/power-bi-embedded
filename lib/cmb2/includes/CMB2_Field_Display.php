@@ -180,7 +180,14 @@ class CMB2_Display_Text_Url extends CMB2_Field_Display {
 	 * @since 2.2.2
 	 */
 	protected function _display() {
-		echo make_clickable( esc_url( $this->value ) );
+		echo wp_kses(make_clickable( esc_url( $this->value ) ),
+		[
+			'script' => array(
+				'type' => array(),
+				'src' => array(),
+			),
+		])
+		;
 	}
 }
 
@@ -274,7 +281,7 @@ class CMB2_Display_Textarea extends CMB2_Field_Display {
 	 * @since 2.2.2
 	 */
 	protected function _display() {
-		echo wpautop( wp_kses_post( esc_attr($this)->value ) );
+		echo wp_kses_post( wpautop(  esc_attr($this)->value ) );
 	}
 }
 
@@ -285,7 +292,7 @@ class CMB2_Display_Textarea_Code extends CMB2_Field_Display {
 	 * @since 2.2.2
 	 */
 	protected function _display() {
-		echo '<xmp class="cmb2-code">' . print_r( esc_attr($this->value), true ) . '</xmp>';
+		echo '<xmp class="cmb2-code">' . esc_html(print_r( esc_attr($this->value), true )) . '</xmp>';
 	}
 }
 
@@ -446,12 +453,18 @@ class CMB2_Display_File extends CMB2_Field_Display {
 				$image = '<img class="cmb-image-display" style="max-width: ' . absint( esc_attr($size )) . 'px; width: 100%; height: auto;" src="' . esc_url( $url_value ) . '" alt="" />';
 			}
 
-			echo $image;
+			echo wp_kses($image,
+			[
+				'script' => array(
+					'type' => array(),
+					'src' => array(),
+				),
+			]);
 
 		} else {
 
 			printf( '<div class="file-status"><span>%1$s <strong><a href="%2$s">%3$s</a></strong></span></div>',
-				esc_html( $field_type->_text( 'file_text', __( 'File:', 'cmb2' ) ) ),
+				esc_html( $field_type->_text( 'file_text', __( 'File:', 'power-bi-embedded' ) ) ),
 				esc_url( $url_value ),
 				esc_html( CMB2_Utils::get_file_name_from_path( $url_value ) )
 			);

@@ -188,11 +188,11 @@ class CMB2_Hookup extends CMB2_Hookup_Base {
 
 	public function term_hooks() {
 		if ( ! function_exists( 'get_term_meta' ) ) {
-			wp_die( esc_html__( 'Term Metadata is a WordPress 4.4+ feature. Please upgrade your WordPress install.', 'cmb2' ) );
+			wp_die( esc_html__( 'Term Metadata is a WordPress 4.4+ feature. Please upgrade your WordPress install.', 'power-bi-embedded' ) );
 		}
 
 		if ( ! $this->cmb->prop( 'taxonomies' ) ) {
-			wp_die( esc_html__( 'Term metaboxes configuration requires a "taxonomies" parameter.', 'cmb2' ) );
+			wp_die( esc_html__( 'Term metaboxes configuration requires a "taxonomies" parameter.', 'power-bi-embedded' ) );
 		}
 
 		$this->taxonomies = (array) $this->cmb->prop( 'taxonomies' );
@@ -576,7 +576,7 @@ class CMB2_Hookup extends CMB2_Hookup_Base {
 		$toggle_button = sprintf(
 			'<button type="button" class="handlediv button-link" aria-expanded="true"><span class="screen-reader-text">%s</span><span class="toggle-indicator" aria-hidden="true"></span></button>',
 			/* translators: %s: name of CMB2 box (panel) */
-			sprintf( __( 'Toggle panel: %s' ), $title )
+			sprintf( __( 'Toggle panel: %s', 'power-bi-embedded' ), $title )
 		);
 		$title_tag = '<h2 class="hndle"><span>' . esc_attr( $title ) . '</span></h2>' . "\n";
 

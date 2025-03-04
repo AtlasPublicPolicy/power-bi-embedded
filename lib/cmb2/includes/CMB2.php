@@ -204,7 +204,7 @@ class CMB2 extends CMB2_Base {
 	public function __construct( $config, $object_id = 0 ) {
 
 		if ( empty( $config['id'] ) ) {
-			wp_die( esc_html__( 'Metabox configuration is required to have an ID parameter.', 'cmb2' ) );
+			wp_die( esc_html__( 'Metabox configuration is required to have an ID parameter.', 'power-bi-embedded' ) );
 		}
 
 		$this->cmb_id = $config['id'];
@@ -623,7 +623,7 @@ class CMB2 extends CMB2_Base {
 		}
 
 			echo '
-			<div class="cmbhandle" title="' , esc_attr__( 'Click to toggle', 'cmb2' ), '"><br></div>
+			<div class="cmbhandle" title="' , esc_attr__( 'Click to toggle', 'power-bi-embedded' ), '"><br></div>
 			<h3 class="cmb-group-title cmbhandle-title"><span>', esc_attr($field_group->replace_hash( $field_group->options( 'group_title' ) )), '</span></h3>
 
 			<div class="inside cmb-td cmb-nested cmb-field-list">';

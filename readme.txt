@@ -1,14 +1,14 @@
-=== Power BI Embedded for WordPress ===
+=== Power BI Embedded ===
 Contributors: atlaspolicy, upnrunn, stegel
-Tags: powerbi-embedded, wordpress-plugin, powerbi, wordpress
+Tags: powerbi-embedded, powerbi
 Requires at least: 5.0.0
 Requires PHP: 7.0
-Tested up to: 6.2.2
-Stable tag: 1.1.7
+Tested up to: 6.7
+Stable tag: 1.1.8
 License: GNU General Public License v3.0
 License URI: https://www.gnu.org/licenses/lgpl.html
 
-This WordPress plugin supports Microsoft Power BI Embedded, including dashboards, reports, report visuals, Q&A, and tiles. It also supports filters and slicers passed in as a JSON object.
+This WordPress plugin supports Microsoft Power BI Embedded, including dashboards, visuals, Q&A, tiles, filters and slicers passed in JSON objects.
 
 == Description ==
 

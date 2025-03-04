@@ -112,7 +112,7 @@ abstract class CMB2_Type_Taxonomy_Base extends CMB2_Type_Multi_Base {
 			$message = $error->get_error_message();
 			$data = 'data-error="' . esc_attr( $error->get_error_code() ) . '"';
 		} else {
-			$message = $this->_text( 'no_terms_text', esc_html__( 'No terms', 'cmb2' ) );
+			$message = $this->_text( 'no_terms_text', esc_html__( 'No terms', 'power-bi-embedded' ) );
 			$data = '';
 		}
 

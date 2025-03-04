@@ -112,7 +112,7 @@ function yourprefix_register_demo_metabox() {
 	 */
 	$cmb_demo = new_cmb2_box( array(
 		'id'            => 'yourprefix_demo_metabox',
-		'title'         => esc_html__( 'Test Metabox', 'cmb2' ),
+		'title'         => esc_html__( 'Test Metabox', 'power-bi-embedded' ),
 		'object_types'  => array( 'page' ), // Post type
 		// 'show_on_cb' => 'yourprefix_show_if_front_page', // function should return a bool value
 		// 'context'    => 'normal',
@@ -145,8 +145,8 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'       => esc_html__( 'Test Text', 'cmb2' ),
-		'desc'       => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'       => esc_html__( 'Test Text', 'power-bi-embedded' ),
+		'desc'       => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'         => 'yourprefix_demo_text',
 		'type'       => 'text',
 		'show_on_cb' => 'yourprefix_hide_if_no_cats', // function should return a bool value
@@ -158,8 +158,8 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Text Small', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Text Small', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_textsmall',
 		'type' => 'text_small',
 		// 'repeatable' => true,
@@ -171,18 +171,18 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Text Medium', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Text Medium', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_textmedium',
 		'type' => 'text_medium',
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'       => esc_html__( 'Read-only Disabled Field', 'cmb2' ),
-		'desc'       => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'       => esc_html__( 'Read-only Disabled Field', 'power-bi-embedded' ),
+		'desc'       => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'         => 'yourprefix_demo_readonly',
 		'type'       => 'text_medium',
-		'default'    => esc_attr__( 'Hey there, I\'m a read-only field', 'cmb2' ),
+		'default'    => esc_attr__( 'Hey there, I\'m a read-only field', 'power-bi-embedded' ),
 		'save_field' => false, // Disables the saving of this field.
 		'attributes' => array(
 			'disabled' => 'disabled',
@@ -191,16 +191,16 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Custom Rendered Field', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Custom Rendered Field', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_render_row_cb',
 		'type' => 'text',
 		'render_row_cb' => 'yourprefix_render_row_cb',
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Website URL', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Website URL', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_url',
 		'type' => 'text_url',
 		// 'protocols' => array('http', 'https', 'ftp', 'ftps', 'mailto', 'news', 'irc', 'gopher', 'nntp', 'feed', 'telnet'), // Array of allowed protocols
@@ -208,47 +208,47 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Text Email', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Text Email', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_email',
 		'type' => 'text_email',
 		// 'repeatable' => true,
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Time', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Time', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_time',
 		'type' => 'text_time',
 		// 'time_format' => 'H:i', // Set to 24hr format
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Time zone', 'cmb2' ),
-		'desc' => esc_html__( 'Time zone', 'cmb2' ),
+		'name' => esc_html__( 'Time zone', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'Time zone', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_timezone',
 		'type' => 'select_timezone',
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Date Picker', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Date Picker', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_textdate',
 		'type' => 'text_date',
 		// 'date_format' => 'Y-m-d',
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Date Picker (UNIX timestamp)', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Date Picker (UNIX timestamp)', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_textdate_timestamp',
 		'type' => 'text_date_timestamp',
 		// 'timezone_meta_key' => 'yourprefix_demo_timezone', // Optionally make this field honor the timezone selected in the select_timezone specified above
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Date/Time Picker Combo (UNIX timestamp)', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Date/Time Picker Combo (UNIX timestamp)', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_datetime_timestamp',
 		'type' => 'text_datetime_timestamp',
 	) );
@@ -264,8 +264,8 @@ function yourprefix_register_demo_metabox() {
 	// ) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Money', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Money', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_textmoney',
 		'type' => 'text_money',
 		// 'before_field' => '£', // override '$' symbol if needed
@@ -273,8 +273,8 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'    => esc_html__( 'Test Color Picker', 'cmb2' ),
-		'desc'    => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'    => esc_html__( 'Test Color Picker', 'power-bi-embedded' ),
+		'desc'    => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'      => 'yourprefix_demo_colorpicker',
 		'type'    => 'colorpicker',
 		'default' => '#ffffff',
@@ -289,22 +289,22 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Text Area', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Text Area', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_textarea',
 		'type' => 'textarea',
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Text Area Small', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Text Area Small', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_textareasmall',
 		'type' => 'textarea_small',
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Text Area for Code', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Text Area for Code', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_textarea_code',
 		'type' => 'textarea_code',
 		// 'attributes' => array(
@@ -321,53 +321,53 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Title Weeeee', 'cmb2' ),
-		'desc' => esc_html__( 'This is a title description', 'cmb2' ),
+		'name' => esc_html__( 'Test Title Weeeee', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'This is a title description', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_title',
 		'type' => 'title',
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'             => esc_html__( 'Test Select', 'cmb2' ),
-		'desc'             => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'             => esc_html__( 'Test Select', 'power-bi-embedded' ),
+		'desc'             => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'               => 'yourprefix_demo_select',
 		'type'             => 'select',
 		'show_option_none' => true,
 		'options'          => array(
-			'standard' => esc_html__( 'Option One', 'cmb2' ),
-			'custom'   => esc_html__( 'Option Two', 'cmb2' ),
-			'none'     => esc_html__( 'Option Three', 'cmb2' ),
+			'standard' => esc_html__( 'Option One', 'power-bi-embedded' ),
+			'custom'   => esc_html__( 'Option Two', 'power-bi-embedded' ),
+			'none'     => esc_html__( 'Option Three', 'power-bi-embedded' ),
 		),
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'             => esc_html__( 'Test Radio inline', 'cmb2' ),
-		'desc'             => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'             => esc_html__( 'Test Radio inline', 'power-bi-embedded' ),
+		'desc'             => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'               => 'yourprefix_demo_radio_inline',
 		'type'             => 'radio_inline',
 		'show_option_none' => 'No Selection',
 		'options'          => array(
-			'standard' => esc_html__( 'Option One', 'cmb2' ),
-			'custom'   => esc_html__( 'Option Two', 'cmb2' ),
-			'none'     => esc_html__( 'Option Three', 'cmb2' ),
+			'standard' => esc_html__( 'Option One', 'power-bi-embedded' ),
+			'custom'   => esc_html__( 'Option Two', 'power-bi-embedded' ),
+			'none'     => esc_html__( 'Option Three', 'power-bi-embedded' ),
 		),
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'    => esc_html__( 'Test Radio', 'cmb2' ),
-		'desc'    => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'    => esc_html__( 'Test Radio', 'power-bi-embedded' ),
+		'desc'    => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'      => 'yourprefix_demo_radio',
 		'type'    => 'radio',
 		'options' => array(
-			'option1' => esc_html__( 'Option One', 'cmb2' ),
-			'option2' => esc_html__( 'Option Two', 'cmb2' ),
-			'option3' => esc_html__( 'Option Three', 'cmb2' ),
+			'option1' => esc_html__( 'Option One', 'power-bi-embedded' ),
+			'option2' => esc_html__( 'Option Two', 'power-bi-embedded' ),
+			'option3' => esc_html__( 'Option Three', 'power-bi-embedded' ),
 		),
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'     => esc_html__( 'Test Taxonomy Radio', 'cmb2' ),
-		'desc'     => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'     => esc_html__( 'Test Taxonomy Radio', 'power-bi-embedded' ),
+		'desc'     => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'       => 'yourprefix_demo_text_taxonomy_radio',
 		'type'     => 'taxonomy_radio', // Or `taxonomy_radio_inline`/`taxonomy_radio_hierarchical`
 		'taxonomy' => 'category', // Taxonomy Slug
@@ -380,16 +380,16 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'     => esc_html__( 'Test Taxonomy Select', 'cmb2' ),
-		'desc'     => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'     => esc_html__( 'Test Taxonomy Select', 'power-bi-embedded' ),
+		'desc'     => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'       => 'yourprefix_demo_taxonomy_select',
 		'type'     => 'taxonomy_select', // Or `taxonomy_select_hierarchical`
 		'taxonomy' => 'category', // Taxonomy Slug
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'     => esc_html__( 'Test Taxonomy Multi Checkbox', 'cmb2' ),
-		'desc'     => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'     => esc_html__( 'Test Taxonomy Multi Checkbox', 'power-bi-embedded' ),
+		'desc'     => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'       => 'yourprefix_demo_multitaxonomy',
 		'type'     => 'taxonomy_multicheck', // Or `taxonomy_multicheck_inline`/`taxonomy_multicheck_hierarchical`
 		'taxonomy' => 'post_tag', // Taxonomy Slug
@@ -397,29 +397,29 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Checkbox', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Checkbox', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_checkbox',
 		'type' => 'checkbox',
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'    => esc_html__( 'Test Multi Checkbox', 'cmb2' ),
-		'desc'    => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'    => esc_html__( 'Test Multi Checkbox', 'power-bi-embedded' ),
+		'desc'    => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'      => 'yourprefix_demo_multicheckbox',
 		'type'    => 'multicheck',
 		// 'multiple' => true, // Store values in individual rows
 		'options' => array(
-			'check1' => esc_html__( 'Check One', 'cmb2' ),
-			'check2' => esc_html__( 'Check Two', 'cmb2' ),
-			'check3' => esc_html__( 'Check Three', 'cmb2' ),
+			'check1' => esc_html__( 'Check One', 'power-bi-embedded' ),
+			'check2' => esc_html__( 'Check Two', 'power-bi-embedded' ),
+			'check3' => esc_html__( 'Check Three', 'power-bi-embedded' ),
 		),
 		// 'inline'  => true, // Toggles display to inline
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'    => esc_html__( 'Test wysiwyg', 'cmb2' ),
-		'desc'    => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'    => esc_html__( 'Test wysiwyg', 'power-bi-embedded' ),
+		'desc'    => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'      => 'yourprefix_demo_wysiwyg',
 		'type'    => 'wysiwyg',
 		'options' => array(
@@ -428,25 +428,25 @@ function yourprefix_register_demo_metabox() {
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'Test Image', 'cmb2' ),
-		'desc' => esc_html__( 'Upload an image or enter a URL.', 'cmb2' ),
+		'name' => esc_html__( 'Test Image', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'Upload an image or enter a URL.', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_demo_image',
 		'type' => 'file',
 	) );
 
 	$cmb_demo->add_field( array(
-		'name'         => esc_html__( 'Multiple Files', 'cmb2' ),
-		'desc'         => esc_html__( 'Upload or add multiple images/attachments.', 'cmb2' ),
+		'name'         => esc_html__( 'Multiple Files', 'power-bi-embedded' ),
+		'desc'         => esc_html__( 'Upload or add multiple images/attachments.', 'power-bi-embedded' ),
 		'id'           => 'yourprefix_demo_file_list',
 		'type'         => 'file_list',
 		'preview_size' => array( 100, 100 ), // Default: array( 50, 50 )
 	) );
 
 	$cmb_demo->add_field( array(
-		'name' => esc_html__( 'oEmbed', 'cmb2' ),
+		'name' => esc_html__( 'oEmbed', 'power-bi-embedded' ),
 		'desc' => sprintf(
 			/* translators: %s: link to codex.wordpress.org/Embeds */
-			esc_html__( 'Enter a youtube, twitter, or instagram URL. Supports services listed at %s.', 'cmb2' ),
+			esc_html__( 'Enter a youtube, twitter, or instagram URL. Supports services listed at %s.', 'power-bi-embedded' ),
 			'<a href="https://wordpress.org/support/article/embeds/">codex.wordpress.org/Embeds</a>'
 		),
 		'id'   => 'yourprefix_demo_embed',
@@ -478,7 +478,7 @@ function yourprefix_register_about_page_metabox() {
 	 */
 	$cmb_about_page = new_cmb2_box( array(
 		'id'           => 'yourprefix_about_metabox',
-		'title'        => esc_html__( 'About Page Metabox', 'cmb2' ),
+		'title'        => esc_html__( 'About Page Metabox', 'power-bi-embedded' ),
 		'object_types' => array( 'page' ), // Post type
 		'context'      => 'normal',
 		'priority'     => 'high',
@@ -489,8 +489,8 @@ function yourprefix_register_about_page_metabox() {
 	) );
 
 	$cmb_about_page->add_field( array(
-		'name' => esc_html__( 'Test Text', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Test Text', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_about_text',
 		'type' => 'text',
 	) );
@@ -508,7 +508,7 @@ function yourprefix_register_repeatable_group_field_metabox() {
 	 */
 	$cmb_group = new_cmb2_box( array(
 		'id'           => 'yourprefix_group_metabox',
-		'title'        => esc_html__( 'Repeating Field Group', 'cmb2' ),
+		'title'        => esc_html__( 'Repeating Field Group', 'power-bi-embedded' ),
 		'object_types' => array( 'page' ),
 	) );
 
@@ -516,11 +516,11 @@ function yourprefix_register_repeatable_group_field_metabox() {
 	$group_field_id = $cmb_group->add_field( array(
 		'id'          => 'yourprefix_group_demo',
 		'type'        => 'group',
-		'description' => esc_html__( 'Generates reusable form entries', 'cmb2' ),
+		'description' => esc_html__( 'Generates reusable form entries', 'power-bi-embedded' ),
 		'options'     => array(
-			'group_title'    => esc_html__( 'Entry {#}', 'cmb2' ), // {#} gets replaced by row number
-			'add_button'     => esc_html__( 'Add Another Entry', 'cmb2' ),
-			'remove_button'  => esc_html__( 'Remove Entry', 'cmb2' ),
+			'group_title'    => esc_html__( 'Entry {#}', 'power-bi-embedded' ), // {#} gets replaced by row number
+			'add_button'     => esc_html__( 'Add Another Entry', 'power-bi-embedded' ),
+			'remove_button'  => esc_html__( 'Remove Entry', 'power-bi-embedded' ),
 			'sortable'       => true,
 			// 'closed'      => true, // true to have the groups closed by default
 			// 'remove_confirm' => esc_html__( 'Are you sure you want to remove?', 'cmb2' ), // Performs confirmation before removing group.
@@ -534,27 +534,27 @@ function yourprefix_register_repeatable_group_field_metabox() {
 	 * The parent field's id needs to be passed as the first argument.
 	 */
 	$cmb_group->add_group_field( $group_field_id, array(
-		'name'       => esc_html__( 'Entry Title', 'cmb2' ),
+		'name'       => esc_html__( 'Entry Title', 'power-bi-embedded' ),
 		'id'         => 'title',
 		'type'       => 'text',
 		// 'repeatable' => true, // Repeatable fields are supported w/in repeatable groups (for most types)
 	) );
 
 	$cmb_group->add_group_field( $group_field_id, array(
-		'name'        => esc_html__( 'Description', 'cmb2' ),
-		'description' => esc_html__( 'Write a short description for this entry', 'cmb2' ),
+		'name'        => esc_html__( 'Description', 'power-bi-embedded' ),
+		'description' => esc_html__( 'Write a short description for this entry', 'power-bi-embedded' ),
 		'id'          => 'description',
 		'type'        => 'textarea_small',
 	) );
 
 	$cmb_group->add_group_field( $group_field_id, array(
-		'name' => esc_html__( 'Entry Image', 'cmb2' ),
+		'name' => esc_html__( 'Entry Image', 'power-bi-embedded' ),
 		'id'   => 'image',
 		'type' => 'file',
 	) );
 
 	$cmb_group->add_group_field( $group_field_id, array(
-		'name' => esc_html__( 'Image Caption', 'cmb2' ),
+		'name' => esc_html__( 'Image Caption', 'power-bi-embedded' ),
 		'id'   => 'image_caption',
 		'type' => 'text',
 	) );
@@ -572,58 +572,58 @@ function yourprefix_register_user_profile_metabox() {
 	 */
 	$cmb_user = new_cmb2_box( array(
 		'id'               => 'yourprefix_user_edit',
-		'title'            => esc_html__( 'User Profile Metabox', 'cmb2' ), // Doesn't output for user boxes
+		'title'            => esc_html__( 'User Profile Metabox', 'power-bi-embedded' ), // Doesn't output for user boxes
 		'object_types'     => array( 'user' ), // Tells CMB2 to use user_meta vs post_meta
 		'show_names'       => true,
 		'new_user_section' => 'add-new-user', // where form will show on new user page. 'add-existing-user' is only other valid option.
 	) );
 
 	$cmb_user->add_field( array(
-		'name'     => esc_html__( 'Extra Info', 'cmb2' ),
-		'desc'     => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'     => esc_html__( 'Extra Info', 'power-bi-embedded' ),
+		'desc'     => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'       => 'yourprefix_user_extra_info',
 		'type'     => 'title',
 		'on_front' => false,
 	) );
 
 	$cmb_user->add_field( array(
-		'name'    => esc_html__( 'Avatar', 'cmb2' ),
-		'desc'    => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'    => esc_html__( 'Avatar', 'power-bi-embedded' ),
+		'desc'    => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'      => 'yourprefix_user_avatar',
 		'type'    => 'file',
 	) );
 
 	$cmb_user->add_field( array(
-		'name' => esc_html__( 'Facebook URL', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Facebook URL', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_user_facebookurl',
 		'type' => 'text_url',
 	) );
 
 	$cmb_user->add_field( array(
-		'name' => esc_html__( 'Twitter URL', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Twitter URL', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_user_twitterurl',
 		'type' => 'text_url',
 	) );
 
 	$cmb_user->add_field( array(
-		'name' => esc_html__( 'Google+ URL', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Google+ URL', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_user_googleplusurl',
 		'type' => 'text_url',
 	) );
 
 	$cmb_user->add_field( array(
-		'name' => esc_html__( 'Linkedin URL', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Linkedin URL', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_user_linkedinurl',
 		'type' => 'text_url',
 	) );
 
 	$cmb_user->add_field( array(
-		'name' => esc_html__( 'User Field', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'User Field', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_user_user_text_field',
 		'type' => 'text',
 	) );
@@ -641,30 +641,30 @@ function yourprefix_register_taxonomy_metabox() {
 	 */
 	$cmb_term = new_cmb2_box( array(
 		'id'               => 'yourprefix_term_edit',
-		'title'            => esc_html__( 'Category Metabox', 'cmb2' ), // Doesn't output for term boxes
+		'title'            => esc_html__( 'Category Metabox', 'power-bi-embedded' ), // Doesn't output for term boxes
 		'object_types'     => array( 'term' ), // Tells CMB2 to use term_meta vs post_meta
 		'taxonomies'       => array( 'category', 'post_tag' ), // Tells CMB2 which taxonomies should have these fields
 		// 'new_term_section' => true, // Will display in the "Add New Category" section
 	) );
 
 	$cmb_term->add_field( array(
-		'name'     => esc_html__( 'Extra Info', 'cmb2' ),
-		'desc'     => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'     => esc_html__( 'Extra Info', 'power-bi-embedded' ),
+		'desc'     => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'       => 'yourprefix_term_extra_info',
 		'type'     => 'title',
 		'on_front' => false,
 	) );
 
 	$cmb_term->add_field( array(
-		'name' => esc_html__( 'Term Image', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Term Image', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_term_avatar',
 		'type' => 'file',
 	) );
 
 	$cmb_term->add_field( array(
-		'name' => esc_html__( 'Arbitrary Term Field', 'cmb2' ),
-		'desc' => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name' => esc_html__( 'Arbitrary Term Field', 'power-bi-embedded' ),
+		'desc' => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'   => 'yourprefix_term_term_text_field',
 		'type' => 'text',
 	) );
@@ -682,7 +682,7 @@ function yourprefix_register_theme_options_metabox() {
 	 */
 	$cmb_options = new_cmb2_box( array(
 		'id'           => 'yourprefix_theme_options_page',
-		'title'        => esc_html__( 'Theme Options', 'cmb2' ),
+		'title'        => esc_html__( 'Theme Options', 'power-bi-embedded' ),
 		'object_types' => array( 'options-page' ),
 
 		/*
@@ -713,8 +713,8 @@ function yourprefix_register_theme_options_metabox() {
 	 * Prefix is not needed.
 	 */
 	$cmb_options->add_field( array(
-		'name'    => esc_html__( 'Site Background Color', 'cmb2' ),
-		'desc'    => esc_html__( 'field description (optional)', 'cmb2' ),
+		'name'    => esc_html__( 'Site Background Color', 'power-bi-embedded' ),
+		'desc'    => esc_html__( 'field description (optional)', 'power-bi-embedded' ),
 		'id'      => 'bg_color',
 		'type'    => 'colorpicker',
 		'default' => '#ffffff',
@@ -750,7 +750,8 @@ function yourprefix_options_page_message_callback( $cmb, $args ) {
 		if ( $args['is_updated'] ) {
 
 			// Modify the updated message.
-			$args['message'] = sprintf( esc_html__( '%s &mdash; Updated!', 'cmb2' ), $cmb->prop( 'title' ) );
+			/* translators: %s: link to codex.wordpress.org/Embeds */
+			$args['message'] = sprintf( esc_html__( '%s &mdash; Updated!', 'power-bi-embedded' ), $cmb->prop( 'title' ) );
 		}
 
 		add_settings_error( $args['setting'], $args['code'], $args['message'], $args['type'] );
@@ -782,7 +783,7 @@ add_action( 'cmb2_init', 'yourprefix_register_rest_api_box' );
 function yourprefix_register_rest_api_box() {
 	$cmb_rest = new_cmb2_box( array(
 		'id'            => 'yourprefix_rest_metabox',
-		'title'         => esc_html__( 'REST Test Box', 'cmb2' ),
+		'title'         => esc_html__( 'REST Test Box', 'power-bi-embedded' ),
 		'object_types'  => array( 'page' ), // Post type
 		'show_in_rest' => WP_REST_Server::ALLMETHODS, // WP_REST_Server::READABLE|WP_REST_Server::EDITABLE, // Determines which HTTP methods the box is visible in.
 		// Optional callback to limit box visibility.
@@ -791,15 +792,15 @@ function yourprefix_register_rest_api_box() {
 	) );
 
 	$cmb_rest->add_field( array(
-		'name'       => esc_html__( 'REST Test Text', 'cmb2' ),
-		'desc'       => esc_html__( 'Will show in the REST API for this box and for pages.', 'cmb2' ),
+		'name'       => esc_html__( 'REST Test Text', 'power-bi-embedded' ),
+		'desc'       => esc_html__( 'Will show in the REST API for this box and for pages.', 'power-bi-embedded' ),
 		'id'         => 'yourprefix_rest_text',
 		'type'       => 'text',
 	) );
 
 	$cmb_rest->add_field( array(
-		'name'       => esc_html__( 'REST Editable Test Text', 'cmb2' ),
-		'desc'       => esc_html__( 'Will show in REST API "editable" contexts only (`POST` requests).', 'cmb2' ),
+		'name'       => esc_html__( 'REST Editable Test Text', 'power-bi-embedded' ),
+		'desc'       => esc_html__( 'Will show in REST API "editable" contexts only (`POST` requests).', 'power-bi-embedded' ),
 		'id'         => 'yourprefix_rest_editable_text',
 		'type'       => 'text',
 		'show_in_rest' => WP_REST_Server::EDITABLE,// WP_REST_Server::ALLMETHODS|WP_REST_Server::READABLE, // Determines which HTTP methods the field is visible in. Will override the cmb2_box 'show_in_rest' param.

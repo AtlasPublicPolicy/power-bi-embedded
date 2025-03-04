@@ -154,7 +154,8 @@ abstract class CMB2_Type_Base {
 			case 'concat_attrs':
 				return call_user_func_array( array( $this->types, $method ), $arguments );
 			default:
-				throw new Exception( sprintf( esc_html__( 'Invalid %1$s method: %2$s', 'cmb2' ), __CLASS__, esc_attr($method) ) );
+				/* translators: %1$s is a type of method. %2$s is the specific method */
+				throw new Exception( sprintf( esc_html__( 'Invalid %1$s method: %2$s', 'power-bi-embedded' ), __CLASS__, esc_attr($method) ) );
 		}
 	}
 
@@ -170,7 +171,8 @@ abstract class CMB2_Type_Base {
 			case 'field':
 				return $this->types->field;
 			default:
-				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'cmb2' ), __CLASS__, esc_attr($field) ) );
+				/* translators: %1$s is a type of property. %2$s is the specific property */
+				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'power-bi-embedded' ), __CLASS__, esc_attr($field) ) );
 		}
 	}
 

@@ -195,8 +195,8 @@ class CMB2_Hook_Finder {
 
 				foreach ( $actions as $hook => $details ) {
 					echo '<tr>
-						<td>' . self::get_hook_link( $hook, $details ) . '</td>
-						<td>' . implode( ', ', array_unique( $details['file'] ) ) . '</td>
+						<td>' . esc_html(self::get_hook_link( esc_html($hook), esc_html($details) )) . '</td>
+						<td>' . implode( ', ', esc_html(array_unique( $details['file'] )) ) . '</td>
 					</tr>' . "\n";
 				}
 
@@ -207,8 +207,8 @@ class CMB2_Hook_Finder {
 
 				foreach ( $filters as $hook => $details ) {
 					echo '<tr>
-						<td>' . self::get_hook_link( $hook, $details ) . '</td>
-						<td>' . implode( ', ', array_unique( $details['file'] ) ) . '</td>
+						<td>' . esc_html(self::get_hook_link( $hook, esc_html($details) )) . '</td>
+						<td>' . implode( ', ', esc_html(array_unique( $details['file'] )) ) . '</td>
 					</tr>' . "\n";
 				}
 
