@@ -4,6 +4,12 @@
  *
  * @package Power_Bi
  */
+
+/** helper function sanitize inputs */
+function power_bi_sanitize_settings($input) {
+	return $input;
+}
+
 class Power_Bi_Settings
 {
 	/**
@@ -43,13 +49,15 @@ class Power_Bi_Settings
 	{
 		add_submenu_page('edit.php?post_type=powerbi', __('Power BI Settings', 'power-bi-embedded'), __('Settings', 'power-bi-embedded'), 'manage_options', 'powerbi', array($this, 'power_bi__options_page'));
 	}
+
 	/**
 	 * [settings_init description]
 	 * @return [type] [description]
 	 */
 	public function settings_init()
 	{
-		register_setting('power_bi', 'power_bi_settings');
+		register_setting('power_bi', 'power_bi_settings', 'power_bi_sanitize_settings');
+
 		add_settings_section(
 			'power_bi_section',
 			__('Azure Authorization', 'power-bi-embedded'),

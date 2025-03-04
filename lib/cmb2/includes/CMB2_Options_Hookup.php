@@ -59,7 +59,7 @@ class CMB2_Options_Hookup extends CMB2_Hookup {
 		}
 
 		// Register setting to cmb2 group.
-		register_setting( 'power-bi-embedded', $this->option_key );
+		register_setting( 'power-bi-embedded', $this->option_key, function ($input) {return (sanitize_text_field($input));} );
 
 		// Handle saving the data.
 		add_action( 'admin_post_' . $this->option_key, array( $this, 'save_options' ) );
