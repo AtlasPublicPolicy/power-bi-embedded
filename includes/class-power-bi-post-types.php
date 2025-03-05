@@ -46,30 +46,30 @@ class Power_Bi_Post_Types
 	public function register_post_types()
 	{
 		$labels = array(
-			'name' => _x('Power BI Items', 'Post type general name', 'power-bi'),
-			'singular_name' => _x('Power BI', 'Post type singular name', 'power-bi'),
-			'menu_name' => _x('Power BI', 'Admin Menu text', 'power-bi'),
-			'name_admin_bar' => _x('Power BI', 'Add New on Toolbar', 'power-bi'),
-			'add_new' => __('Add New', 'power-bi'),
-			'add_new_item' => __('Add New Power BI', 'power-bi'),
-			'new_item' => __('New Power BI', 'power-bi'),
-			'edit_item' => __('Edit Power BI', 'power-bi'),
-			'view_item' => __('View Power BI', 'power-bi'),
-			'all_items' => __('All Power BI Items', 'power-bi'),
-			'search_items' => __('Search Power BI Items', 'power-bi'),
-			'parent_item_colon' => __('Parent Power BI Items:', 'power-bi'),
-			'not_found' => __('No Power BI found.', 'power-bi'),
-			'not_found_in_trash' => __('No Power BI found in Trash.', 'power-bi'),
-			'featured_image' => _x('Power BI Cover Image', 'Overrides the “Featured Image” phrase for this post type. Added in 4.3', 'power-bi'),
-			'set_featured_image' => _x('Set cover image', 'Overrides the “Set featured image” phrase for this post type. Added in 4.3', 'power-bi'),
-			'remove_featured_image' => _x('Remove cover image', 'Overrides the “Remove featured image” phrase for this post type. Added in 4.3', 'power-bi'),
-			'use_featured_image' => _x('Use as cover image', 'Overrides the “Use as featured image” phrase for this post type. Added in 4.3', 'power-bi'),
-			'archives' => _x('Power BI archives', 'The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4', 'power-bi'),
-			'insert_into_item' => _x('Insert into report', 'Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4', 'power-bi'),
-			'uploaded_to_this_item' => _x('Uploaded to this report', 'Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4', 'power-bi'),
-			'filter_items_list' => _x('Filter reports list', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4', 'power-bi'),
-			'items_list_navigation' => _x('Power BI Items list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'power-bi'),
-			'items_list' => _x('Power BI Items list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'power-bi'),
+			'name' => _x('Power BI Items', 'Post type general name', 'power-bi-embedded'),
+			'singular_name' => _x('Power BI', 'Post type singular name', 'power-bi-embedded'),
+			'menu_name' => _x('Power BI', 'Admin Menu text', 'power-bi-embedded'),
+			'name_admin_bar' => _x('Power BI', 'Add New on Toolbar', 'power-bi-embedded'),
+			'add_new' => __('Add New', 'power-bi-embedded'),
+			'add_new_item' => __('Add New Power BI', 'power-bi-embedded'),
+			'new_item' => __('New Power BI', 'power-bi-embedded'),
+			'edit_item' => __('Edit Power BI', 'power-bi-embedded'),
+			'view_item' => __('View Power BI', 'power-bi-embedded'),
+			'all_items' => __('All Power BI Items', 'power-bi-embedded'),
+			'search_items' => __('Search Power BI Items', 'power-bi-embedded'),
+			'parent_item_colon' => __('Parent Power BI Items:', 'power-bi-embedded'),
+			'not_found' => __('No Power BI found.', 'power-bi-embedded'),
+			'not_found_in_trash' => __('No Power BI found in Trash.', 'power-bi-embedded'),
+			'featured_image' => _x('Power BI Cover Image', 'Overrides the “Featured Image” phrase for this post type. Added in 4.3', 'power-bi-embedded'),
+			'set_featured_image' => _x('Set cover image', 'Overrides the “Set featured image” phrase for this post type. Added in 4.3', 'power-bi-embedded'),
+			'remove_featured_image' => _x('Remove cover image', 'Overrides the “Remove featured image” phrase for this post type. Added in 4.3', 'power-bi-embedded'),
+			'use_featured_image' => _x('Use as cover image', 'Overrides the “Use as featured image” phrase for this post type. Added in 4.3', 'power-bi-embedded'),
+			'archives' => _x('Power BI archives', 'The post type archive label used in nav menus. Default “Post Archives”. Added in 4.4', 'power-bi-embedded'),
+			'insert_into_item' => _x('Insert into report', 'Overrides the “Insert into post”/”Insert into page” phrase (used when inserting media into a post). Added in 4.4', 'power-bi-embedded'),
+			'uploaded_to_this_item' => _x('Uploaded to this report', 'Overrides the “Uploaded to this post”/”Uploaded to this page” phrase (used when viewing media attached to a post). Added in 4.4', 'power-bi-embedded'),
+			'filter_items_list' => _x('Filter reports list', 'Screen reader text for the filter links heading on the post type listing screen. Default “Filter posts list”/”Filter pages list”. Added in 4.4', 'power-bi-embedded'),
+			'items_list_navigation' => _x('Power BI Items list navigation', 'Screen reader text for the pagination heading on the post type listing screen. Default “Posts list navigation”/”Pages list navigation”. Added in 4.4', 'power-bi-embedded'),
+			'items_list' => _x('Power BI Items list', 'Screen reader text for the items list heading on the post type listing screen. Default “Posts list”/”Pages list”. Added in 4.4', 'power-bi-embedded'),
 		);
 		$args = array(
 			'labels' => $labels,
@@ -121,11 +121,11 @@ class Power_Bi_Post_Types
 				'type' => 'select',
 				'default' => 'report',
 				'options' => array(
-					'report' => __('Report', 'power-bi'),
-					'visual' => __('Report Visual', 'power-bi'),
-					'qna' => __('Q&A', 'power-bi'),
-					'dashboard' => __('Dashboard', 'power-bi'),
-					'tile' => __('Tile', 'power-bi'),
+					'report' => __('Report', 'power-bi-embedded'),
+					'visual' => __('Report Visual', 'power-bi-embedded'),
+					'qna' => __('Q&A', 'power-bi-embedded'),
+					'dashboard' => __('Dashboard', 'power-bi-embedded'),
+					'tile' => __('Tile', 'power-bi-embedded'),
 				),
 			));
 		$metabox_details->add_field(
@@ -136,9 +136,9 @@ class Power_Bi_Post_Types
 				'type' => 'select',
 				'default' => 'view',
 				'options' => array(
-					'view' => __('View Mode', 'power-bi'),
-					'edit' => __('Edit Mode', 'power-bi'),
-					'create' => __('Create Mode', 'power-bi'),
+					'view' => __('View Mode', 'power-bi-embedded'),
+					'edit' => __('Edit Mode', 'power-bi-embedded'),
+					'create' => __('Create Mode', 'power-bi-embedded'),
 				),
 				'attributes' => array(
 					'data-conditional-id' => $prefix . 'embed_type',
@@ -153,9 +153,9 @@ class Power_Bi_Post_Types
 				'type' => 'radio',
 				'default' => 'show_qna',
 				'options' => array(
-					'show_qna' => __('Show Q&A', 'power-bi'),
-					'show_qna_predefined' => __('Show Q&A with predefined question', 'power-bi'),
-					'show_a_predefined' => __('Show answer only with predefined question', 'power-bi'),
+					'show_qna' => __('Show Q&A', 'power-bi-embedded'),
+					'show_qna_predefined' => __('Show Q&A with predefined question', 'power-bi-embedded'),
+					'show_a_predefined' => __('Show answer only with predefined question', 'power-bi-embedded'),
 				),
 				'attributes' => array(
 					'data-conditional-id' => $prefix . 'embed_type',
@@ -310,8 +310,8 @@ class Power_Bi_Post_Types
 	}
 	public function set_custom_edit_powerbi_columns($columns)
 	{
-		$columns['type'] = __('Type', 'power-bi');
-		$columns['shortcode'] = __('Shortcode', 'power-bi');
+		$columns['type'] = __('Type', 'power-bi-embedded');
+		$columns['shortcode'] = __('Shortcode', 'power-bi-embedded');
 		return $columns;
 	}
 	public function custom_powerbi_column($column, $post_id)
@@ -320,17 +320,17 @@ class Power_Bi_Post_Types
 			case 'type':
 				$type = get_post_meta($post_id, '_power_bi_embed_type', true);
 				if (!empty($type)) {
-					echo $type;
+					echo esc_html($type);
 				} else {
-					_e('Unable to get type', 'power-bi');
+					esc_html_e('Unable to get type', 'power-bi-embedded');
 				}
 				break;
 			case 'shortcode':
-				$container_width = get_post_meta($post_id, '_power_bi_width', true);
-				$container_height = get_post_meta($post_id, '_power_bi_height', true);
+				$container_width = sanitize_text_field(get_post_meta($post_id, '_power_bi_width', true));
+				$container_height = sanitize_text_field(get_post_meta($post_id, '_power_bi_height', true));
 				$param_width = empty($container_width) ? '' : ' width="' . $container_width . '"';
 				$param_height = empty($container_height) ? '' : ' height="' . $container_height . '"';
-				echo '[powerbi id="' . $post_id . '"' . $param_width . $param_height . ']';
+				echo '[powerbi id="' . esc_html($post_id) . '"' . esc_html($param_width) . esc_html($param_height) . ']';
 				break;
 		}
 	}

@@ -90,6 +90,11 @@ class CMB2_JS {
 				self::colorpicker_frontend();
 			}
 
+			// Enqueue colorpicker
+			if ( ! wp_script_is( 'wp-color-picker', 'enqueued' ) ) {
+				wp_enqueue_script( 'wp-color-picker' );
+			}
+
 			if ( isset( $dependencies['wp-color-picker-alpha'] ) ) {
 				self::register_colorpicker_alpha();
 			}
@@ -110,12 +115,19 @@ class CMB2_JS {
 		$enqueue_wysiwyg = isset( $dependencies['cmb2-wysiwyg'] ) && $debug;
 		unset( $dependencies['cmb2-wysiwyg'] );
 
+		// if cmb2-char-counter.
+		$enqueue_char_counter = isset( $dependencies['cmb2-char-counter'] ) && $debug;
+		unset( $dependencies['cmb2-char-counter'] );
+
 		// Enqueue cmb JS.
-		wp_enqueue_script( self::$handle, CMB2_Utils::url( "js/cmb2{$min}.js" ), $dependencies, CMB2_VERSION, true );
+		wp_enqueue_script( self::$handle, CMB2_Utils::url( "js/cmb2{$min}.js" ), array_values( $dependencies ), CMB2_VERSION, true );
 
 		// if SCRIPT_DEBUG, we need to enqueue separately.
 		if ( $enqueue_wysiwyg ) {
 			wp_enqueue_script( 'cmb2-wysiwyg', CMB2_Utils::url( 'js/cmb2-wysiwyg.js' ), array( 'jquery', 'wp-util' ), CMB2_VERSION );
+		}
+		if ( $enqueue_char_counter ) {
+			wp_enqueue_script( 'cmb2-char-counter', CMB2_Utils::url( 'js/cmb2-char-counter.js' ), array( 'jquery', 'wp-util' ), CMB2_VERSION );
 		}
 
 		self::localize( $debug );
@@ -162,10 +174,10 @@ class CMB2_JS {
 		wp_register_script( 'iris', admin_url( 'js/iris.min.js' ), array( 'jquery-ui-draggable', 'jquery-ui-slider', 'jquery-touch-punch' ), CMB2_VERSION );
 		wp_register_script( 'wp-color-picker', admin_url( 'js/color-picker.min.js' ), array( 'iris' ), CMB2_VERSION );
 		wp_localize_script( 'wp-color-picker', 'wpColorPickerL10n', array(
-			'clear'         => esc_html__( 'Clear', 'cmb2' ),
-			'defaultString' => esc_html__( 'Default', 'cmb2' ),
-			'pick'          => esc_html__( 'Select Color', 'cmb2' ),
-			'current'       => esc_html__( 'Current Color', 'cmb2' ),
+			'clear'         => esc_html__( 'Clear', 'power-bi-embedded' ),
+			'defaultString' => esc_html__( 'Default', 'power-bi-embedded' ),
+			'pick'          => esc_html__( 'Select Color', 'power-bi-embedded' ),
+			'current'       => esc_html__( 'Current Color', 'power-bi-embedded' ),
 		) );
 	}
 
@@ -197,39 +209,39 @@ class CMB2_JS {
 				'date_picker'  => array(
 					'changeMonth'     => true,
 					'changeYear'      => true,
-					'dateFormat'      => _x( 'mm/dd/yy', 'Valid formatDate string for jquery-ui datepicker', 'cmb2' ),
-					'dayNames'        => explode( ',', esc_html__( 'Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday', 'cmb2' ) ),
-					'dayNamesMin'     => explode( ',', esc_html__( 'Su, Mo, Tu, We, Th, Fr, Sa', 'cmb2' ) ),
-					'dayNamesShort'   => explode( ',', esc_html__( 'Sun, Mon, Tue, Wed, Thu, Fri, Sat', 'cmb2' ) ),
-					'monthNames'      => explode( ',', esc_html__( 'January, February, March, April, May, June, July, August, September, October, November, December', 'cmb2' ) ),
-					'monthNamesShort' => explode( ',', esc_html__( 'Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec', 'cmb2' ) ),
-					'nextText'        => esc_html__( 'Next', 'cmb2' ),
-					'prevText'        => esc_html__( 'Prev', 'cmb2' ),
-					'currentText'     => esc_html__( 'Today', 'cmb2' ),
-					'closeText'       => esc_html__( 'Done', 'cmb2' ),
-					'clearText'       => esc_html__( 'Clear', 'cmb2' ),
+					'dateFormat'      => _x( 'mm/dd/yy', 'Valid formatDate string for jquery-ui datepicker', 'power-bi-embedded' ),
+					'dayNames'        => explode( ',', esc_html__( 'Sunday, Monday, Tuesday, Wednesday, Thursday, Friday, Saturday', 'power-bi-embedded' ) ),
+					'dayNamesMin'     => explode( ',', esc_html__( 'Su, Mo, Tu, We, Th, Fr, Sa', 'power-bi-embedded' ) ),
+					'dayNamesShort'   => explode( ',', esc_html__( 'Sun, Mon, Tue, Wed, Thu, Fri, Sat', 'power-bi-embedded' ) ),
+					'monthNames'      => explode( ',', esc_html__( 'January, February, March, April, May, June, July, August, September, October, November, December', 'power-bi-embedded' ) ),
+					'monthNamesShort' => explode( ',', esc_html__( 'Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec', 'power-bi-embedded' ) ),
+					'nextText'        => esc_html__( 'Next', 'power-bi-embedded' ),
+					'prevText'        => esc_html__( 'Prev', 'power-bi-embedded' ),
+					'currentText'     => esc_html__( 'Today', 'power-bi-embedded' ),
+					'closeText'       => esc_html__( 'Done', 'power-bi-embedded' ),
+					'clearText'       => esc_html__( 'Clear', 'power-bi-embedded' ),
 				),
 				'time_picker'  => array(
-					'timeOnlyTitle' => esc_html__( 'Choose Time', 'cmb2' ),
-					'timeText'      => esc_html__( 'Time', 'cmb2' ),
-					'hourText'      => esc_html__( 'Hour', 'cmb2' ),
-					'minuteText'    => esc_html__( 'Minute', 'cmb2' ),
-					'secondText'    => esc_html__( 'Second', 'cmb2' ),
-					'currentText'   => esc_html__( 'Now', 'cmb2' ),
-					'closeText'     => esc_html__( 'Done', 'cmb2' ),
-					'timeFormat'    => _x( 'hh:mm TT', 'Valid formatting string, as per http://trentrichardson.com/examples/timepicker/', 'cmb2' ),
+					'timeOnlyTitle' => esc_html__( 'Choose Time', 'power-bi-embedded' ),
+					'timeText'      => esc_html__( 'Time', 'power-bi-embedded' ),
+					'hourText'      => esc_html__( 'Hour', 'power-bi-embedded' ),
+					'minuteText'    => esc_html__( 'Minute', 'power-bi-embedded' ),
+					'secondText'    => esc_html__( 'Second', 'power-bi-embedded' ),
+					'currentText'   => esc_html__( 'Now', 'power-bi-embedded' ),
+					'closeText'     => esc_html__( 'Done', 'power-bi-embedded' ),
+					'timeFormat'    => _x( 'hh:mm TT', 'Valid formatting string, as per http://trentrichardson.com/examples/timepicker/', 'power-bi-embedded' ),
 					'controlType'   => 'select',
 					'stepMinute'    => 5,
 				),
 			),
 			'strings' => array(
-				'upload_file'  => esc_html__( 'Use this file', 'cmb2' ),
-				'upload_files' => esc_html__( 'Use these files', 'cmb2' ),
-				'remove_image' => esc_html__( 'Remove Image', 'cmb2' ),
-				'remove_file'  => esc_html__( 'Remove', 'cmb2' ),
-				'file'         => esc_html__( 'File:', 'cmb2' ),
-				'download'     => esc_html__( 'Download', 'cmb2' ),
-				'check_toggle' => esc_html__( 'Select / Deselect All', 'cmb2' ),
+				'upload_file'  => esc_html__( 'Use this file', 'power-bi-embedded' ),
+				'upload_files' => esc_html__( 'Use these files', 'power-bi-embedded' ),
+				'remove_image' => esc_html__( 'Remove Image', 'power-bi-embedded' ),
+				'remove_file'  => esc_html__( 'Remove', 'power-bi-embedded' ),
+				'file'         => esc_html__( 'File:', 'power-bi-embedded' ),
+				'download'     => esc_html__( 'Download', 'power-bi-embedded' ),
+				'check_toggle' => esc_html__( 'Select / Deselect All', 'power-bi-embedded' ),
 			),
 		);
 

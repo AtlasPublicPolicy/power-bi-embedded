@@ -11,7 +11,7 @@
  * @license   GPL-2.0+
  * @link      https://cmb2.io
  */
-class CMB2_Options_Hookup extends CMB2_hookup {
+class CMB2_Options_Hookup extends CMB2_Hookup {
 
 	/**
 	 * The object type we are performing the hookup for
@@ -59,7 +59,7 @@ class CMB2_Options_Hookup extends CMB2_hookup {
 		}
 
 		// Register setting to cmb2 group.
-		register_setting( 'cmb2', $this->option_key );
+		register_setting( 'power-bi-embedded', $this->option_key, function ($input) {return (sanitize_text_field($input));} );
 
 		// Handle saving the data.
 		add_action( 'admin_post_' . $this->option_key, array( $this, 'save_options' ) );
@@ -68,7 +68,7 @@ class CMB2_Options_Hookup extends CMB2_hookup {
 		$hook = $this->cmb->prop( 'admin_menu_hook' );
 
 		// Hook in to add our menu.
-		add_action( $hook, array( $this, 'options_page_menu_hooks' ) );
+		add_action( $hook, array( $this, 'options_page_menu_hooks' ), $this->get_priority() );
 
 		// If in the network admin, need to use get/update_site_option.
 		if ( 'network_admin_menu' === $hook ) {
@@ -116,7 +116,7 @@ class CMB2_Options_Hookup extends CMB2_hookup {
 
 		if ( $this->cmb->prop( 'cmb_styles' ) ) {
 			// Include CMB CSS in the head to avoid FOUC.
-			add_action( "admin_print_styles-{$page_hook}", array( 'CMB2_hookup', 'enqueue_cmb_css' ) );
+			add_action( "admin_print_styles-{$page_hook}", array( 'CMB2_Hookup', 'enqueue_cmb_css' ) );
 		}
 
 		$this->maybe_register_message();
@@ -136,11 +136,11 @@ class CMB2_Options_Hookup extends CMB2_hookup {
 		$is_updated      = $should_notify && 'true' === $_GET['settings-updated'];
 		$setting         = "{$this->option_key}-notices";
 		$code            = '';
-		$message         = __( 'Nothing to update.', 'cmb2' );
+		$message         = __( 'Nothing to update.', 'power-bi-embedded' );
 		$type            = 'notice-warning';
 
 		if ( $is_updated ) {
-			$message = __( 'Settings updated.', 'cmb2' );
+			$message = __( 'Settings updated.', 'power-bi-embedded' );
 			$type    = 'updated';
 		}
 
@@ -194,25 +194,37 @@ class CMB2_Options_Hookup extends CMB2_hookup {
 			return call_user_func( $callback, $this );
 		}
 
-		$tabs = $this->get_tab_group_tabs();
 		?>
-		<div class="wrap cmb2-options-page option-<?php echo $this->option_key; ?>">
+		<div class="wrap cmb2-options-page option-<?php echo esc_attr( sanitize_html_class( $this->option_key ) ); ?>">
 			<?php if ( $this->cmb->prop( 'title' ) ) : ?>
 				<h2><?php echo wp_kses_post( $this->cmb->prop( 'title' ) ); ?></h2>
 			<?php endif; ?>
-			<?php if ( ! empty( $tabs ) ) : ?>
-				<h2 class="nav-tab-wrapper">
-					<?php foreach ( $tabs as $option_key => $tab_title ) : ?>
-						<a class="nav-tab<?php if ( self::is_page( $option_key ) ) : ?> nav-tab-active<?php endif; ?>" href="<?php menu_page_url( $option_key ); ?>"><?php echo wp_kses_post( $tab_title ); ?></a>
-					<?php endforeach; ?>
-				</h2>
-			<?php endif; ?>
-			<form class="cmb-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" id="<?php echo $this->cmb->cmb_id; ?>" enctype="multipart/form-data" encoding="multipart/form-data">
+			<?php $this->options_page_tab_nav_output(); ?>
+			<form class="cmb-form" action="<?php echo esc_url( admin_url( 'admin-post.php' ) ); ?>" method="POST" id="<?php echo esc_attr($this)->cmb->cmb_id; ?>" enctype="multipart/form-data" encoding="multipart/form-data">
 				<input type="hidden" name="action" value="<?php echo esc_attr( $this->option_key ); ?>">
 				<?php $this->options_page_metabox(); ?>
 				<?php submit_button( esc_attr( $this->cmb->prop( 'save_button' ) ), 'primary', 'submit-cmb' ); ?>
 			</form>
 		</div>
+		<?php
+	}
+
+	/**
+	 * Display options-page Tab Navigation output.
+	 *
+	 * @since 2.9.0
+	 */
+	public function options_page_tab_nav_output() {
+		$tabs = $this->get_tab_group_tabs();
+		if ( empty( $tabs ) ) {
+			return;
+		}
+		?>
+		<h2 class="nav-tab-wrapper">
+			<?php foreach ( $tabs as $option_key => $tab_title ) : ?>
+				<a class="nav-tab<?php if ( self::is_page( $option_key ) ) : ?> nav-tab-active<?php endif; ?>" href="<?php menu_page_url( $option_key ); ?>"><?php echo wp_kses_post( $tab_title ); ?></a>
+			<?php endforeach; ?>
+		</h2>
 		<?php
 	}
 
@@ -259,7 +271,7 @@ class CMB2_Options_Hookup extends CMB2_hookup {
 			}
 		}
 
-		return $tabs;
+		return apply_filters( 'cmb2_tab_group_tabs', $tabs, $tab_group );
 	}
 
 	/**
@@ -354,7 +366,8 @@ class CMB2_Options_Hookup extends CMB2_hookup {
 			case 'cmb':
 				return $this->{$field};
 			default:
-				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'cmb2' ), __CLASS__, $field ) );
+				/* translators: %1$s is a type of property. %2$s is the specific property */
+				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'power-bi-embedded' ), __CLASS__, esc_attr($field) ) );
 		}
 	}
 }

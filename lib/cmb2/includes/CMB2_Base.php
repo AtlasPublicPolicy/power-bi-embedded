@@ -246,7 +246,7 @@ abstract class CMB2_Base {
 	 * @param string $param Field parameter.
 	 */
 	public function peform_param_callback( $param ) {
-		echo $this->get_param_callback_result( $param );
+		echo esc_attr($this->get_param_callback_result( $param ));
 	}
 
 	/**
@@ -413,17 +413,20 @@ abstract class CMB2_Base {
 	 */
 	protected function deprecated_param( $function, $version, $message = null ) {
 
+		$args = func_get_args();
+
 		if ( is_numeric( $message ) ) {
-			$args = func_get_args();
 
 			switch ( $message ) {
 
 				case self::DEPRECATED_PARAM:
-					$message = sprintf( __( 'The "%1$s" field parameter has been deprecated in favor of the "%2$s" parameter.', 'cmb2' ), $args[3], $args[4] );
+					/* translators: %1$s is replaced with the %2$s parameter */
+					$message = sprintf( __( 'The "%1$s" field parameter has been deprecated in favor of the "%2$s" parameter.', 'power-bi-embedded' ), $args[3], $args[4] );
 					break;
 
 				case self::DEPRECATED_CB_PARAM:
-					$message = sprintf( __( 'Using the "%1$s" field parameter as a callback has been deprecated in favor of the "%2$s" parameter.', 'cmb2' ), $args[3], $args[4] );
+					/* translators: %1$s is replaced with the %2$s parameter */
+					$message = sprintf( __( 'Using the "%1$s" field parameter as a callback has been deprecated in favor of the "%2$s" parameter.', 'power-bi-embedded' ), $args[3], $args[4] );
 					break;
 
 				default:
@@ -453,15 +456,19 @@ abstract class CMB2_Base {
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG && apply_filters( 'deprecated_argument_trigger_error', true ) ) {
 			if ( function_exists( '__' ) ) {
 				if ( ! is_null( $message ) ) {
-					trigger_error( sprintf( __( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'cmb2' ), $function, $version, $message ) );
+					/* translators: %1$s is replaced with the %2$s parameter */
+					trigger_error( sprintf( esc_html__( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'power-bi-embedded' ), esc_html($function), esc_html($version), esc_html($message) ) );
 				} else {
-					trigger_error( sprintf( __( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'cmb2' ), $function, $version ) );
+					/* translators: %1$s has been deprecated */
+					trigger_error( sprintf(esc_html__( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'power-bi-embedded' ), esc_html($function), esc_html($version) ) );
 				}
 			} else {
 				if ( ! is_null( $message ) ) {
-					trigger_error( sprintf( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', $function, $version, $message ) );
+					/* translators: %1$s is replaced with the %2$s parameter */
+					trigger_error( sprintf( esc_html__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'power-bi-embedded'), esc_html($function), esc_html($version), esc_html($message) ) );
 				} else {
-					trigger_error( sprintf( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', $function, $version ) );
+					/* translators: %1$s has been deprecated */
+					trigger_error( sprintf( esc_html__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'power-bi-embedded'), esc_html($function), esc_html($version) ) );
 				}
 			}
 		}
@@ -488,7 +495,8 @@ abstract class CMB2_Base {
 			case 'object_type':
 				return $this->{$field};
 			default:
-				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'cmb2' ), __CLASS__, $field ) );
+				/* translators: Invalid %1$s property */
+				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'power-bi-embedded' ), __CLASS__, esc_attr($field) ) );
 		}
 	}
 
@@ -506,7 +514,8 @@ abstract class CMB2_Base {
 		$object_class = strtolower( get_class( $this ) );
 
 		if ( ! has_filter( "{$object_class}_inherit_{$method}" ) ) {
-			throw new Exception( sprintf( esc_html__( 'Invalid %1$s method: %2$s', 'cmb2' ), get_class( $this ), $method ) );
+			/* translators: Invalid %1$s method */
+			throw new Exception( sprintf( esc_html__( 'Invalid %1$s method: %2$s', 'power-bi-embedded' ), esc_attr(get_class( $this )), esc_attr($method) ) );
 		}
 
 		array_unshift( $args, $this );

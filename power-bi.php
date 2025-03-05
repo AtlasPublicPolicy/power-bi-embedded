@@ -1,15 +1,14 @@
 <?php
 /**
- * Plugin Name: Power BI Embedded for WordPress
+ * Plugin Name: Power BI Embedded
  * Plugin URI: https://github.com/atlaspolicy/wordpress-power-bi-embedded
  * Description: Use Power BI Embedded to embed dashboards, reports, Q&A, visuals, and tiles in your WordPress website.
- * Version: 1.1.7
+ * Version: 1.1.8
  * Author: Atlas Public Policy
  * Author URI: http://www.atlaspolicy.com
- * Text Domain: power-bi
- * Domain Path: /languages/
+ * Text Domain: power-bi-embedded
+ * Domain Path: /lib/cmb2/languages
  * License: GNU General Public License v3.0
- *
  * @package Power_Bi
  */
 if (!defined('ABSPATH')) {
@@ -18,7 +17,7 @@ if (!defined('ABSPATH')) {
 /**
  * Currently plugin version.
  */
-define('POWER_BI_VERSION', '1.1.7');
+define('POWER_BI_VERSION', '1.1.8');
 define('POWER_BI_PLUGIN_DIR', untrailingslashit(plugin_dir_path(__FILE__)));
 define('POWER_BI_PLUGIN_URL', untrailingslashit(plugins_url(basename(plugin_dir_path(__FILE__)), basename(__FILE__))));
 /**

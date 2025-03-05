@@ -21,6 +21,14 @@
 class CMB2 extends CMB2_Base {
 
 	/**
+	 * Supported CMB2 object types
+	 *
+	 * @var array
+	 * @since 2.11.0
+	 */
+	protected $core_object_types = array( 'post', 'user', 'comment', 'term', 'options-page' );
+
+	/**
 	 * The object properties name.
 	 *
 	 * @var   string
@@ -74,7 +82,7 @@ class CMB2 extends CMB2_Base {
 		 * Comments screen contexts include 'normal' and 'side'. Default is 'normal'.
 		 */
 		'context'                 => 'normal',
-		'priority'                => 'high',
+		'priority'                => 'high', // Or 10 for options pages.
 		'show_names'              => true, // Show field names on the left.
 		'show_on_cb'              => null, // Callback to determine if metabox should display.
 		'show_on'                 => array(), // Post IDs or page templates to display this metabox. overrides 'show_on_cb'.
@@ -196,7 +204,7 @@ class CMB2 extends CMB2_Base {
 	public function __construct( $config, $object_id = 0 ) {
 
 		if ( empty( $config['id'] ) ) {
-			wp_die( esc_html__( 'Metabox configuration is required to have an ID parameter.', 'cmb2' ) );
+			wp_die( esc_html__( 'Metabox configuration is required to have an ID parameter.', 'power-bi-embedded' ) );
 		}
 
 		$this->cmb_id = $config['id'];
@@ -208,6 +216,15 @@ class CMB2 extends CMB2_Base {
 		$this->object_id( $object_id );
 
 		if ( $this->is_options_page_mb() ) {
+
+			// Check initial priority.
+			if ( empty( $config['priority'] ) ) {
+
+				// If not explicitly defined, Reset the priority to 10
+				// Fixes https://github.com/CMB2/CMB2/issues/1410.
+				$this->meta_box['priority'] = 10;
+			}
+
 			$this->init_options_mb();
 		}
 
@@ -229,7 +246,7 @@ class CMB2 extends CMB2_Base {
 		do_action( "cmb2_init_{$this->cmb_id}", $this );
 
 		// Hook in the hookup... how meta.
-		add_action( "cmb2_init_hookup_{$this->cmb_id}", array( 'CMB2_hookup', 'maybe_init_and_hookup' ) );
+		add_action( "cmb2_init_hookup_{$this->cmb_id}", array( 'CMB2_Hookup', 'maybe_init_and_hookup' ) );
 
 		// Hook in the rest api functionality.
 		add_action( "cmb2_init_hookup_{$this->cmb_id}", array( 'CMB2_REST', 'maybe_init_and_hookup' ) );
@@ -361,13 +378,19 @@ class CMB2 extends CMB2_Base {
 		 */
 		$classes = apply_filters( 'cmb2_wrap_classes', $classes, $this );
 
-		// Clean up.
-		$classes = array_map( 'strip_tags', array_filter( $classes ) );
+		$split = array();
+		foreach ( array_filter( $classes ) as $class ) {
+			foreach ( explode( ' ', $class ) as $_class ) {
+				// Clean up & sanitize.
+				$split[] = sanitize_html_class( strip_tags( $_class ) );
+			}
+		}
+		$classes = $split;
 
 		// Remove any duplicates.
 		$classes = array_unique( $classes );
 
-		// Make a string.
+		// Make it a string.
 		return implode( ' ', $classes );
 	}
 
@@ -502,16 +525,16 @@ class CMB2 extends CMB2_Base {
 		$label     = $field_group->args( 'name' );
 		$group_val = (array) $field_group->value();
 
-		echo '<div class="cmb-row cmb-repeat-group-wrap ', esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="', esc_attr( $field_group->id() ), '" id="', esc_attr( $field_group->id() ), '_repeat" ', $this->group_wrap_attributes( $field_group ), '>';
+		echo '<div class="cmb-row cmb-repeat-group-wrap ', esc_attr( $field_group->row_classes() ), '" data-fieldtype="group"><div class="cmb-td"><div data-groupid="', esc_attr( $field_group->id() ), '" id="', esc_attr( $field_group->id() ), '_repeat" ', esc_attr($this)->group_wrap_attributes( $field_group ), '>';
 
 		if ( $desc || $label ) {
 			$class = $desc ? ' cmb-group-description' : '';
-			echo '<div class="cmb-row', $class, '"><div class="cmb-th">';
+			echo '<div class="cmb-row', esc_attr($class), '"><div class="cmb-th">';
 			if ( $label ) {
-				echo '<h2 class="cmb-group-name">', $label, '</h2>';
+				echo '<h2 class="cmb-group-name">', esc_attr($label), '</h2>';
 			}
 			if ( $desc ) {
-				echo '<p class="cmb2-metabox-description">', $desc, '</p>';
+				echo '<p class="cmb2-metabox-description">', esc_attr($desc), '</p>';
 			}
 			echo '</div></div>';
 		}
@@ -526,7 +549,7 @@ class CMB2 extends CMB2_Base {
 		}
 
 		if ( $field_group->args( 'repeatable' ) ) {
-			echo '<div class="cmb-row"><div class="cmb-td"><p class="cmb-add-row"><button type="button" data-selector="', esc_attr( $field_group->id() ), '_repeat" data-grouptitle="', esc_attr( $field_group->options( 'group_title' ) ), '" class="cmb-add-group-row button-secondary">', $field_group->options( 'add_button' ), '</button></p></div></div>';
+			echo '<div class="cmb-row"><div class="cmb-td"><p class="cmb-add-row"><button type="button" data-selector="', esc_attr( $field_group->id() ), '_repeat" data-grouptitle="', esc_attr( $field_group->options( 'group_title' ) ), '" class="cmb-add-group-row button-secondary">', esc_attr($field_group->options( 'add_button' )), '</button></p></div></div>';
 		}
 
 		echo '</div></div></div>';
@@ -568,10 +591,10 @@ class CMB2 extends CMB2_Base {
 		$atts = array();
 		foreach ( $group_wrap_attributes as $att => $att_value ) {
 			if ( ! CMB2_Utils::is_data_attribute( $att ) ) {
-				$att_value = htmlspecialchars( $att_value );
+				$att_value = htmlspecialchars( $att_value, ENT_COMPAT );
 			}
 
-			$atts[ sanitize_html_class( $att ) ] = sanitize_text_field( strip_tags( $att_value ) );
+			$atts[ sanitize_html_class( $att ) ] = sanitize_text_field( $att_value );
 		}
 
 		return CMB2_Utils::concat_attrs( $atts );
@@ -593,15 +616,15 @@ class CMB2 extends CMB2_Base {
 		$confirm_deletion = ! empty( $confirm_deletion ) ? $confirm_deletion : '';
 
 		echo '
-		<div id="cmb-group-', $field_group->id(), '-', $field_group->index, '" class="postbox cmb-row cmb-repeatable-grouping', $closed_class, '" data-iterator="', $field_group->index, '">';
+		<div id="cmb-group-', esc_attr($field_group->id()), '-', esc_attr($field_group->index), '" class="postbox cmb-row cmb-repeatable-grouping', esc_attr($closed_class), '" data-iterator="', esc_attr($field_group->index), '">';
 
 		if ( $field_group->args( 'repeatable' ) ) {
-			echo '<button type="button" data-selector="', $field_group->id(), '_repeat" data-confirm="', esc_attr( $confirm_deletion ), '" class="dashicons-before dashicons-no-alt cmb-remove-group-row" title="', esc_attr( $field_group->options( 'remove_button' ) ), '"></button>';
+			echo '<button type="button" data-selector="', esc_attr($field_group->id()), '_repeat" data-confirm="', esc_attr( $confirm_deletion ), '" class="dashicons-before dashicons-no-alt cmb-remove-group-row" title="', esc_attr( $field_group->options( 'remove_button' ) ), '"></button>';
 		}
 
 			echo '
-			<div class="cmbhandle" title="' , esc_attr__( 'Click to toggle', 'cmb2' ), '"><br></div>
-			<h3 class="cmb-group-title cmbhandle-title"><span>', $field_group->replace_hash( $field_group->options( 'group_title' ) ), '</span></h3>
+			<div class="cmbhandle" title="' , esc_attr__( 'Click to toggle', 'power-bi-embedded' ), '"><br></div>
+			<h3 class="cmb-group-title cmbhandle-title"><span>', esc_attr($field_group->replace_hash( $field_group->options( 'group_title' ) )), '</span></h3>
 
 			<div class="inside cmb-td cmb-nested cmb-field-list">';
 				// Loop and render repeatable group fields.
@@ -624,7 +647,7 @@ class CMB2 extends CMB2_Base {
 			echo '
 					<div class="cmb-row cmb-remove-field-row">
 						<div class="cmb-remove-row">
-							<button type="button" data-selector="', $field_group->id(), '_repeat" data-confirm="', esc_attr( $confirm_deletion ), '" class="cmb-remove-group-row cmb-remove-group-row-button alignright button-secondary">', $field_group->options( 'remove_button' ), '</button>
+							<button type="button" data-selector="', esc_attr($field_group->id()), '_repeat" data-confirm="', esc_attr( $confirm_deletion ), '" class="cmb-remove-group-row cmb-remove-group-row-button alignright button-secondary">', esc_attr($field_group->options( 'remove_button' )), '</button>
 						</div>
 					</div>
 					';
@@ -912,7 +935,7 @@ class CMB2 extends CMB2_Base {
 			return;
 		}
 
-		$old        = $field_group->get_data();
+		$old = $field_group->get_data();
 		// Check if group field has sanitization_cb.
 		$group_vals = $field_group->sanitization_cb( $this->data_to_save[ $base_id ] );
 		$saved      = array();
@@ -1008,17 +1031,17 @@ class CMB2 extends CMB2_Base {
 		// Try to get our object ID from the global space.
 		switch ( $this->object_type() ) {
 			case 'user':
-				$object_id = isset( $_REQUEST['user_id'] ) ? wp_unslash( $_REQUEST['user_id'] ) : $object_id;
+				$object_id = isset( $_REQUEST['user_id'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['user_id'] ) ) : $object_id;
 				$object_id = ! $object_id && 'user-new.php' !== $pagenow && isset( $GLOBALS['user_ID'] ) ? $GLOBALS['user_ID'] : $object_id;
 				break;
 
 			case 'comment':
-				$object_id = isset( $_REQUEST['c'] ) ? wp_unslash( $_REQUEST['c'] ) : $object_id;
+				$object_id = isset( $_REQUEST['c'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['c'] ) ) : $object_id;
 				$object_id = ! $object_id && isset( $GLOBALS['comments']->comment_ID ) ? $GLOBALS['comments']->comment_ID : $object_id;
 				break;
 
 			case 'term':
-				$object_id = isset( $_REQUEST['tag_ID'] ) ? wp_unslash( $_REQUEST['tag_ID'] ) : $object_id;
+				$object_id = isset( $_REQUEST['tag_ID'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['tag_ID'] ) ) : $object_id;
 				break;
 
 			case 'options-page':
@@ -1030,12 +1053,22 @@ class CMB2 extends CMB2_Base {
 
 			default:
 				$object_id = isset( $GLOBALS['post']->ID ) ? $GLOBALS['post']->ID : $object_id;
-				$object_id = isset( $_REQUEST['post'] ) ? wp_unslash( $_REQUEST['post'] ) : $object_id;
+				$object_id = isset( $_REQUEST['post'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['post'] ) ) : $object_id;
 				break;
 		}
 
+		/**
+		 * Filter the object id.
+		 *
+		 * @since  {{next}}
+		 *
+		 * @param  integer|string $object_id Object ID.
+		 * @param  CMB2           $cmb       This CMB2 object.
+		 */
+		$object_id = apply_filters( 'cmb2_set_object_id', $object_id, $this );
+
 		// reset to id or 0.
-		$this->object_id = $object_id ? $object_id : 0;
+		$this->object_id = ! empty( $object_id ) ? $object_id : 0;
 
 		return $this->object_id;
 	}
@@ -1051,38 +1084,42 @@ class CMB2 extends CMB2_Base {
 			return $this->mb_object_type;
 		}
 
+		$found_type = '';
+
 		if ( $this->is_options_page_mb() ) {
-			$this->mb_object_type = 'options-page';
-			return $this->mb_object_type;
-		}
+			$found_type = 'options-page';
+		} else {
+			$registered_types = $this->box_types();
 
-		$registered_types = $this->box_types();
-
-		$type = '';
-
-		// if it's an array of one, extract it.
-		if ( 1 === count( $registered_types ) ) {
-			$last = end( $registered_types );
-			if ( is_string( $last ) ) {
-				$type = $last;
+			// if it's an array of one, extract it.
+			if ( 1 === count( $registered_types ) ) {
+				$last = end( $registered_types );
+				if ( is_string( $last ) ) {
+					$found_type = $last;
+				}
+			} else {
+				$current_object_type = $this->current_object_type();
+				if ( in_array( $current_object_type, $registered_types, true ) ) {
+					$found_type = $current_object_type;
+				}
 			}
-		} elseif ( ( $curr_type = $this->current_object_type() ) && in_array( $curr_type, $registered_types, true ) ) {
-			$type = $curr_type;
 		}
 
 		// Get our object type.
-		switch ( $type ) {
+		$mb_object_type = $this->is_supported_core_object_type( $found_type )
+			? $found_type
+			: 'post';
 
-			case 'user':
-			case 'comment':
-			case 'term':
-				$this->mb_object_type = $type;
-				break;
-
-			default:
-				$this->mb_object_type = 'post';
-				break;
-		}
+		/**
+		 * Filter the metabox object type.
+		 *
+		 * @since {{next}}
+		 *
+		 * @param string $mb_object_type The metabox object type.
+		 * @param string $found_type     The found object type.
+		 * @param CMB2   $cmb            This CMB2 object.
+		 */
+		$this->mb_object_type = apply_filters( 'cmb2_set_box_object_type', $mb_object_type, $found_type, $this );
 
 		return $this->mb_object_type;
 	}
@@ -1097,6 +1134,30 @@ class CMB2 extends CMB2_Base {
 	 */
 	public function box_types( $fallback = array() ) {
 		return CMB2_Utils::ensure_array( $this->prop( 'object_types' ), $fallback );
+	}
+
+	/**
+	 * Check if given object_type(s) matches any of the registered object types or
+	 * taxonomies for this box.
+	 *
+	 * @since  2.7.0
+	 * @param  string|array $object_types The object type(s) to check.
+	 * @param  array        $fallback     Fallback object_types value.
+	 *
+	 * @return bool Whether given object type(s) are registered to this box.
+	 */
+	public function is_box_type( $object_types = array(), $fallback = array() ) {
+		$object_types = (array) $object_types;
+		$box_types    = $this->box_types( $fallback );
+
+		if ( in_array( 'term', $box_types, true ) ) {
+			$taxonomies = CMB2_Utils::ensure_array( $this->prop( 'taxonomies' ) );
+			$box_types = array_merge( $box_types, $taxonomies );
+		}
+
+		$found = array_intersect( $object_types, $box_types );
+
+		return ! empty( $found );
 	}
 
 	/**
@@ -1353,7 +1414,7 @@ class CMB2 extends CMB2_Base {
 
 		list( $field_id, $sub_field_id ) = $ids;
 
-		$index = implode( '', $ids ) . ( $field_group ? $field_group->index : '' );
+		$index = $field_id . ( $sub_field_id ? '|' . $sub_field_id : '' ) . ( $field_group ? '|' . $field_group->index : '' );
 
 		if ( array_key_exists( $index, $this->fields ) && ! $reset_cached ) {
 			return $this->fields[ $index ];
@@ -1461,40 +1522,6 @@ class CMB2 extends CMB2_Base {
 			return false;
 		}
 
-		// Perform some field-type-specific initiation actions.
-		switch ( $field['type'] ) {
-			case 'file':
-			case 'file_list':
-				// Initiate attachment JS hooks.
-				add_filter( 'wp_prepare_attachment_for_js', array( 'CMB2_Type_File_Base', 'prepare_image_sizes_for_js' ), 10, 3 );
-				break;
-
-			case 'oembed':
-				// Initiate oembed Ajax hooks.
-				cmb2_ajax();
-				break;
-
-			case 'group':
-				if ( empty( $field['render_row_cb'] ) ) {
-					$field['render_row_cb'] = array( $this, 'render_group_callback' );
-				}
-				break;
-			case 'colorpicker':
-				// https://github.com/JayWood/CMB2_RGBa_Picker
-				// Dequeue the rgba_colorpicker custom field script if it is used,
-				// since we now enqueue our own more current version.
-				add_action( 'admin_enqueue_scripts', array( 'CMB2_Type_Colorpicker', 'dequeue_rgba_colorpicker_script' ), 99 );
-				break;
-		}
-
-		if ( isset( $field['column'] ) && false !== $field['column'] ) {
-			$field = $this->define_field_column( $field );
-		}
-
-		if ( isset( $field['taxonomy'] ) && ! empty( $field['remove_default'] ) ) {
-			$this->tax_metaboxes_to_remove[ $field['taxonomy'] ] = $field['taxonomy'];
-		}
-
 		$this->_add_field_to_array(
 			$field,
 			$this->meta_box['fields'],
@@ -1502,26 +1529,6 @@ class CMB2 extends CMB2_Base {
 		);
 
 		return $field['id'];
-	}
-
-	/**
-	 * Defines a field's column if requesting to be show in admin columns.
-	 *
-	 * @since  2.2.3
-	 * @param  array $field Metabox field config array.
-	 * @return array         Modified metabox field config array.
-	 */
-	protected function define_field_column( array $field ) {
-		$this->has_columns = true;
-
-		$column = is_array( $field['column'] ) ? $field['column'] : array();
-
-		$field['column'] = wp_parse_args( $column, array(
-			'name'     => isset( $field['name'] ) ? $field['name'] : '',
-			'position' => false,
-		) );
-
-		return $field;
 	}
 
 	/**
@@ -1558,6 +1565,47 @@ class CMB2 extends CMB2_Base {
 	}
 
 	/**
+	 * Perform some field-type-specific initiation actions.
+	 *
+	 * @since  2.7.0
+	 * @param  array $field Metabox field config array.
+	 * @return void
+	 */
+	protected function field_actions( $field ) {
+		$field = CMB2_Hookup_Field::init( $field, $this );
+
+		if ( isset( $field['column'] ) && false !== $field['column'] ) {
+			$field = $this->define_field_column( $field );
+		}
+
+		if ( isset( $field['taxonomy'] ) && ! empty( $field['remove_default'] ) ) {
+			$this->tax_metaboxes_to_remove[ $field['taxonomy'] ] = $field['taxonomy'];
+		}
+
+		return $field;
+	}
+
+	/**
+	 * Defines a field's column if requesting to be show in admin columns.
+	 *
+	 * @since  2.2.3
+	 * @param  array $field Metabox field config array.
+	 * @return array         Modified metabox field config array.
+	 */
+	protected function define_field_column( array $field ) {
+		$this->has_columns = true;
+
+		$column = is_array( $field['column'] ) ? $field['column'] : array();
+
+		$field['column'] = wp_parse_args( $column, array(
+			'name'     => isset( $field['name'] ) ? $field['name'] : '',
+			'position' => false,
+		) );
+
+		return $field;
+	}
+
+	/**
 	 * Add a field array to a fields array in desired position
 	 *
 	 * @since 2.0.2
@@ -1566,6 +1614,8 @@ class CMB2 extends CMB2_Base {
 	 * @param integer $position Optionally specify a position in the array to be inserted.
 	 */
 	protected function _add_field_to_array( $field, &$fields, $position = 0 ) {
+		$field = $this->field_actions( $field );
+
 		if ( $position ) {
 			CMB2_Utils::array_insert( $fields, array( $field['id'] => $field ), $position );
 		} else {
@@ -1744,6 +1794,16 @@ class CMB2 extends CMB2_Base {
 	}
 
 	/**
+	 * Whether given object type is one of the core supported object types.
+	 *
+	 * @since  2.11.0
+	 * @return bool
+	 */
+	public function is_supported_core_object_type( $object_type ) {
+		return in_array( $object_type, $this->core_object_types, true );
+	}
+
+	/**
 	 * Magic getter for our object.
 	 *
 	 * @param  string $property Object property.
@@ -1755,6 +1815,7 @@ class CMB2 extends CMB2_Base {
 			case 'updated':
 			case 'has_columns':
 			case 'tax_metaboxes_to_remove':
+			case 'core_object_types':
 				return $this->{$property};
 			default:
 				return parent::__get( $property );

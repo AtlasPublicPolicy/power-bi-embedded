@@ -51,8 +51,15 @@ class Power_Bi_Shortcodes
 		$container_height = empty($height) ? get_post_meta($id, '_power_bi_height', true) : $height;
 		$powerbi_js = $this->powerbi_js($id);
 		ob_start();
-		echo '<div id="powerbi-embedded-' . $id . '" style="height: ' . $container_height . '; width: ' . $container_width . ';"></div>';
-		echo $powerbi_js;
+		echo '<div id="powerbi-embedded-' . esc_html($id) . '" style="height: ' . esc_html($container_height) . '; width: ' . esc_html($container_width) . ';"></div>';
+		echo wp_kses($powerbi_js,
+			[
+				'script' => array(
+					'type' => array(),
+					'src' => array(),
+				),
+			]
+		);
 		return ob_get_clean();
 	}
 	public function powerbi_js($id)
@@ -66,16 +73,16 @@ class Power_Bi_Shortcodes
 		// Common metas
 		$token_type = 'Aad';
 		$api_url = "https://app.powerbi.com/";
-		$embed_type = get_post_meta($id, '_power_bi_embed_type', true);
-		$dashboard_id = get_post_meta($id, '_power_bi_dashboard_id', true);
-		$group_id = get_post_meta($id, '_power_bi_group_id', true);
-		$report_id = get_post_meta($id, '_power_bi_report_id', true);
-		$dataset_id = get_post_meta($id, '_power_bi_dataset_id', true);
-		$filter_pane = get_post_meta($id, '_power_bi_filter_pane', true);
-		$page_navigation = get_post_meta($id, '_power_bi_page_navigation', true);
-		$background = get_post_meta($id, '_power_bi_background', true);
-		$language = get_post_meta($id, '_power_bi_language', true);
-		$format_local = get_post_meta($id, '_power_bi_format_local', true);
+		$embed_type = sanitize_text_field(get_post_meta($id, '_power_bi_embed_type', true));
+		$dashboard_id =sanitize_text_field(get_post_meta($id, '_power_bi_dashboard_id', true));
+		$group_id = sanitize_text_field(get_post_meta($id, '_power_bi_group_id', true));
+		$report_id = sanitize_text_field(get_post_meta($id, '_power_bi_report_id', true));
+		$dataset_id = sanitize_text_field(get_post_meta($id, '_power_bi_dataset_id', true));
+		$filter_pane = sanitize_text_field(get_post_meta($id, '_power_bi_filter_pane', true));
+		$page_navigation = sanitize_text_field(get_post_meta($id, '_power_bi_page_navigation', true));
+		$background = sanitize_text_field(get_post_meta($id, '_power_bi_background', true));
+		$language = sanitize_text_field(get_post_meta($id, '_power_bi_language', true));
+		$format_local = sanitize_text_field(get_post_meta($id, '_power_bi_format_local', true));
 		if ('dashboard' === $embed_type) {
 			$embed_url = $api_url . "dashboardEmbed?dashboardId=" . $dashboard_id . "&groupId=" . $group_id;
 		}
@@ -114,7 +121,7 @@ class Power_Bi_Shortcodes
 				"use strict";
 				$(document).ready(function () {
 					var models = window['powerbi-client'].models;
-					var restURL = "<?php echo get_rest_url('', 'wp/v2/powerbi/getToken'); ?>";
+					var restURL = "<?php echo esc_url(get_rest_url('', 'wp/v2/powerbi/getToken')); ?>";
 					var tmpdata = jQuery.get({
 						url: restURL,
 						async: false,
@@ -129,52 +136,52 @@ class Power_Bi_Shortcodes
 					sessionStorage.setItem('access_token', access_token);
 					// console.log(sessionStorage.getItem('access_token'));
 					var embedConfiguration = {
-						type: '<?php echo $embed_type; ?>',
-						embedUrl: '<?php echo $embed_url; ?>',
-						tokenType: models.TokenType.<?php echo $token_type; ?>,
+						type: '<?php echo esc_html($embed_type); ?>',
+						embedUrl: '<?php echo esc_url($embed_url); ?>',
+						tokenType: models.TokenType.<?php echo esc_html($token_type); ?>,
 						accessToken: access_token,
 						settings: {
 							filterPaneEnabled: <?php echo ($filter_pane ? 'true' : 'false'); ?>,
 							navContentPaneEnabled: <?php echo ($page_navigation ? 'true' : 'false'); ?>,
 							<?php if (isset($background)): ?>
 										<?php if (!empty($background)): ?>
-												background: <?php echo $background; ?>,
+												background: <?php echo esc_html($background); ?>,
 								<?php endif; ?>
 									<?php else: ?>
 											background: models.BackgroundType.Transparent,
 							<?php endif; ?>
 									localeSettings: {
-								language: '<?php echo $language; ?>',
-								formatLocale: '<?php echo $format_local; ?>'
+								language: '<?php echo esc_html($language); ?>',
+								formatLocale: '<?php echo esc_html($format_local); ?>'
 							}
 						},
 						<?php if ('dashboard' === $embed_type): ?>
-									dashboardId: '<?php echo $dashboard_id; ?>',
+									dashboardId: '<?php echo esc_html($dashboard_id); ?>',
 						<?php endif; ?>
 								<?php if ('report' === $embed_type): ?>
-									id: '<?php echo $report_id; ?>',
-							pageName: '<?php echo $page_name; ?>',
+									id: '<?php echo esc_html($report_id); ?>',
+							pageName: '<?php echo esc_html($page_name); ?>',
 						<?php endif; ?>
 								<?php if ('qna' === $embed_type): ?>
-									viewMode: models.QnaMode['<?php echo $qna_mode; ?>'],
-							datasetIds: ['<?php echo $dataset_id; ?>'],
-							question: '<?php echo $input_question; ?>',
+									viewMode: models.QnaMode['<?php echo esc_html($qna_mode); ?>'],
+							datasetIds: ['<?php echo esc_html($dataset_id); ?>'],
+							question: '<?php echo esc_html($input_question); ?>',
 						<?php endif; ?>
 								<?php if ('visual' === $embed_type): ?>
-									pageName: '<?php echo $page_name; ?>',
-							visualName: '<?php echo $visual_name; ?>',
-							id: '<?php echo $report_id; ?>',
+									pageName: '<?php echo esc_html($page_name); ?>',
+							visualName: '<?php echo esc_html($visual_name); ?>',
+							id: '<?php echo esc_html($report_id); ?>',
 						<?php endif; ?>
 								<?php if ('tile' === $embed_type): ?>
-									id: '<?php echo $tile_id; ?>',
-							dashboardId: '<?php echo $dashboard_id; ?>',
+									id: '<?php echo esc_html($tile_id); ?>',
+							dashboardId: '<?php echo esc_html($dashboard_id); ?>',
 						<?php endif; ?>
 								<?php if ('edit' === $report_mode && 'report' === $embed_type): ?>
 									viewMode: models.ViewMode.Edit,
 							permissions: models.Permissions.All,
 						<?php endif; ?>
 								<?php if ('create' === $report_mode && 'report' === $embed_type): ?>
-									datasetId: '<?php echo $dataset_id; ?>',
+									datasetId: '<?php echo esc_html($dataset_id); ?>',
 							permissions: models.Permissions.All,
 						<?php endif; ?>
 					};
@@ -196,7 +203,7 @@ class Power_Bi_Shortcodes
 						var urlSlicers = JSON.parse(urlParams.get("slicers"));
 						embedConfiguration.slicers = urlSlicers;
 					}
-					var $container = $('#powerbi-embedded-<?php echo $id; ?>');
+					var $container = $('#powerbi-embedded-<?php echo esc_html($id); ?>');
 					<?php if ('create' === $report_mode && 'report' === $embed_type): ?>
 						var report = powerbi.createReport($container.get(0), embedConfiguration);
 					<?php else: ?>
@@ -206,11 +213,11 @@ class Power_Bi_Shortcodes
 							function test(report) {
 								setTimeout(function () {
 									updateToken().then(function (data) {
-										console.log("Resetting token: " + report.getAccessToken());
+										// console.log("Resetting token: " + report.getAccessToken());
 										// console.log(data);
 										report.setAccessToken(data)
 											.then(function (resp) {
-												console.log("New token: " + report.getAccessToken());
+												//console.log("New token: " + report.getAccessToken());
 												sessionStorage.setItem('access_token', report.getAccessToken());
 											})
 											.catch(function (error) { console.log(error) });
@@ -221,7 +228,7 @@ class Power_Bi_Shortcodes
 							test(report);
 						});
 						function updateToken() {
-							var restURL = "<?php echo get_rest_url('', 'wp/v2/powerbi/getToken'); ?>";
+							var restURL = "<?php echo esc_html(get_rest_url('', 'wp/v2/powerbi/getToken')); ?>";
 							return new Promise(function (resolve, reject) {
 								$.ajax({
 									url: restURL,

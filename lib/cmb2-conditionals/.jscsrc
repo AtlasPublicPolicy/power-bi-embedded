@@ -1,9 +1,0 @@
-{
-    "preset": "wordpress",
-    "disallowKeywordsOnNewLine": null,
-    "disallowMultipleLineBreaks": null,
-    "fileExtensions": [ ".js" ],
-    "excludeFiles": [
-    	"js/**.min.js",
-    ]
-}
