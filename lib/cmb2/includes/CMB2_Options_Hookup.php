@@ -59,7 +59,7 @@ class CMB2_Options_Hookup extends CMB2_Hookup {
 		}
 
 		// Register setting to cmb2 group.
-		register_setting( 'power-bi-embedded', $this->option_key, function ($input) {return (sanitize_text_field($input));} );
+		register_setting( 'embed-power-bi', $this->option_key, function ($input) {return (sanitize_text_field($input));} );
 
 		// Handle saving the data.
 		add_action( 'admin_post_' . $this->option_key, array( $this, 'save_options' ) );
@@ -136,11 +136,11 @@ class CMB2_Options_Hookup extends CMB2_Hookup {
 		$is_updated      = $should_notify && 'true' === $_GET['settings-updated'];
 		$setting         = "{$this->option_key}-notices";
 		$code            = '';
-		$message         = __( 'Nothing to update.', 'power-bi-embedded' );
+		$message         = __( 'Nothing to update.', 'embed-power-bi' );
 		$type            = 'notice-warning';
 
 		if ( $is_updated ) {
-			$message = __( 'Settings updated.', 'power-bi-embedded' );
+			$message = __( 'Settings updated.', 'embed-power-bi' );
 			$type    = 'updated';
 		}
 
@@ -367,7 +367,7 @@ class CMB2_Options_Hookup extends CMB2_Hookup {
 				return $this->{$field};
 			default:
 				/* translators: %1$s is a type of property. %2$s is the specific property */
-				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'power-bi-embedded' ), __CLASS__, esc_attr($field) ) );
+				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'embed-power-bi' ), __CLASS__, esc_attr($field) ) );
 		}
 	}
 }

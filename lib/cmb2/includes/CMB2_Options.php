@@ -245,7 +245,7 @@ class CMB2_Option {
 				return $this->{$field};
 			default:
 				/* translators: %1$s is a type of property. %2$s is the specific property */
-				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'power-bi-embedded' ), __CLASS__, esc_attr($field) ) );
+				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'embed-power-bi' ), __CLASS__, esc_attr($field) ) );
 		}
 	}
 }

@@ -180,14 +180,14 @@ function yourprefix_register_conditionals_demo_metabox() {
 
 	// Example using conditionals with multi-check checkboxes.
 	$cmb_demo->add_field( array(
-		'name'    => __( 'Test Multi Checkbox', 'power-bi-embedded' ),
-		'desc'    => __( 'field description (optional)', 'power-bi-embedded' ),
+		'name'    => __( 'Test Multi Checkbox', 'embed-power-bi' ),
+		'desc'    => __( 'field description (optional)', 'embed-power-bi' ),
 		'id'      => $prefix . 'multi-checkbox',
 		'type'    => 'multicheck',
 		'options' => array(
-			'check1' => __( 'Check One', 'power-bi-embedded' ),
-			'check2' => __( 'Check Two', 'power-bi-embedded' ),
-			'check3' => __( 'Check Three', 'power-bi-embedded' ),
+			'check1' => __( 'Check One', 'embed-power-bi' ),
+			'check2' => __( 'Check Two', 'embed-power-bi' ),
+			'check3' => __( 'Check Three', 'embed-power-bi' ),
 		),
 	) );
 

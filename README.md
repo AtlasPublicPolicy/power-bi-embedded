@@ -1,8 +1,8 @@
-# power-bi-embedded
+# embed-power-bi
 
 ![Atlas](https://atlaspolicy.com/public/website_logo_horiz.png)
 
- **Title:** Power BI Embedded for WordPress
+ **Title:** Embed for Power BI for WordPress
 
  **Contributors:** Nick Nigro [nick.nigro@atlaspolicy.com], aswingiri [aswingiri@upnrunn.com], bankerrajendra [bankerrajendra@upnrunn.com], bhoot[mithunbiswas@upnrunn.com], stegel
 
@@ -19,7 +19,7 @@
  **License URI:** [https://www.gnu.org/licenses/lgpl.html](https://www.gnu.org/licenses/lgpl.html)
 
 ## Description
-This WordPress plugin supports Microsoft Power BI Embedded, including  dashboards, reports, report visuals, Q&A, and tiles. Power BI is a sophisticated data analytics software and service package from Microsoft. More information on Power BI is available at www.powerbi.com.
+This WordPress plugin supports Microsoft Embed for Power BI, including  dashboards, reports, report visuals, Q&A, and tiles. Power BI is a sophisticated data analytics software and service package from Microsoft. More information on Power BI is available at www.powerbi.com.
 
 **You can download this plugin on WordPress at [https://wordpress.org/plugins/embed-power-bi/](https://wordpress.org/plugins/embed-power-bi).**
 
@@ -39,7 +39,7 @@ The "app owns data" process requires that a single, master Power BI Pro account 
 
 After you save your changes, you'll see the authentication status on the settings page if it worked. Once you've configured the plugin, you can now add Power BI content to your WordPress site and embed it wherever you want.
 
-The plugin also includes support to control the Power BI Embedded resource on Azure. This can be really helpful if you're trying to control costs by disabling the resource when it's not in use. The scheduling can be controlled on a daily basis by setting the hour to enable and the hour to disable the resource. If you don't need to disable the resource, then you can ignore this section. 
+The plugin also includes support to control the Embed for Power BI resource on Azure. This can be really helpful if you're trying to control costs by disabling the resource when it's not in use. The scheduling can be controlled on a daily basis by setting the hour to enable and the hour to disable the resource. If you don't need to disable the resource, then you can ignore this section. 
 
  * Tenant ID or Directory ID under Azure Active Directory for Office 365: The Directory ID is under the Properties section of the Azure Active Directory on the Azure portal. 
  * Subscription ID for Power BI Resource: Read directly from Azure portal.
@@ -110,7 +110,7 @@ Once the Power BI content is created in WordPress, you can embed it anywhere wit
 
     [powerbi id=X width=X height=X]
 
-You also can use a shortcode to display content based on the Power BI Embedded resource state. This shortcode allows you to show content when the resource is active and other content when the resource is paused. 
+You also can use a shortcode to display content based on the Embed for Power BI resource state. This shortcode allows you to show content when the resource is active and other content when the resource is paused. 
 
 Display the content when resource is active.
 
@@ -124,7 +124,7 @@ Display the content when resource is paused.
         Resource is paused.
     [/powerbi_resource]
 
-Learn more about states. [https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state](https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities/getdetails#state)
+Learn more about states. [https://docs.microsoft.com/en-us/rest/api/embed-power-bi/capacities/getdetails#state](https://docs.microsoft.com/en-us/rest/api/embed-power-bi/capacities/getdetails#state)
 
 ## Applying Filters
 The plugin is able to filter *Reports* using the [Report Level Filters](https://github.com/Microsoft/PowerBI-JavaScript/wiki/Filters) API functions in PowerBI embedded. To use filters you need to pass the filter object in the querystring as a serialized JSON string.

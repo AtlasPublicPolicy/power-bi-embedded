@@ -47,7 +47,7 @@ class Power_Bi_Settings
 	 */
 	public function add_admin_menu()
 	{
-		add_submenu_page('edit.php?post_type=powerbi', __('Power BI Settings', 'power-bi-embedded'), __('Settings', 'power-bi-embedded'), 'manage_options', 'powerbi', array($this, 'power_bi__options_page'));
+		add_submenu_page('edit.php?post_type=powerbi', __('Power BI Settings', 'embed-power-bi'), __('Settings', 'embed-power-bi'), 'manage_options', 'powerbi', array($this, 'power_bi__options_page'));
 	}
 
 	/**
@@ -60,41 +60,41 @@ class Power_Bi_Settings
 
 		add_settings_section(
 			'power_bi_section',
-			__('Azure Authorization', 'power-bi-embedded'),
+			__('Azure Authorization', 'embed-power-bi'),
 			'power_bi_section_callback',
 			'power_bi'
 		);
 		add_settings_field(
 			'power_bi_username',
-			__('User Name', 'power-bi-embedded'),
+			__('User Name', 'embed-power-bi'),
 			'power_bi_username_render',
 			'power_bi',
 			'power_bi_section'
 		);
 		add_settings_field(
 			'power_bi_password',
-			__('Password', 'power-bi-embedded'),
+			__('Password', 'embed-power-bi'),
 			'power_bi_password_render',
 			'power_bi',
 			'power_bi_section'
 		);
 		add_settings_field(
 			'power_bi_client_id',
-			__('Client ID', 'power-bi-embedded'),
+			__('Client ID', 'embed-power-bi'),
 			'power_bi_client_id_render',
 			'power_bi',
 			'power_bi_section'
 		);
 		add_settings_field(
 			'power_bi_client_secret',
-			__('Client Secret', 'power-bi-embedded'),
+			__('Client Secret', 'embed-power-bi'),
 			'power_bi_client_secret_render',
 			'power_bi',
 			'power_bi_section'
 		);
 		add_settings_field(
 			'power_bi_oauth_success',
-			__('Oauth Status', 'power-bi-embedded'),
+			__('Oauth Status', 'embed-power-bi'),
 			'power_bi_oauth_success_render',
 			'power_bi',
 			'power_bi_section'
@@ -102,14 +102,14 @@ class Power_Bi_Settings
 		// Schedule Power BI Resource
 		add_settings_section(
 			'power_bi_schedule_section',
-			__('Power BI Resource On/Off Schedule', 'power-bi-embedded'),
+			__('Power BI Resource On/Off Schedule', 'embed-power-bi'),
 			'power_bi_schedule_section_callback',
 			'power_bi'
 		);
 		// Added Option to view resource status
 		add_settings_field(
 			'power_bi_azure_resource_state',
-			__('Power BI Resource Status', 'power-bi-embedded'),
+			__('Power BI Resource Status', 'embed-power-bi'),
 			'power_bi_azure_resource_state_render',
 			'power_bi',
 			'power_bi_schedule_section'
@@ -117,77 +117,77 @@ class Power_Bi_Settings
 		// New setting for adding other required fields for make azure api call
 		add_settings_field(
 			'power_bi_azure_tenant_id',
-			__('Tenant ID or Directory ID under Azure Active Directory for Office 365', 'power-bi-embedded'),
+			__('Tenant ID or Directory ID under Azure Active Directory for Office 365', 'embed-power-bi'),
 			'power_bi_azure_tenant_id_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_azure_subscription_id',
-			__('Subscription ID for Power BI Resource', 'power-bi-embedded'),
+			__('Subscription ID for Power BI Resource', 'embed-power-bi'),
 			'power_bi_azure_subscription_id_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_azure_resource_group',
-			__('Resource Group Name', 'power-bi-embedded'),
+			__('Resource Group Name', 'embed-power-bi'),
 			'power_bi_azure_resource_group_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_azure_capacity',
-			__('Resource Name', 'power-bi-embedded'),
+			__('Resource Name', 'embed-power-bi'),
 			'power_bi_azure_capacity_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_sunday_time',
-			__('Sunday', 'power-bi-embedded'),
+			__('Sunday', 'embed-power-bi'),
 			'power_bi_schedule_sunday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_monday_time',
-			__('Monday', 'power-bi-embedded'),
+			__('Monday', 'embed-power-bi'),
 			'power_bi_schedule_monday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_tuesday_time',
-			__('Tuesday', 'power-bi-embedded'),
+			__('Tuesday', 'embed-power-bi'),
 			'power_bi_schedule_tuesday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_wednesday_time',
-			__('Wednesday', 'power-bi-embedded'),
+			__('Wednesday', 'embed-power-bi'),
 			'power_bi_schedule_wednesday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_thursday_time',
-			__('Thursday', 'power-bi-embedded'),
+			__('Thursday', 'embed-power-bi'),
 			'power_bi_schedule_thursday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_friday_time',
-			__('Friday', 'power-bi-embedded'),
+			__('Friday', 'embed-power-bi'),
 			'power_bi_schedule_friday_render',
 			'power_bi',
 			'power_bi_schedule_section'
 		);
 		add_settings_field(
 			'power_bi_schedule_saturday_time',
-			__('Saturday', 'power-bi-embedded'),
+			__('Saturday', 'embed-power-bi'),
 			'power_bi_schedule_saturday_render',
 			'power_bi',
 			'power_bi_schedule_section'
@@ -212,9 +212,9 @@ class Power_Bi_Settings
 		if (isset($_GET['settings-updated'])) {
 			$nonce = isset($_REQUEST['power_bi_nonce']) ? sanitize_text_field(wp_unslash($_REQUEST['power_bi_nonce'])) : '';
 			if (!empty($nonce) && wp_verify_nonce(sanitize_text_field($nonce), 'power_bi_settings')) {
-				add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'power-bi-embedded'), 'updated');
+				add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'embed-power-bi'), 'updated');
 			}
-			add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'power-bi-embedded'), 'updated');
+			add_settings_error('wporg_messages', 'wporg_message', __('Settings Saved', 'embed-power-bi'), 'updated');
 			// clear all cron setup previously //
 			$days_arry = array('sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday');
 			foreach ($days_arry as $day_name) {

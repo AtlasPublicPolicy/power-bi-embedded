@@ -53,7 +53,7 @@ function power_bi_oauth_success_render()
 // For power_bi_schedule_section_callback
 function power_bi_schedule_section_callback()
 {
-	$url = "https://docs.microsoft.com/en-us/rest/api/power-bi-embedded/capacities";
+	$url = "https://docs.microsoft.com/en-us/rest/api/embed-power-bi/capacities";
 	echo 'Configure schedule to suspend and resume the Power BI resource on Azure. 
 	When the resource is suspended, no charges are incurred. The WordPress time zone is used. 
 	Documentation of the Azure API used for this feature is available <a href='. 
@@ -109,12 +109,12 @@ function power_bi_schedule_sunday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_sunday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('START', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_sunday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_sunday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('PAUSE', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_sunday_pause_time']); ?>
 	</select>
@@ -126,12 +126,12 @@ function power_bi_schedule_monday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_monday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('START', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_monday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_monday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('PAUSE', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_monday_pause_time']); ?>
 	</select>
@@ -143,12 +143,12 @@ function power_bi_schedule_tuesday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_tuesday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('START', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_tuesday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_tuesday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('PAUSE', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_tuesday_pause_time']); ?>
 	</select>
@@ -160,12 +160,12 @@ function power_bi_schedule_wednesday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_wednesday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('START', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_wednesday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_wednesday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('PAUSE', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_wednesday_pause_time']); ?>
 	</select>
@@ -177,12 +177,12 @@ function power_bi_schedule_thursday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_thursday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('START', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_thursday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_thursday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('PAUSE', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_thursday_pause_time']); ?>
 	</select>
@@ -194,12 +194,12 @@ function power_bi_schedule_friday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_friday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('START', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_friday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_friday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('PAUSE', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_friday_pause_time']); ?>
 	</select>
@@ -211,12 +211,12 @@ function power_bi_schedule_saturday_render()
 	?>
 	<select name="power_bi_settings[power_bi_schedule_saturday_start_time]">
 		<option value="">
-			<?php echo esc_html_e('START', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('START', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_saturday_start_time']); ?>
 	</select>&nbsp;<select name="power_bi_settings[power_bi_schedule_saturday_pause_time]">
 		<option value="">
-			<?php echo esc_html_e('PAUSE', 'power-bi-embedded'); ?>
+			<?php echo esc_html_e('PAUSE', 'embed-power-bi'); ?>
 		</option>
 		<?php display_time_dropdown($options['power_bi_schedule_saturday_pause_time']); ?>
 	</select>
@@ -242,7 +242,7 @@ function power_bi_add_weekly_schedule($schedules)
 	$schedules['weekly'] = array(
 		'interval' => 7 * 24 * 60 * 60,
 		//7 days * 24 hours * 60 minutes * 60 seconds
-		'display' => esc_html_e('Once Weekly', 'power-bi-embedded')
+		'display' => esc_html_e('Once Weekly', 'embed-power-bi')
 	);
 	return $schedules;
 }

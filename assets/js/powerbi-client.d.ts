@@ -1538,7 +1538,7 @@ declare module "service" {
         private handleEvent(event);
         /**
          * API for warm starting powerbi embedded endpoints.
-         * Use this API to preload Power BI Embedded in the background.
+         * Use this API to preload Embed for Power BI in the background.
          *
          * @public
          * @param {embed.IEmbedConfigurationBase} [config={}]

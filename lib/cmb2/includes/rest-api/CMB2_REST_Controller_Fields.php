@@ -24,16 +24,16 @@ class CMB2_REST_Controller_Fields extends CMB2_REST_Controller_Boxes {
 	public function register_routes() {
 		$args = array(
 			'_embed' => array(
-				'description' => __( 'Includes the box object which the fields are registered to in the response.', 'power-bi-embedded' ),
+				'description' => __( 'Includes the box object which the fields are registered to in the response.', 'embed-power-bi' ),
 			),
 			'_rendered' => array(
-				'description' => __( 'When the \'_rendered\' argument is passed, the renderable field attributes will be returned fully rendered. By default, the names of the callback handers for the renderable attributes will be returned.', 'power-bi-embedded' ),
+				'description' => __( 'When the \'_rendered\' argument is passed, the renderable field attributes will be returned fully rendered. By default, the names of the callback handers for the renderable attributes will be returned.', 'embed-power-bi' ),
 			),
 			'object_id' => array(
-				'description' => __( 'To view or modify the field\'s value, the \'object_id\' and \'object_type\' arguments are required.', 'power-bi-embedded' ),
+				'description' => __( 'To view or modify the field\'s value, the \'object_id\' and \'object_type\' arguments are required.', 'embed-power-bi' ),
 			),
 			'object_type' => array(
-				'description' => __( 'To view or modify the field\'s value, the \'object_id\' and \'object_type\' arguments are required.', 'power-bi-embedded' ),
+				'description' => __( 'To view or modify the field\'s value, the \'object_id\' and \'object_type\' arguments are required.', 'embed-power-bi' ),
 			),
 		);
 
@@ -233,7 +233,7 @@ class CMB2_REST_Controller_Fields extends CMB2_REST_Controller_Boxes {
 		$this->initiate_rest_read_box( $request, 'field_value_update' );
 
 		if ( ! $this->request['value'] ) {
-			return new WP_Error( 'cmb2_rest_update_field_error', __( 'CMB2 Field value cannot be updated without the value parameter specified.', 'power-bi-embedded' ), array(
+			return new WP_Error( 'cmb2_rest_update_field_error', __( 'CMB2 Field value cannot be updated without the value parameter specified.', 'embed-power-bi' ), array(
 				'status' => 400,
 			) );
 		}
@@ -294,7 +294,7 @@ class CMB2_REST_Controller_Fields extends CMB2_REST_Controller_Boxes {
 	public function modify_field_value( $activity ) {
 
 		if ( ! $this->request['object_id'] || ! $this->request['object_type'] ) {
-			return new WP_Error( 'cmb2_rest_modify_field_value_error', __( 'CMB2 Field value cannot be modified without the object_id and object_type parameters specified.', 'power-bi-embedded' ), array(
+			return new WP_Error( 'cmb2_rest_modify_field_value_error', __( 'CMB2 Field value cannot be modified without the object_id and object_type parameters specified.', 'embed-power-bi' ), array(
 				'status' => 400,
 			) );
 		}
@@ -309,7 +309,7 @@ class CMB2_REST_Controller_Fields extends CMB2_REST_Controller_Boxes {
 		);
 
 		if ( ! $this->field ) {
-			return new WP_Error( 'cmb2_rest_no_field_by_id_error', __( 'No field found by that id.', 'power-bi-embedded' ), array(
+			return new WP_Error( 'cmb2_rest_no_field_by_id_error', __( 'No field found by that id.', 'embed-power-bi' ), array(
 				'status' => 403,
 			) );
 		}
@@ -338,7 +338,7 @@ class CMB2_REST_Controller_Fields extends CMB2_REST_Controller_Boxes {
 		$this->field = $this->rest_box->field_can_read( $field, true );
 
 		if ( ! $this->field ) {
-			return new WP_Error( 'cmb2_rest_no_field_by_id_error', __( 'No field found by that id.', 'power-bi-embedded' ), array(
+			return new WP_Error( 'cmb2_rest_no_field_by_id_error', __( 'No field found by that id.', 'embed-power-bi' ), array(
 				'status' => 403,
 			) );
 		}
@@ -413,7 +413,7 @@ class CMB2_REST_Controller_Fields extends CMB2_REST_Controller_Boxes {
 				$field_data[ $key ] = $value;
 			} else {
 				/* translators: %s: field key */
-				$field_data[ $key ] = sprintf( __( 'Value Error for %s', 'power-bi-embedded' ), $key );
+				$field_data[ $key ] = sprintf( __( 'Value Error for %s', 'embed-power-bi' ), $key );
 			}
 		}
 

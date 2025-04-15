@@ -421,12 +421,12 @@ abstract class CMB2_Base {
 
 				case self::DEPRECATED_PARAM:
 					/* translators: %1$s is replaced with the %2$s parameter */
-					$message = sprintf( __( 'The "%1$s" field parameter has been deprecated in favor of the "%2$s" parameter.', 'power-bi-embedded' ), $args[3], $args[4] );
+					$message = sprintf( __( 'The "%1$s" field parameter has been deprecated in favor of the "%2$s" parameter.', 'embed-power-bi' ), $args[3], $args[4] );
 					break;
 
 				case self::DEPRECATED_CB_PARAM:
 					/* translators: %1$s is replaced with the %2$s parameter */
-					$message = sprintf( __( 'Using the "%1$s" field parameter as a callback has been deprecated in favor of the "%2$s" parameter.', 'power-bi-embedded' ), $args[3], $args[4] );
+					$message = sprintf( __( 'Using the "%1$s" field parameter as a callback has been deprecated in favor of the "%2$s" parameter.', 'embed-power-bi' ), $args[3], $args[4] );
 					break;
 
 				default:
@@ -457,18 +457,18 @@ abstract class CMB2_Base {
 			if ( function_exists( '__' ) ) {
 				if ( ! is_null( $message ) ) {
 					/* translators: %1$s is replaced with the %2$s parameter */
-					trigger_error( sprintf( esc_html__( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'power-bi-embedded' ), esc_html($function), esc_html($version), esc_html($message) ) );
+					trigger_error( sprintf( esc_html__( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'embed-power-bi' ), esc_html($function), esc_html($version), esc_html($message) ) );
 				} else {
 					/* translators: %1$s has been deprecated */
-					trigger_error( sprintf(esc_html__( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'power-bi-embedded' ), esc_html($function), esc_html($version) ) );
+					trigger_error( sprintf(esc_html__( '%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'embed-power-bi' ), esc_html($function), esc_html($version) ) );
 				}
 			} else {
 				if ( ! is_null( $message ) ) {
 					/* translators: %1$s is replaced with the %2$s parameter */
-					trigger_error( sprintf( esc_html__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'power-bi-embedded'), esc_html($function), esc_html($version), esc_html($message) ) );
+					trigger_error( sprintf( esc_html__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s! %3$s', 'embed-power-bi'), esc_html($function), esc_html($version), esc_html($message) ) );
 				} else {
 					/* translators: %1$s has been deprecated */
-					trigger_error( sprintf( esc_html__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'power-bi-embedded'), esc_html($function), esc_html($version) ) );
+					trigger_error( sprintf( esc_html__('%1$s was called with a parameter that is <strong>deprecated</strong> since version %2$s with no alternative available.', 'embed-power-bi'), esc_html($function), esc_html($version) ) );
 				}
 			}
 		}
@@ -496,7 +496,7 @@ abstract class CMB2_Base {
 				return $this->{$field};
 			default:
 				/* translators: Invalid %1$s property */
-				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'power-bi-embedded' ), __CLASS__, esc_attr($field) ) );
+				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'embed-power-bi' ), __CLASS__, esc_attr($field) ) );
 		}
 	}
 
@@ -515,7 +515,7 @@ abstract class CMB2_Base {
 
 		if ( ! has_filter( "{$object_class}_inherit_{$method}" ) ) {
 			/* translators: Invalid %1$s method */
-			throw new Exception( sprintf( esc_html__( 'Invalid %1$s method: %2$s', 'power-bi-embedded' ), esc_attr(get_class( $this )), esc_attr($method) ) );
+			throw new Exception( sprintf( esc_html__( 'Invalid %1$s method: %2$s', 'embed-power-bi' ), esc_attr(get_class( $this )), esc_attr($method) ) );
 		}
 
 		array_unshift( $args, $this );

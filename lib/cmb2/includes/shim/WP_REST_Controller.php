@@ -22,7 +22,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function register_routes() {
 		/* translators: %s: register_routes() */
-		_doing_it_wrong( 'WP_REST_Controller::register_routes', sprintf( esc_html__( "Method '%s' must be overridden.", 'power-bi-embedded'), __METHOD__ ), '4.7' );
+		_doing_it_wrong( 'WP_REST_Controller::register_routes', sprintf( esc_html__( "Method '%s' must be overridden.", 'embed-power-bi'), __METHOD__ ), '4.7' );
 	}
 
 	/**
@@ -33,7 +33,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function get_items_permissions_check( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -46,7 +46,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function get_items( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -59,7 +59,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function get_item_permissions_check( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -72,7 +72,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function get_item( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -85,7 +85,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function create_item_permissions_check( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -98,7 +98,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function create_item( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -111,7 +111,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function update_item_permissions_check( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -124,7 +124,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function update_item( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -137,7 +137,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function delete_item_permissions_check( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -150,7 +150,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function delete_item( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -163,7 +163,7 @@ abstract class WP_REST_Controller {
 	 */
 	protected function prepare_item_for_database( $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded'), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi'), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -177,7 +177,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function prepare_item_for_response( $item, $request ) {
 		/* translators: %s: Missing method name */
-		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'power-bi-embedded' ), __METHOD__ ), array(
+		return new WP_Error( 'invalid-method', sprintf( __( "Method '%s' not implemented. Must be overridden in subclass.", 'embed-power-bi' ), __METHOD__ ), array(
 			'status' => 405,
 		) );
 	}
@@ -282,7 +282,7 @@ abstract class WP_REST_Controller {
 		return array(
 			'context'                => $this->get_context_param(),
 			'page'                   => array(
-				'description'        => __( 'Current page of the collection.', 'power-bi-embedded' ),
+				'description'        => __( 'Current page of the collection.', 'embed-power-bi' ),
 				'type'               => 'integer',
 				'default'            => 1,
 				'sanitize_callback'  => 'absint',
@@ -290,7 +290,7 @@ abstract class WP_REST_Controller {
 				'minimum'            => 1,
 			),
 			'per_page'               => array(
-				'description'        => __( 'Maximum number of items to be returned in result set.', 'power-bi-embedded' ),
+				'description'        => __( 'Maximum number of items to be returned in result set.', 'embed-power-bi' ),
 				'type'               => 'integer',
 				'default'            => 10,
 				'minimum'            => 1,
@@ -299,7 +299,7 @@ abstract class WP_REST_Controller {
 				'validate_callback'  => 'rest_validate_request_arg',
 			),
 			'search'                 => array(
-				'description'        => __( 'Limit results to those matching a string.', 'power-bi-embedded' ),
+				'description'        => __( 'Limit results to those matching a string.', 'embed-power-bi' ),
 				'type'               => 'string',
 				'sanitize_callback'  => 'sanitize_text_field',
 				'validate_callback'  => 'rest_validate_request_arg',
@@ -317,7 +317,7 @@ abstract class WP_REST_Controller {
 	 */
 	public function get_context_param( $args = array() ) {
 		$param_details = array(
-			'description'        => __( 'Scope under which the request is made; determines fields present in response.', 'power-bi-embedded' ),
+			'description'        => __( 'Scope under which the request is made; determines fields present in response.', 'embed-power-bi' ),
 			'type'               => 'string',
 			'sanitize_callback'  => 'sanitize_key',
 			'validate_callback'  => 'rest_validate_request_arg',

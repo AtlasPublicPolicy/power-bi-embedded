@@ -51,7 +51,8 @@ class Power_Bi_Shortcodes
 		$container_height = empty($height) ? get_post_meta($id, '_power_bi_height', true) : $height;
 		$powerbi_js = $this->powerbi_js($id);
 		ob_start();
-		echo '<div id="powerbi-embedded-' . esc_html($id) . '" style="height: ' . esc_html($container_height) . '; width: ' . esc_html($container_width) . ';"></div>';
+		echo '<div id="powerbi-embedded-' . esc_html($id) . '" style="height: ' . esc_html($container_height) . '; width: ' . esc_html($container_width) . ';"
+			title="Embedded Power BI Data Dashboard"></div>';
 		echo wp_kses($powerbi_js,
 			[
 				'script' => array(

@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Versions of Power BI Embedded for WordPress project that are currently being supported with security updates.
+Versions of Embed for Power BI for WordPress project that are currently being supported with security updates.
 
 | Version | Supported          |
 | ------- | ------------------ |
@@ -13,4 +13,4 @@ Versions of Power BI Embedded for WordPress project that are currently being sup
 
 Use this section to tell people how to report a vulnerability.
 
-If you find a security issue, please either post an [issue on WordPress](https://wordpress.org/support/plugin/embed-power-bi/) , post an [issue on GitHub](https://github.com/AtlasPublicPolicy/power-bi-embedded/issues), or send an email to info@atlaspolicy.com. 
+If you find a security issue, please either post an [issue on WordPress](https://wordpress.org/support/plugin/embed-power-bi/) , post an [issue on GitHub](https://github.com/AtlasPublicPolicy/embed-power-bi/issues), or send an email to info@atlaspolicy.com. 

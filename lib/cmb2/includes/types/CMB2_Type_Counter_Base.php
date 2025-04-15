@@ -47,19 +47,19 @@ abstract class CMB2_Type_Counter_Base extends CMB2_Type_Base {
 		switch ( $type ) {
 			case 'words':
 				$label = $char_max
-					? $this->_text( 'words_left_text', esc_html__( 'Words left', 'power-bi-embedded' ) )
-					: $this->_text( 'words_text', esc_html__( 'Words', 'power-bi-embedded' ) );
+					? $this->_text( 'words_left_text', esc_html__( 'Words left', 'embed-power-bi' ) )
+					: $this->_text( 'words_text', esc_html__( 'Words', 'embed-power-bi' ) );
 				break;
 			default:
 				$type  = 'characters';
 				$label = $char_max
-					? $this->_text( 'characters_left_text', esc_html__( 'Characters left', 'power-bi-embedded' ) )
-					: $this->_text( 'characters_text', esc_html__( 'Characters', 'power-bi-embedded' ) );
+					? $this->_text( 'characters_left_text', esc_html__( 'Characters left', 'embed-power-bi' ) )
+					: $this->_text( 'characters_text', esc_html__( 'Characters', 'embed-power-bi' ) );
 				break;
 		}
 
 		$msg = $char_max
-			? sprintf( '<span class="cmb2-char-max-msg">%s</span>', $this->_text( 'characters_truncated_text', esc_html__( 'Your text may be truncated.', 'power-bi-embedded' ) ) )
+			? sprintf( '<span class="cmb2-char-max-msg">%s</span>', $this->_text( 'characters_truncated_text', esc_html__( 'Your text may be truncated.', 'embed-power-bi' ) ) )
 			: '';
 
 		$length = strlen( $val );

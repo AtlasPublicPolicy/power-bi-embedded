@@ -42,7 +42,7 @@ abstract class CMB2_Hookup_Base {
 	 */
 	public static function maybe_init_and_hookup( CMB2 $cmb ) {
 		/* translators: %1$s is the name of a function */
-		throw new Exception( sprintf( esc_html__( '%1$s should be implemented by the extended class.', 'power-bi-embedded' ), __FUNCTION__ ) );
+		throw new Exception( sprintf( esc_html__( '%1$s should be implemented by the extended class.', 'embed-power-bi' ), __FUNCTION__ ) );
 	}
 
 	/**
@@ -101,7 +101,7 @@ abstract class CMB2_Hookup_Base {
 				return $this->{$field};
 			default:
 				/* translators: %1$s is a type of property. %2$s is the specific property */
-				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'power-bi-embedded' ), __CLASS__, esc_attr($field) ) );
+				throw new Exception( sprintf( esc_html__( 'Invalid %1$s property: %2$s', 'embed-power-bi' ), __CLASS__, esc_attr($field) ) );
 		}
 	}
 }
